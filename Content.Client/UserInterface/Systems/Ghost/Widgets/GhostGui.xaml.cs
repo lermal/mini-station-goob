@@ -21,6 +21,7 @@ public sealed partial class GhostGui : UIWidget
     public event Action? ReturnToBodyPressed;
     public event Action? GhostRolesPressed;
     public event Action? GhostBarPressed; // CorvaxGoob-GhostBar
+    public event Action? ThunderdomePressed; // Goobstation - Thunderdome
     private int _prevNumberRoles;
 
     public GhostGui()
@@ -41,6 +42,7 @@ public sealed partial class GhostGui : UIWidget
         GhostRolesButton.OnPressed += _ => GhostRolesPressed?.Invoke();
         GhostRolesButton.OnPressed += _ => GhostRolesButton.StyleClasses.Remove(StyleBase.ButtonCaution);
         GhostBarButton.OnPressed += _ => GhostBarPressed?.Invoke(); // CorvaxGoob-GhostBar
+        ThunderdomeButton.OnPressed += _ => ThunderdomePressed?.Invoke(); // Goobstation - Thunderdome
     }
 
     public void Hide()
@@ -72,6 +74,12 @@ public sealed partial class GhostGui : UIWidget
         }
 
         TargetWindow.Populate();
+    }
+
+    // Goobstation - Thunderdome
+    public void UpdateThunderdome(int playerCount)
+    {
+        ThunderdomeButton.Text = Loc.GetString("thunderdome-ghost-button", ("count", playerCount));
     }
 
     protected override void Dispose(bool disposing)
