@@ -187,6 +187,7 @@
         - Hammer # Goobstation
         - Nailgun # Goobstation
         - MagazineNailgun # Goobstation
+        - HandHeldMassScanner # CorvaxGoob
       components:
         - SprayPainter
         - SprayPainterAmmo
@@ -274,6 +275,7 @@
         - Hammer # Goobstation
         - Nailgun # Goobstation
         - MagazineNailgun # Goobstation
+        - HandHeldMassScanner # CorvaxGoob
       components:
         - SprayPainter
         - SprayPainterAmmo
@@ -394,6 +396,7 @@
         - HolosignProjector
         - Plunger
         - Keyring # Goobstation
+        - GoldenPlunger
         - WireBrush
       components:
         - LightReplacer
@@ -675,6 +678,7 @@
         - BolaEnergy # Goobstation
         - EnergySpeedloader # Goobstation
         - MilitaryPowerCell # Goobstation
+        - EnergyMagAmmo # Goobstation
         - HandGrenade
         - TelescopicBaton # CorvaxGoob
         - TelescopicShield # CorvaxGoob
@@ -900,6 +904,7 @@
         - LavalandJaunter # CorvaxGoob
         - FlashlightSeclite # CorvaxGoob
         - MineralScanner # CorvaxGoob
+        - HandHeldMassScanner # CorvaxGoob
       components:
         - StationMap
         - SprayPainter

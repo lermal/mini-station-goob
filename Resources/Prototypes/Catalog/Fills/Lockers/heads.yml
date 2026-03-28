@@ -539,7 +539,7 @@
     - id: ClothingOuterCoatHoSTrench
     - id: ClothingShoesBootsJack
     - id: DoorRemoteSecurity
-    - id: HoloprojectorSecurity
+    #- id: HoloprojectorSecurity Goob, you have one in the belt
     - id: RubberStampHos
     - id: TelephoneHeadOfSecurity
     - id: SecurityTechFabCircuitboard
@@ -600,3 +600,5 @@
     - id: SpaceCash1000
     - id: BeachBall
     - id: BikeHorn
+    - id: FoodMango #Goobstation
+      prob: 0.65

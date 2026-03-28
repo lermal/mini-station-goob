@@ -15,7 +15,7 @@
     mobState:
     - Critical
     - Dead
-  - type: Rattle
+  - type: RattleOnTrigger
     radioChannel: Syndicate
 
 - type: entity

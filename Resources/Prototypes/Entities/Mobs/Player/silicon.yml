@@ -308,6 +308,10 @@
   - AiHolder
   suffix: Empty
   components:
+  - type: Anchorable
+    flags:
+    - Anchorable
+  - type: Rotatable
   - type: WarpPoint
   - type: ContainerComp
     proto: AiHeld
@@ -429,6 +433,48 @@
       state: ai_female
   - type: NameIdentifier
     group: StationAi
+  - type: LanguageKnowledge
+    speaks:
+    - TauCetiBasic
+    - Canilunzt
+    - Bubblish
+    - Nekomimetic
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - ValyrianStandard
+    - Chittin
+    - SiikMaas
+    - RobotTalk
+    - DroneTalk
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Schechi
+    - NewKinPidgin
+    understands:
+    - TauCetiBasic
+    - Canilunzt
+    - Bubblish
+    - Nekomimetic
+    - Draconic
+    - SolCommon
+    - RootSpeak
+    - Moffic
+    - ValyrianStandard
+    - Chittin
+    - SiikMaas
+    - RobotTalk
+    - DroneTalk
+    - Marish
+    - Elyran
+    - Freespeak
+    - Tradeband
+    - Sign
+    - Schechi
+    - NewKinPidgin
   - type: TTS # CorvaxGoob-TTS
     voice: Glados
   # CorvaxGoob-Revert : DB conflicts
@@ -533,6 +579,7 @@
       rules: ghost-role-information-silicon-rules
       raffle:
         settings: default
+      job: Borg
     - type: GhostTakeoverAvailable
 
 - type: entity
@@ -601,6 +648,7 @@
       rules: ghost-role-information-silicon-rules
       raffle:
         settings: default
+      job: Borg
     - type: GhostTakeoverAvailable
 
 - type: entity
@@ -650,8 +698,6 @@
       rules: ghost-role-information-silicon-rules
       raffle:
         settings: default
-      requirements: # Goobstation - ghost roles requirements
-      - !type:RoleTimeRequirement
-        role: JobBorg
-        time: 3600 #1 hour
+      reregister: false
+      job: Borg
     - type: GhostTakeoverAvailable
