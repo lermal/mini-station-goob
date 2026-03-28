@@ -29,6 +29,7 @@ using Content.Shared.Database;
 using Content.Shared.GameTicking;
 using Content.Shared.Mind;
 using Content.Shared.Roles.Jobs;
+using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
@@ -42,13 +43,14 @@ namespace Content.Shared.Roles;
 
 public abstract class SharedRoleSystem : EntitySystem
 {
-    [Dependency] private   readonly IConfigurationManager _cfg = default!;
-    [Dependency] private   readonly IEntityManager _entityManager = default!;
-    [Dependency] private   readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private   readonly ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] protected readonly ISharedPlayerManager Player = default!;
-    [Dependency] private   readonly SharedAudioSystem _audio = default!;
-    [Dependency] private   readonly SharedMindSystem _minds = default!;
+    [Dependency] private readonly IEntityManager _entityManager = default!;
+    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private readonly SharedMindSystem _minds = default!;
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
 
     private JobRequirementOverridePrototype? _requirementOverride;
 
@@ -527,6 +529,20 @@ public abstract class SharedRoleSystem : EntitySystem
     }
 
     /// <summary>
+    /// Returns true if a mind has a role that matches a whitelist.
+    /// </summary>
+    public bool MindHasRole(Entity<MindComponent> mind, EntityWhitelist whitelist)
+    {
+        foreach (var roleEnt in mind.Comp.MindRoles)
+        {
+            if (_whitelist.IsWhitelistPass(whitelist, roleEnt))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Finds the first mind role of a specific type on a mind entity.
     /// </summary>
     /// <param name="mindId">The mind entity</param>
@@ -685,10 +701,13 @@ public abstract class SharedRoleSystem : EntitySystem
             _audio.PlayGlobal(sound, session);
     }
 
-    // TODO ROLES Change to readonly.
+    // TODO ROLES Change to readonly?
     // Passing around a reference to a prototype's hashset makes me uncomfortable because it might be accidentally
     // mutated.
-    public HashSet<JobRequirement>? GetJobRequirement(JobPrototype job)
+    /// <summary>
+    /// Returns the list of requirements for a role, or null. May be altered by requirement overrides.
+    /// </summary>
+    public HashSet<JobRequirement>? GetRoleRequirements(JobPrototype job)
     {
         if (_requirementOverride != null && _requirementOverride.Jobs.TryGetValue(job.ID, out var req))
             return req;
@@ -696,31 +715,28 @@ public abstract class SharedRoleSystem : EntitySystem
         return job.Requirements;
     }
 
-    // TODO ROLES Change to readonly.
-    public HashSet<JobRequirement>? GetJobRequirement(ProtoId<JobPrototype> job)
+    // TODO ROLES Change to readonly?
+    /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
+    public HashSet<JobRequirement>? GetRoleRequirements(AntagPrototype antag)
     {
-        if (_requirementOverride != null && _requirementOverride.Jobs.TryGetValue(job, out var req))
-            return req;
-
-        return _prototypes.Index(job).Requirements;
-    }
-
-    // TODO ROLES Change to readonly.
-    public HashSet<JobRequirement>? GetAntagRequirement(ProtoId<AntagPrototype> antag)
-    {
-        if (_requirementOverride != null && _requirementOverride.Antags.TryGetValue(antag, out var req))
-            return req;
-
-        return _prototypes.Index(antag).Requirements;
-    }
-
-    // TODO ROLES Change to readonly.
-    public HashSet<JobRequirement>? GetAntagRequirement(AntagPrototype antag)
-    {
-        if (_requirementOverride != null && _requirementOverride.Antags.TryGetValue(antag.ID, out var req))
+        if (_requirementOverride != null && _requirementOverride.Jobs.TryGetValue(antag.ID, out var req))
             return req;
 
         return antag.Requirements;
+    }
+
+    // TODO ROLES Change to readonly?
+    /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
+    public HashSet<JobRequirement>? GetRoleRequirements(ProtoId<JobPrototype> jobId)
+    {
+        return _prototypes.TryIndex(jobId, out var job) ? GetRoleRequirements(job) : null;
+    }
+
+    // TODO ROLES Change to readonly?
+    /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
+    public HashSet<JobRequirement>? GetRoleRequirements(ProtoId<AntagPrototype> antagId)
+    {
+        return _prototypes.TryIndex(antagId, out var antag) ? GetRoleRequirements(antag) : null;
     }
 
     /// <summary>

@@ -293,9 +293,9 @@
 - type: construction
   id: DiagonalShuttleWall
   name: construction-recipe-diagonal-shuttle-wall
-  graph: Girder
+  graph: GirderDiagonal # CorvaxGob: diagonal-walls-crafts
   startNode: start
-  targetNode: diagonalshuttleWall
+  targetNode: shuttleWallDiagonal # CorvaxGob: diagonal-walls-crafts
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -303,6 +303,7 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+      failIfSpace: false # CorvaxGob: diagonal-walls-crafts
 
 - type: construction
   id: ClownWall
@@ -329,6 +330,19 @@
   canBuildInImpassable: false
   conditions:
   - !type:TileNotBlocked
+
+- type: construction
+  id: Cardwall
+  graph: Cardwall
+  startNode: start
+  targetNode: cardwall
+  category: construction-category-structures
+  conditions:
+  - !type:TileNotBlocked
+    failIfSpace: false
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: false
 
 - type: construction
   id: Grille
@@ -1340,6 +1354,16 @@
   canBuildInImpassable: false
 
 - type: construction
+  id: CardDoor
+  graph: DoorGraph
+  startNode: start
+  targetNode: cardDoor
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+
+- type: construction
   id: PlasticFlapsClear
   name: construction-recipe-plastic-flaps-clear
   graph: PlasticFlapsGraph
@@ -1456,3 +1480,4 @@
   canBuildInImpassable: false
   conditions:
     - !type:TileNotBlocked
+ 

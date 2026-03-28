@@ -440,6 +440,7 @@
     - GrenadeTriggersStatic
     - TapeRecorderStatic
     - MiscSignallersStatic
+    - HydroponicsStatic # CorvaxGoob
   - type: EmagLatheRecipes
     emagStaticPacks:
     - SecurityWeaponsStatic
@@ -546,6 +547,7 @@
     - RestraintTechnology
     - MiningWeapons
     # CorvaxGoob Packs
+    emagStaticPacks:
     - SyndicateBodyBagsStatic # AdvancedBodyBag
 
 - type: entity
@@ -920,7 +922,7 @@
     stealGroup: MedicalTechFabCircuitboard
 
 - type: entity
-  parent: BaseLathe
+  parent: [BaseLatheLube, BaseSiloUtilizer] #Goob edit
   id: UniformPrinter
   name: uniform printer
   description: Prints new or replacement uniforms.
@@ -1108,7 +1110,7 @@
     - SheetifierStatic
 
 - type: entity
-  parent: BaseLathe
+  parent: [BaseLatheLube, BaseSiloUtilizer] # CorvaxGoob
   id: CutterMachine
   name: cutter machine
   description: This is a cutter. It cuts. Add variety to your station floor with eye-pleasing patterns! Don't stick your fingers in.

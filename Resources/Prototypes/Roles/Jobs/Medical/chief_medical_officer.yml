@@ -145,6 +145,9 @@
     - !type:DepartmentTimeRequirement
       department: Medical
       time: 36000 #10 hrs
+    - !type:RoleTimeRequirement  # CorvaxGoob
+      role: JobSurgeon  
+      time: 7200 # CorvaxGoob 2 hrs
     - !type:SpeciesRequirement # Goob - None Felinid
       inverted: true
       species:
@@ -195,7 +198,7 @@
   equipment:
     id: CMOPDA
     ears: ClothingHeadsetAltMedical # Goobstation
-    eyes: ClothingEyesGlassesMed # Goobstation
+#   eyes: ClothingEyesGlassesMed # Goobstation # CorvaxGoob-loadouts: replaced on a ChiefMedicalOfficerGlasses loadout
     belt: ClothingBeltMedicalFilled
   storage:
     back:
