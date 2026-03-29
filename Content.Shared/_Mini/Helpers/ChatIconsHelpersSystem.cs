@@ -9,7 +9,8 @@ public sealed class ChatIconsHelpersSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _prototype = default!;
 
-    public const string NoIdIconPath = "/Textures/Interface/Misc/job_icons.rsi/NoId.png";
+    public const string NoIdIconRsiPath = "/Textures/Interface/Misc/job_icons.rsi";
+    public const string NoIdIconState = "NoId";
 
     /// <summary>
     /// Собирает и возвращает иконку для переданной работы
@@ -17,33 +18,50 @@ public sealed class ChatIconsHelpersSystem : EntitySystem
     [PublicAPI]
     public string GetJobIcon(ProtoId<JobPrototype>? job, int scale = 1)
     {
-        var iconPath = _prototype.TryIndex(job, out var jobPrototype)
-            ? GetJobIconPath(jobPrototype)
-            : NoIdIconPath;
+        if (!_prototype.TryIndex(job, out var jobPrototype))
+        {
+            return BuildIconMarkup(GetFallbackJobIconSpecifier(), scale);
+        }
 
-        var jobIcon = Loc.GetString("texture-tag",
-            ("path", iconPath),
-            ("scale", scale)
-        );
-
-        return jobIcon;
+        return BuildIconMarkup(GetJobIconSpecifier(jobPrototype), scale);
     }
 
     /// <summary>
-    /// Возвращает путь к иконке работы, используя переданный прототип работы
+    /// Возвращает спецификатор иконки работы, используя переданный прототип работы
     /// </summary>
     [PublicAPI]
-    public string GetJobIconPath(JobPrototype job)
+    public SpriteSpecifier GetJobIconSpecifier(JobPrototype job)
     {
         var icon = _prototype.Index(job.Icon);
 
-        var sprite = icon.Icon switch
+        return icon.Icon switch
         {
-            SpriteSpecifier.Texture tex => tex.TexturePath.CanonPath,
-            SpriteSpecifier.Rsi rsi => rsi.RsiPath.CanonPath + '/' + rsi.RsiState + ".png",
-            _ => NoIdIconPath,
+            SpriteSpecifier.Texture tex => tex,
+            SpriteSpecifier.Rsi rsi => rsi,
+            _ => GetFallbackJobIconSpecifier(),
         };
+    }
 
-        return sprite;
+    private static SpriteSpecifier.Rsi GetFallbackJobIconSpecifier()
+    {
+        return new SpriteSpecifier.Rsi(new ResPath(NoIdIconRsiPath), NoIdIconState);
+    }
+
+    private string BuildIconMarkup(SpriteSpecifier icon, int scale)
+    {
+        return icon switch
+        {
+            SpriteSpecifier.Texture tex => Loc.GetString("texture-tag",
+                ("path", tex.TexturePath.CanonPath),
+                ("scale", scale)),
+            SpriteSpecifier.Rsi rsi => Loc.GetString("texture-rsi-tag",
+                ("path", rsi.RsiPath.CanonPath),
+                ("state", rsi.RsiState),
+                ("scale", scale)),
+            _ => Loc.GetString("texture-rsi-tag",
+                ("path", NoIdIconRsiPath),
+                ("state", NoIdIconState),
+                ("scale", scale)),
+        };
     }
 }
