@@ -298,7 +298,6 @@ namespace Content.Server.Database
                 .HasDefaultValue(HwidType.Legacy);
 
             OnCustomModelCreating(modelBuilder);
-            ModelBan.OnModelCreating(modelBuilder);
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)

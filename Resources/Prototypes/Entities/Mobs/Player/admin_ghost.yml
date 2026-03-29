@@ -118,7 +118,9 @@
       - Ghost
       - Normal
       - CosmicCultMonument # DeltaV - Cosmic Cult
-      - Abductor
+      - EldritchInfluence
+      - EldritchInfluenceSpent
+      - Admin
   - type: AghostColor
   - type: IgnoreSkills # CorvaxGoob-Skills
   # Corvax-Goob-start
