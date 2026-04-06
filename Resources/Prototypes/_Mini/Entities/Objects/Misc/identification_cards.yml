@@ -27,9 +27,9 @@
   suffix: Тайпан
   components:
   - type: Sprite
-    sprite: _Mini/Objects/Misc/typansec.rsi
+    sprite: _Mini/Objects/Misc/typanotk.rsi
     layers:
-    - state: typancardcom
+    - state: typancardotk
   - type: Access
     tags:
     - TypanArmory
