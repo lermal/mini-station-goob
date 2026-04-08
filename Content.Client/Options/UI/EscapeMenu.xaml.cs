@@ -27,6 +27,7 @@ using Robust.Client.Console;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Client.Player;
+using Robust.Client.Console;
 using Robust.Shared.Configuration;
 using Content.Client.UserInterface.Systems.Ghost.Controls;
 using Content.Client.Stylesheets;
@@ -42,9 +43,14 @@ namespace Content.Client.Options.UI
     [GenerateTypedNameReferences]
     public sealed partial class EscapeMenu : DefaultWindow
     {
+        [Dependency] private readonly IClientConsoleHost _consoleHost = default!;
         [Dependency] private readonly IUriOpener _uriOpener = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IConfigurationManager _cfg = default!;
+        private void OpenDailyRewards()
+        {
+            _consoleHost.ExecuteCommand("dailyrewardmenu");
+        }
         public EscapeMenu()
         {
             RobustXamlLoader.Load(this);
@@ -58,6 +64,7 @@ namespace Content.Client.Options.UI
             Boosty.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://boosty.to/mini-station"));
             Discord.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://discord.gg/mini-station"));
             Telegram.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://t.me/mini_station"));
+            DailyRewardsButton.OnPressed += _ => OpenDailyRewards();
         }
     }
 }
