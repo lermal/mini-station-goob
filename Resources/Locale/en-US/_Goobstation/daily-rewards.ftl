@@ -21,3 +21,5 @@ daily-reward-card-current = Today
 daily-reward-card-future = Soon
 daily-reward-card-token = Reward: {$name}
 daily-reward-card-step = Reward for this day
+daily-reward-card-timer-ready = Ready to claim
+daily-reward-card-timer-wait = In {$time}

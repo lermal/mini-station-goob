@@ -18,6 +18,9 @@ namespace Content.Client._Mini.DailyRewards;
 
 public sealed class DailyRewardWindow : DefaultWindow
 {
+    private const string ClockIconPath = "/Textures/_Mini/Interface/Clock.png";
+    private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
+
     private static readonly Color WindowBackgroundColor = Color.FromHex("#101826");
     private static readonly Color HeroPanelColor = Color.FromHex("#16263f");
     private static readonly Color AccentColor = Color.FromHex("#f2c14e");
@@ -39,12 +42,16 @@ public sealed class DailyRewardWindow : DefaultWindow
     private readonly ProgressBar _activeProgressBar;
     private readonly Button _claimButton;
     private readonly BoxContainer _rewardTrack;
+    private readonly Texture _clockTexture;
+    private readonly Texture _coinTexture;
     private DailyRewardUpdateMessage? _state;
 
     public DailyRewardWindow()
     {
         IoCManager.InjectDependencies(this);
         _resourceCache = IoCManager.Resolve<IResourceCache>();
+        _clockTexture = _resourceCache.GetTexture(ClockIconPath);
+        _coinTexture = _resourceCache.GetTexture(CoinIconPath);
 
         Title = Loc.GetString("daily-reward-window-title");
         MinSize = new Vector2(980, 620);
@@ -190,11 +197,46 @@ public sealed class DailyRewardWindow : DefaultWindow
         for (var i = 0; i < state.Rewards.Count; i++)
         {
             var reward = state.Rewards[i];
-            _rewardTrack.AddChild(CreateRewardCard(reward));
+            _rewardTrack.AddChild(CreateRewardColumn(reward, state));
 
             if (i < state.Rewards.Count - 1)
                 _rewardTrack.AddChild(CreateConnector(reward, state.Rewards[i + 1]));
         }
+    }
+
+    private Control CreateRewardColumn(DailyRewardEntry reward, DailyRewardUpdateMessage state)
+    {
+        var column = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Vertical,
+            SeparationOverride = 8,
+            MinSize = new Vector2(170, 0)
+        };
+
+        column.AddChild(CreateRewardCard(reward));
+
+        if (reward.IsCurrent)
+        {
+            var timerLabel = new Label
+            {
+                Text = state.CanClaim
+                    ? Loc.GetString("daily-reward-card-timer-ready")
+                    : Loc.GetString("daily-reward-card-timer-wait", ("time", Format(state.TimeUntilNextClaim))),
+                Modulate = Color.FromHex("#dce8ff"),
+                HorizontalAlignment = HAlignment.Center
+            };
+
+            column.AddChild(CreateCenteredIconLabelRow(_clockTexture, timerLabel));
+        }
+        else
+        {
+            column.AddChild(new Control
+            {
+                MinSize = new Vector2(0, 22)
+            });
+        }
+
+        return column;
     }
 
     private Control BuildHeroSection(
@@ -285,7 +327,7 @@ public sealed class DailyRewardWindow : DefaultWindow
         {
             Modulate = Color.White
         };
-        left.AddChild(activeProgressLabel);
+        left.AddChild(CreateIconLabelRow(_clockTexture, activeProgressLabel));
 
         activeProgressBar = new ProgressBar
         {
@@ -312,13 +354,13 @@ public sealed class DailyRewardWindow : DefaultWindow
         {
             Modulate = Color.FromHex("#d7e2f4")
         };
-        metaRow.AddChild(cooldownLabel);
+        metaRow.AddChild(CreateIconLabelRow(_clockTexture, cooldownLabel));
 
         expiryLabel = new Label
         {
             Modulate = Color.FromHex("#9fb4d8")
         };
-        metaRow.AddChild(expiryLabel);
+        metaRow.AddChild(CreateIconLabelRow(_clockTexture, expiryLabel));
 
         var right = new PanelContainer
         {
@@ -450,15 +492,15 @@ public sealed class DailyRewardWindow : DefaultWindow
         };
         imagePanel.AddChild(imageBox);
 
-        var texture = TryGetRewardTexture(reward.IconPath);
+        var texture = _coinTexture;
         imageBox.AddChild(new TextureRect
         {
-            Texture = texture ?? _resourceCache.GetTexture("/Textures/Interface/info.svg.192dpi.png"),
+            Texture = texture,
+            MinSize = new Vector2(72, 72),
             Stretch = TextureRect.StretchMode.KeepAspectCentered,
             HorizontalAlignment = HAlignment.Center,
             VerticalAlignment = VAlignment.Center,
-            HorizontalExpand = true,
-            VerticalExpand = true
+            HorizontalExpand = true
         });
 
         box.AddChild(new Label
@@ -491,6 +533,47 @@ public sealed class DailyRewardWindow : DefaultWindow
                 BackgroundColor = color
             }
         };
+    }
+
+    private Control CreateIconLabelRow(Texture texture, Label label)
+    {
+        var row = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 6
+        };
+
+        row.AddChild(new TextureRect
+        {
+            Texture = texture,
+            MinSize = new Vector2(12, 12),
+            Stretch = TextureRect.StretchMode.KeepCentered,
+            VerticalAlignment = VAlignment.Center
+        });
+
+        row.AddChild(label);
+        return row;
+    }
+
+    private Control CreateCenteredIconLabelRow(Texture texture, Label label)
+    {
+        var row = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 6,
+            HorizontalAlignment = HAlignment.Center
+        };
+
+        row.AddChild(new TextureRect
+        {
+            Texture = texture,
+            MinSize = new Vector2(12, 12),
+            Stretch = TextureRect.StretchMode.KeepCentered,
+            VerticalAlignment = VAlignment.Center
+        });
+
+        row.AddChild(label);
+        return row;
     }
 
     private Texture? TryGetRewardTexture(string? iconPath)
