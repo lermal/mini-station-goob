@@ -47,17 +47,21 @@ public sealed class AntagTokenRoleEntry(
     int cost,
     AntagPurchaseMode mode,
     bool purchased,
+    int freeUnlocks,
     bool canAfford,
     bool saturated,
     bool available,
+    string? tagLocKey,
     string? statusLocKey)
 {
     public string RoleId { get; } = roleId;
     public int Cost { get; } = cost;
     public AntagPurchaseMode Mode { get; } = mode;
     public bool Purchased { get; } = purchased;
+    public int FreeUnlocks { get; } = freeUnlocks;
     public bool CanAfford { get; } = canAfford;
     public bool Saturated { get; } = saturated;
     public bool Available { get; } = available;
+    public string? TagLocKey { get; } = tagLocKey;
     public string? StatusLocKey { get; } = statusLocKey;
 }
