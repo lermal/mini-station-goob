@@ -60,15 +60,15 @@ public sealed class DailyRewardStateEvent(DailyRewardUpdateMessage state) : Enti
 [Serializable, NetSerializable]
 public sealed class DailyRewardEntry(
     int day,
-    string? tokenName,
-    bool grantsToken,
+    string? rewardName,
+    bool hasReward,
     string iconPath,
     bool isClaimed,
     bool isCurrent)
 {
     public int Day { get; } = day;
-    public string? TokenName { get; } = tokenName;
-    public bool GrantsToken { get; } = grantsToken;
+    public string? RewardName { get; } = rewardName;
+    public bool HasReward { get; } = hasReward;
     public string IconPath { get; } = iconPath;
     public bool IsClaimed { get; } = isClaimed;
     public bool IsCurrent { get; } = isCurrent;

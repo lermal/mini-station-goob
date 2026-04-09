@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Casha
 using System;
+using System.Numerics;
 using Content.Client.Resources;
 using Content.Shared._Mini.DailyRewards;
 using Robust.Client.Graphics;
@@ -10,7 +11,6 @@ using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.IoC;
 using Robust.Shared.Localization;
 using Robust.Shared.Maths;
-using System.Numerics;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 
@@ -21,6 +21,16 @@ public sealed class DailyRewardWindow : DefaultWindow
     private const string ClockIconPath = "/Textures/_Mini/Interface/Clock.png";
     private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
 
+    private static readonly Color WindowBackgroundColor = Color.FromHex("#0a0e17");
+    private static readonly Color HeroPanelColor = Color.FromHex("#1a233a").WithAlpha(0.4f);
+    private static readonly Color AccentColor = Color.FromHex("#898076");
+    private static readonly Color ClaimReadyColor = Color.FromHex("#2a9d8f");
+    private static readonly Color ClaimedCardColor = Color.FromHex("#1b2a3a").WithAlpha(0.35f);
+    private static readonly Color CurrentCardColor = Color.FromHex("#2a3d5c").WithAlpha(0.45f);
+    private static readonly Color FutureCardColor = Color.FromHex("#151e2c").WithAlpha(0.25f);
+    private static readonly Color ClaimedBorderColor = Color.FromHex("#2a9d8f").WithAlpha(0.15f);
+    private static readonly Color CurrentBorderColor = Color.FromHex("#e9c46a").WithAlpha(0.2f);
+    private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithAlpha(0.1f);
 // Глубокий фон с синеватым отливом (как тонированное стекло)
 private static readonly Color WindowBackgroundColor = Color.FromHex("#0a0e17");
 
@@ -344,6 +354,7 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
         left.AddChild(statusRow);
 
         cooldownLabel = new Label { Modulate = Color.FromHex("#d7e2f4") };
+        expiryLabel = new Label { Modulate = Color.FromHex("#9fb4d8") };
         // statusRow.AddChild((cooldownLabel));
 
         expiryLabel = new Label { Modulate = Color.FromHex("#9fb4d8") };
@@ -426,6 +437,7 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
             SeparationOverride = 6,
             VerticalAlignment = VAlignment.Center,
             HorizontalAlignment = HAlignment.Center,
+            VerticalExpand = true
             VerticalExpand = true  // Добавлено
         };
         panel.AddChild(box);
@@ -444,6 +456,23 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
             Modulate = Color.White
         });
 
+        if (reward.HasReward)
+        {
+            var texture = TryGetRewardTexture(reward.IconPath) ?? _coinTexture;
+            box.AddChild(new TextureRect
+            {
+                Texture = texture,
+                MinSize = new Vector2(56, 56),
+                Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                HorizontalAlignment = HAlignment.Center
+            });
+
+            box.AddChild(new Label
+            {
+                Text = Loc.GetString("daily-reward-card-token", ("name", reward.RewardName ?? "-")),
+                Modulate = AccentColor,
+                HorizontalAlignment = HAlignment.Center
+            });
         // Убран spacer
 
         if (reward.GrantsToken)
@@ -545,6 +574,24 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
 
         row.AddChild(label);
         return row;
+    }
+
+    private Texture? TryGetRewardTexture(string? iconPath)
+    {
+        if (string.IsNullOrWhiteSpace(iconPath) || !iconPath.StartsWith('/'))
+            return null;
+
+        try
+        {
+            var path = new ResPath(iconPath);
+            return _resourceCache.TryGetResource<TextureResource>(path, out var textureResource)
+                ? textureResource.Texture
+                : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static DailyRewardCardState GetCardState(DailyRewardEntry reward)

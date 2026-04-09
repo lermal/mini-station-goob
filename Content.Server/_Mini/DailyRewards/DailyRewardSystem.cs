@@ -9,16 +9,12 @@ using Content.Shared._Mini.AntagTokens;
 using Content.Shared._Mini.DailyRewards;
 using Content.Server.Database;
 using Content.Server.GameTicking;
-using Content.Server.Players.PlayTimeTracking;
 using Content.Server.Popups;
 using Content.Shared.Database;
 using Content.Shared.GameTicking;
 using Content.Shared.Players;
-using Content.Shared.Players.PlayTimeTracking;
-using Robust.Server.GameObjects;
-using Robust.Server.Player;
-using Robust.Shared.Enums;
 using Robust.Shared.Network;
+using Robust.Server.Player;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -34,6 +30,7 @@ public sealed class DailyRewardSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly AntagTokenSystem _antagTokens = default!;
+
     private readonly Dictionary<NetUserId, SessionRewardState> _states = new();
     private readonly DailyRewardComponent _defaultComponent = new();
 
@@ -237,7 +234,7 @@ public sealed class DailyRewardSystem : EntitySystem
 
         EnsureCurrentDay(state.Progress, DateTime.UtcNow);
 
-        if (state.ActiveSince != null || session.Status != SessionStatus.InGame || session.AttachedEntity == null)
+        if (state.ActiveSince != null || session.AttachedEntity == null)
             return;
 
         state.ActiveSince = _timing.CurTime;
@@ -307,13 +304,24 @@ public sealed class DailyRewardSystem : EntitySystem
                 if (!string.IsNullOrWhiteSpace(note))
                     message = $"{message} {note}";
 
+                _popup.PopupEntity(message, uid, uid);
+            }
+        }
+
+        if (reward.RoleUnlockRoleId != null)
+        {
+            _antagTokens.AddRoleCredit(session.UserId, reward.RoleUnlockRoleId, 1, out var totalCredits);
+
+            if (session.AttachedEntity is { Valid: true } uid)
+            {
                 _popup.PopupEntity(
-                    message,
+                    $"Получен бесплатный жетон на роль \"{reward.DisplayName}\". Доступно: {totalCredits}.",
                     uid,
                     uid);
             }
         }
-        else
+
+        if (reward.TokenAmount <= 0 && reward.RoleUnlockRoleId == null)
         {
             if (session.AttachedEntity is { Valid: true } uid)
                 _popup.PopupEntity($"Ежедневная награда за день {nextDay} получена.", uid, uid);
@@ -379,7 +387,7 @@ public sealed class DailyRewardSystem : EntitySystem
             rewards.Add(new DailyRewardEntry(
                 day,
                 reward.DisplayName,
-                reward.TokenAmount > 0,
+                reward.TokenAmount > 0 || reward.RoleUnlockRoleId != null,
                 reward.IconPath,
                 day <= visibleStreak,
                 day == nextDay));
@@ -398,13 +406,22 @@ public sealed class DailyRewardSystem : EntitySystem
             rewards)), session);
     }
 
-    private static RewardDefinition GetRewardPreview(DailyRewardComponent component, int day)
+    private RewardDefinition GetRewardPreview(DailyRewardComponent component, int day)
     {
         var tokenAmount = GetRewardAmount(component, day);
+        component.BonusRoleUnlockRewards.TryGetValue(day, out var roleUnlockRoleId);
+
+        if (roleUnlockRoleId != null &&
+            AntagTokenCatalog.TryGetRole(roleUnlockRoleId, out var role))
+        {
+            return new RewardDefinition(Loc.GetString(role.NameLocKey), tokenAmount, role.IconPath, roleUnlockRoleId);
+        }
+
         var displayName = tokenAmount > 0
             ? $"+{tokenAmount}"
             : "Прогресс стрика";
 
+        return new RewardDefinition(displayName, tokenAmount, StreakRewardIconPath, null);
         // Используем путь к иконке монетки
         var iconPath = tokenAmount > 0
             ? "/Textures/_Mini/Interface/Coin.png"
@@ -520,5 +537,5 @@ public sealed class DailyRewardSystem : EntitySystem
         public DateTime? ActiveStartedAtUtc { get; set; }
     }
 
-    private readonly record struct RewardDefinition(string? DisplayName, int TokenAmount, string IconPath);
+    private readonly record struct RewardDefinition(string? DisplayName, int TokenAmount, string IconPath, string? RoleUnlockRoleId);
 }
