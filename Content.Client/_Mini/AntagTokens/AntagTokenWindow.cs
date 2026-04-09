@@ -12,6 +12,7 @@ using Robust.Shared.IoC;
 using Robust.Shared.Localization;
 using Robust.Shared.Maths;
 using Robust.Shared.Utility;
+using static Robust.Client.UserInterface.Controls.BoxContainer;
 
 namespace Content.Client._Mini.AntagTokens;
 
@@ -47,8 +48,8 @@ public sealed class AntagTokenWindow : DefaultWindow
         _coinTexture = _resourceCache.GetTexture(CoinIconPath);
 
         Title = Loc.GetString("antag-token-window-title");
-        MinSize = new Vector2(1000, 650);
-        SetSize = new Vector2(1000, 650);
+        MinSize = new Vector2(1050, 700);
+        SetSize = new Vector2(1050, 700);
 
         var root = new BoxContainer
         {
@@ -77,6 +78,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         var gridPanel = new PanelContainer
         {
             VerticalExpand = true,
+            HorizontalExpand = true,
             PanelOverride = new StyleBoxFlat
             {
                 BackgroundColor = Color.FromHex("#12161c"),
@@ -101,9 +103,8 @@ public sealed class AntagTokenWindow : DefaultWindow
         _roleGrid = new GridContainer
         {
             Columns = GridColumns,
-            HSeparationOverride = 12,
-            VSeparationOverride = 12,
-            HorizontalAlignment = HAlignment.Stretch
+            HSeparationOverride = 10,
+            VSeparationOverride = 10
         };
         scroll.AddChild(_roleGrid);
 
@@ -141,9 +142,9 @@ public sealed class AntagTokenWindow : DefaultWindow
                 BorderColor = AccentColor.WithAlpha(0.2f),
                 BorderThickness = new Thickness(0, 0, 0, 1),
                 ContentMarginLeftOverride = 16,
-                ContentMarginTopOverride = 16,
+                ContentMarginTopOverride = 12,
                 ContentMarginRightOverride = 16,
-                ContentMarginBottomOverride = 16
+                ContentMarginBottomOverride = 12
             }
         };
 
@@ -154,11 +155,10 @@ public sealed class AntagTokenWindow : DefaultWindow
         };
         panel.AddChild(content);
 
-        // Левая часть с информацией
         var left = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 8,
+            SeparationOverride = 6,
             HorizontalExpand = true
         };
         content.AddChild(left);
@@ -176,69 +176,43 @@ public sealed class AntagTokenWindow : DefaultWindow
             Modulate = Color.FromHex("#8b949e")
         });
 
-        // Информация в строку
         var infoRow = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 24
+            SeparationOverride = 20
         };
         left.AddChild(infoRow);
 
-        // Баланс
         var balanceBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6
+            SeparationOverride = 4
         };
-        balanceBox.AddChild(new Label
-        {
-            Text = Loc.GetString("antag-token-window-balance-label"),
-            Modulate = Color.FromHex("#8b949e")
-        });
-        _balanceLabel = new Label
-        {
-            Modulate = AccentColor
-        };
+        balanceBox.AddChild(new Label { Text = "Баланс:", Modulate = Color.FromHex("#8b949e") });
+        _balanceLabel = new Label { Modulate = AccentColor };
         balanceBox.AddChild(_balanceLabel);
         infoRow.AddChild(balanceBox);
 
-        // Лимит
         var capBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6
+            SeparationOverride = 4
         };
-        capBox.AddChild(new Label
-        {
-            Text = Loc.GetString("antag-token-window-cap-label"),
-            Modulate = Color.FromHex("#8b949e")
-        });
-        _capLabel = new Label
-        {
-            Modulate = Color.FromHex("#c9d1d9")
-        };
+        capBox.AddChild(new Label { Text = "Лимит:", Modulate = Color.FromHex("#8b949e") });
+        _capLabel = new Label { Modulate = Color.FromHex("#c9d1d9") };
         capBox.AddChild(_capLabel);
         infoRow.AddChild(capBox);
 
-        // Депозит
         var depositBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6
+            SeparationOverride = 4
         };
-        depositBox.AddChild(new Label
-        {
-            Text = Loc.GetString("antag-token-window-deposit-label"),
-            Modulate = Color.FromHex("#8b949e")
-        });
-        _depositLabel = new Label
-        {
-            Modulate = Color.FromHex("#c9d1d9")
-        };
+        depositBox.AddChild(new Label { Text = "В очереди:", Modulate = Color.FromHex("#8b949e") });
+        _depositLabel = new Label { Modulate = Color.FromHex("#c9d1d9") };
         depositBox.AddChild(_depositLabel);
         infoRow.AddChild(depositBox);
 
-        // Правая часть с кнопкой
         var right = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
@@ -249,7 +223,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         _clearButton = new Button
         {
             Text = Loc.GetString("antag-token-window-clear"),
-            MinSize = new Vector2(40, 36),
+            MinSize = new Vector2(140, 32),
             Modulate = Color.White
         };
         right.AddChild(_clearButton);
@@ -261,42 +235,36 @@ public sealed class AntagTokenWindow : DefaultWindow
     {
         AntagTokenCatalog.TryGetRole(entry.RoleId, out var roleDef);
 
-        var isPurchased = entry.Purchased;
-        var bgColor = isPurchased ? PurchasedCardColor : CardBackgroundColor;
-        var borderColor = isPurchased ? PurchasedBorderColor : CardBorderColor;
-
         var panel = new PanelContainer
         {
-            MinSize = new Vector2(300, 380),
-            MaxSize = new Vector2(300, 1000),
-            VerticalExpand = true,
+            MinSize = new Vector2(310, 0),
+            MaxSize = new Vector2(310, 1000),
             PanelOverride = new StyleBoxFlat
             {
-                BackgroundColor = bgColor,
-                BorderColor = borderColor,
+                BackgroundColor = entry.Purchased ? PurchasedCardColor : CardBackgroundColor,
+                BorderColor = entry.Purchased ? PurchasedBorderColor : CardBorderColor,
                 BorderThickness = new Thickness(1),
-                ContentMarginLeftOverride = 16,
-                ContentMarginTopOverride = 16,
-                ContentMarginRightOverride = 16,
-                ContentMarginBottomOverride = 16
+                ContentMarginLeftOverride = 12,
+                ContentMarginTopOverride = 12,
+                ContentMarginRightOverride = 12,
+                ContentMarginBottomOverride = 12
             }
         };
 
         var root = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 12,
+            SeparationOverride = 6,
             VerticalExpand = true
         };
         panel.AddChild(root);
 
-        // Изображение роли
         var imageBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
             HorizontalAlignment = HAlignment.Center,
             VerticalAlignment = VAlignment.Center,
-            MinSize = new Vector2(0, 140)
+            MinSize = new Vector2(0, 100)
         };
         root.AddChild(imageBox);
 
@@ -307,31 +275,25 @@ public sealed class AntagTokenWindow : DefaultWindow
             imageBox.AddChild(new TextureRect
             {
                 Texture = textureResource.Texture,
-                MinSize = new Vector2(96, 96),
+                MinSize = new Vector2(80, 80),
+                MaxSize = new Vector2(80, 80),
                 Stretch = TextureRect.StretchMode.KeepAspectCentered
             });
         }
         else
         {
-            imageBox.AddChild(new Label
-            {
-                Text = "?",
-                Modulate = Color.White
-            });
+            imageBox.AddChild(new Label { Text = "?", Modulate = Color.White });
         }
 
-        // Название роли
         root.AddChild(new Label
         {
             Text = roleDef == null ? entry.RoleId : Loc.GetString(roleDef.NameLocKey),
             StyleClasses = { "LabelHeading" },
             Modulate = Color.White,
             HorizontalAlignment = HAlignment.Center,
-            MaxWidth = 248,
-            ClipText = true
+            MaxWidth = 286
         });
 
-        // Тег (очередь/призрак)
         if (entry.TagLocKey != null)
         {
             root.AddChild(new Label
@@ -339,35 +301,21 @@ public sealed class AntagTokenWindow : DefaultWindow
                 Text = Loc.GetString(entry.TagLocKey),
                 Modulate = AccentColor,
                 HorizontalAlignment = HAlignment.Center,
-                MaxWidth = 248,
-                ClipText = true
+                MaxWidth = 286
             });
         }
 
-        // Описание
-        if (roleDef != null)
+        if (entry.StatusLocKey != null)
         {
             root.AddChild(new Label
             {
-                Text = Loc.GetString(roleDef.DescriptionLocKey),
-                Modulate = Color.FromHex("#8b949e"),
+                Text = Loc.GetString(entry.StatusLocKey),
+                Modulate = entry.Purchased ? PurchasedBorderColor : Color.FromHex("#f85149"),
                 HorizontalAlignment = HAlignment.Center,
-                MaxWidth = 248,
-                ClipText = true
+                MaxWidth = 286
             });
         }
 
-        // Статус
-        root.AddChild(new Label
-        {
-            Text = Loc.GetString(entry.StatusLocKey),
-            Modulate = entry.Purchased ? PurchasedBorderColor : Color.FromHex("#f85149"),
-            HorizontalAlignment = HAlignment.Center,
-            MaxWidth = 248,
-            ClipText = true
-        });
-
-        // Бесплатные анлоки
         if (entry.FreeUnlocks > 0)
         {
             root.AddChild(new Label
@@ -375,21 +323,16 @@ public sealed class AntagTokenWindow : DefaultWindow
                 Text = Loc.GetString("antag-token-window-free-unlocks", ("amount", entry.FreeUnlocks)),
                 Modulate = AccentColor,
                 HorizontalAlignment = HAlignment.Center,
-                MaxWidth = 248,
-                ClipText = true
+                MaxWidth = 286
             });
         }
 
-        root.AddChild(new Control
-        {
-            VerticalExpand = true
-        });
+        root.AddChild(new Control { VerticalExpand = true, MinSize = new Vector2(0, 4) });
 
-        // Кнопка покупки
         var buyButton = new Button
         {
-            MinSize = new Vector2(0, 36),
-            HorizontalExpand = true,
+            MinSize = new Vector2(286, 32),
+            MaxSize = new Vector2(286, 32),
             Disabled = IsButtonDisabled(entry),
             ToolTip = GetButtonTooltip(entry)
         };
@@ -400,7 +343,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         var buttonContent = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6,
+            SeparationOverride = 4,
             HorizontalAlignment = HAlignment.Center,
             VerticalAlignment = VAlignment.Center
         };
@@ -437,8 +380,9 @@ public sealed class AntagTokenWindow : DefaultWindow
             buttonContent.AddChild(new TextureRect
             {
                 Texture = _coinTexture,
-                MinSize = new Vector2(18, 18),
-                TextureScale = new Vector2(0.4f, 0.4f),
+                MinSize = new Vector2(14, 14),
+                MaxSize = new Vector2(14, 14),
+                TextureScale = new Vector2(0.35f, 0.35f),
                 Stretch = TextureRect.StretchMode.KeepCentered,
                 VerticalAlignment = VAlignment.Center
             });
@@ -461,7 +405,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         return entry.Mode == AntagPurchaseMode.LobbyDeposit && entry.Saturated;
     }
 
-    private static string GetButtonTooltip(AntagTokenRoleEntry entry)
+    private static string? GetButtonTooltip(AntagTokenRoleEntry entry)
     {
         if (entry.StatusLocKey != null)
             return Loc.GetString(entry.StatusLocKey);
@@ -473,7 +417,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         {
             AntagPurchaseMode.GhostRule => Loc.GetString("antag-token-window-tooltip-ghost"),
             AntagPurchaseMode.LobbyDeposit => Loc.GetString("antag-token-window-tooltip-deposit"),
-            _ => Loc.GetString("antag-token-window-button-unavailable")
+            _ => null
         };
     }
 }

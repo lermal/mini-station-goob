@@ -24,14 +24,14 @@ antag-token-window-tooltip-ghost = Потратить монеты и зарез
 antag-token-window-tooltip-deposit = Потратить монеты и поставить роль в очередь на следующий подходящий раунд.
 antag-token-window-tooltip-free = Использовать бесплатный жетон на конкретную роль вместо монет.
 
-antag-store-status-deposited = Вы уже в очереди на эту роль.
-antag-store-status-not-enough = Монет не хватает.
-antag-store-status-saturated = Очередь на эту роль занята.
-antag-store-status-has-other-deposit = Вы уже стоите в очереди на другую роль.
-antag-store-status-unavailable = Роль временно недоступна.
-antag-store-status-min-players = На сервере сейчас недостаточно игроков для этой роли.
-antag-store-status-round-only = Эту роль можно купить только во время активного раунда.
-antag-store-status-lobby-only = Эту роль можно поставить в очередь только из лобби перед стартом.
+antag-store-status-deposited = Роль выбрана
+antag-store-status-not-enough = Недостаточно
+antag-store-status-saturated = Занято другим игроком
+antag-store-status-has-other-deposit = Выбрана другая роль
+antag-store-status-unavailable = Роль временно недоступна
+antag-store-status-min-players = Недостаточно игроков
+antag-store-status-round-only = Недоступно в лобби
+antag-store-status-lobby-only = Недоступно в раунде
 antag-store-unavailable-yao = Для этой роли не задан настоящий прототип в этой сборке.
 
 antag-store-role-thief-name = Вор

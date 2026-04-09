@@ -31,27 +31,6 @@ public sealed class DailyRewardWindow : DefaultWindow
     private static readonly Color ClaimedBorderColor = Color.FromHex("#2a9d8f").WithAlpha(0.15f);
     private static readonly Color CurrentBorderColor = Color.FromHex("#e9c46a").WithAlpha(0.2f);
     private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithAlpha(0.1f);
-// Глубокий фон с синеватым отливом (как тонированное стекло)
-private static readonly Color WindowBackgroundColor = Color.FromHex("#0a0e17");
-
-// Панель героя — эффект молочного стекла с лёгким голубым оттенком
-private static readonly Color HeroPanelColor = Color.FromHex("#1a233a").WithAlpha(0.4f);
-
-// Акцент — жидкое золото/янтарь (как расплавленное стекло)
-private static readonly Color AccentColor = Color.FromHex("#898076");
-
-// Кнопка готова — жидкий изумруд
-private static readonly Color ClaimReadyColor = Color.FromHex("#2a9d8f");
-
-// Карточки — эффект layered glass (наслоение стекла)
-private static readonly Color ClaimedCardColor = Color.FromHex("#1b2a3a").WithAlpha(0.35f);
-private static readonly Color CurrentCardColor = Color.FromHex("#2a3d5c").WithAlpha(0.45f);
-private static readonly Color FutureCardColor = Color.FromHex("#151e2c").WithAlpha(0.25f);
-
-// Рамки — тонкое свечение по краям (как преломление света в стекле)
-private static readonly Color ClaimedBorderColor = Color.FromHex("#2a9d8f").WithAlpha(0.15f);
-private static readonly Color CurrentBorderColor = Color.FromHex("#e9c46a").WithAlpha(0.2f);
-private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithAlpha(0.1f);
 
     public event Action? OnClaimPressed;
 
@@ -186,7 +165,7 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
 
         var progressRatio = state.RequiredActiveTime <= TimeSpan.Zero
             ? 1f
-            : Math.Clamp((float)(state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
+            : Math.Clamp((float) (state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
 
         _activeProgressBar.MinValue = 0;
         _activeProgressBar.MaxValue = 100;
@@ -279,7 +258,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
         };
         panel.AddChild(content);
 
-        // Левая часть
         var left = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
@@ -301,7 +279,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
             Modulate = Color.FromHex("#c5d3ed")
         });
 
-        // Панель стрика
         var streakPanel = new PanelContainer
         {
             PanelOverride = new StyleBoxFlat
@@ -333,7 +310,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
         streakValueLabel = new Label { Modulate = AccentColor };
         streakBox.AddChild(streakValueLabel);
 
-        // Активное время
         activeProgressLabel = new Label { Modulate = Color.White };
         left.AddChild(CreateIconLabelRow(_clockTexture, activeProgressLabel));
 
@@ -345,7 +321,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
         };
         left.AddChild(activeProgressBar);
 
-        // Статусная строка
         var statusRow = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
@@ -355,12 +330,7 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
 
         cooldownLabel = new Label { Modulate = Color.FromHex("#d7e2f4") };
         expiryLabel = new Label { Modulate = Color.FromHex("#9fb4d8") };
-        // statusRow.AddChild((cooldownLabel));
 
-        expiryLabel = new Label { Modulate = Color.FromHex("#9fb4d8") };
-        // statusRow.AddChild((expiryLabel));
-
-        // Правая часть - кнопка
         var right = new PanelContainer
         {
             MinSize = new Vector2(200, 0),
@@ -438,7 +408,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
             VerticalAlignment = VAlignment.Center,
             HorizontalAlignment = HAlignment.Center,
             VerticalExpand = true
-            VerticalExpand = true  // Добавлено
         };
         panel.AddChild(box);
 
@@ -473,35 +442,6 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
                 Modulate = AccentColor,
                 HorizontalAlignment = HAlignment.Center
             });
-        // Убран spacer
-
-        if (reward.GrantsToken)
-        {
-            var tokenRow = new BoxContainer
-            {
-                Orientation = LayoutOrientation.Horizontal,
-                SeparationOverride = 4,
-                HorizontalAlignment = HAlignment.Center
-            };
-
-            tokenRow.AddChild(new Label
-            {
-                Text = reward.TokenName ?? "1",
-                Modulate = AccentColor,
-                StyleClasses = { "LabelHeading" },
-                VerticalAlignment = VAlignment.Center
-            });
-
-            tokenRow.AddChild(new TextureRect
-            {
-                Texture = _coinTexture,
-                MinSize = new Vector2(14, 14),
-                TextureScale = new Vector2(0.4f, 0.4f),
-                Stretch = TextureRect.StretchMode.KeepCentered,
-                VerticalAlignment = VAlignment.Center
-            });
-
-            box.AddChild(tokenRow);
         }
         else
         {
@@ -515,7 +455,7 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
 
         return panel;
     }
-    }
+
     private Control CreateConnector(DailyRewardEntry left, DailyRewardEntry right)
     {
         var claimedAhead = left.IsClaimed && right.IsClaimed;
@@ -604,21 +544,12 @@ private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithA
         return DailyRewardCardState.Future;
     }
 
-    // private static string GetStatusLocKey(DailyRewardCardState state)
-    // {
-    //     return state switch
-    //     {
-    //         DailyRewardCardState.Claimed => "daily-reward-card-claimed",
-    //         DailyRewardCardState.Current => "daily-reward-card-current",
-    //         _ => "daily-reward-card-future"
-    //     };
-    // }
-
     private static string Format(TimeSpan span)
     {
         if (span <= TimeSpan.Zero)
             return "00:00:00";
-        var totalHours = (int)span.TotalHours;
+
+        var totalHours = (int) span.TotalHours;
         return $"{totalHours:00}:{span.Minutes:00}:{span.Seconds:00}";
     }
 
