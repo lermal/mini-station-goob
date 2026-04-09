@@ -418,10 +418,16 @@ public sealed class DailyRewardSystem : EntitySystem
         }
 
         var displayName = tokenAmount > 0
-            ? $"+{tokenAmount} ток."
+            ? $"+{tokenAmount}"
             : "Прогресс стрика";
 
         return new RewardDefinition(displayName, tokenAmount, StreakRewardIconPath, null);
+        // Используем путь к иконке монетки
+        var iconPath = tokenAmount > 0
+            ? "/Textures/_Mini/Interface/Coin.png"
+            : StreakRewardIconPath;
+
+        return new RewardDefinition(displayName, tokenAmount, iconPath);
     }
 
     private static int GetRewardAmount(DailyRewardComponent component, int day)

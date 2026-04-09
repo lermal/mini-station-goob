@@ -6,7 +6,7 @@ antag-token-window-clear = Выйти из очереди
 antag-token-window-balance = Монет на счету: {$amount}
 antag-token-window-cap = За месяц получено: {$earned} / {$cap}
 antag-token-window-cap-free = За месяц получено: {$earned}
-antag-token-window-deposit = В очереди роль: {$role}
+antag-token-window-deposit = {$role}
 antag-token-window-no-deposit = Вы нигде не стоите.
 antag-token-window-role-title = {$name} — {$cost} монет
 antag-token-window-mode-ghost = Формат: роль-призрак. Вызов события. Роль достанется только вам.
@@ -54,6 +54,29 @@ antag-store-role-headrev-name = Глава революции
 antag-store-role-headrev-description = Очередь на главу революции.
 antag-store-role-cosmic-cult-name = Космический культист
 antag-store-role-cosmic-cult-description = Очередь на космического культиста.
+antag-store-role-ninja-description = Вызов события ниндзя. Роль-призрак достанется только вам.
+
+antag-store-role-dragon-name = Дракон
+antag-store-role-dragon-description = Вызов события дракона. Роль-призрак достанется только вам.
+
+antag-store-role-abductor-name = Абдуктор
+antag-store-role-abductor-description = Вызов события абдуктора. Одиночная роль для похищений.
+
+antag-store-role-initial-infected-name = Зомби
+antag-store-role-initial-infected-description = Очередь на нулевого заражённого. Выбирается заранее в лобби.
+
+antag-store-role-revenant-name = Ревенант
+antag-store-role-revenant-description = Вызов события ревенанта. Роль-призрак достанется только вам.
+
+antag-store-role-yao-name = Оперативник
+antag-store-role-yao-description = Вызов события яо. Формат одинокого оперативника. Роль только ваша.
+
+antag-store-role-headrev-name = Глава революции
+antag-store-role-headrev-description = Очередь на главу восстания. Выбирается заранее в лобби.
+
+antag-store-role-cosmic-cult-name = Культист
+antag-store-role-cosmic-cult-description = Очередь на космического культиста. Выбирается заранее в лобби.
+
 antag-store-role-devil-name = Дьявол
 antag-store-role-devil-description = Очередь на дьявола.
 antag-store-role-blob-name = Блоб
@@ -72,3 +95,6 @@ antag-store-role-shadowling-name = Шедоулинг
 antag-store-role-shadowling-description = Очередь на шедоулинга.
 antag-store-role-xenomorph-name = Ксеноморф
 antag-store-role-xenomorph-description = Очередь на раундстартовое заражение ксеноморфами.
+antag-store-role-shadowling-description = Очередь на шедоулинга. Выбирается заранее в лобби.
+
+antag-token-window-roles-title = Антагонисты
