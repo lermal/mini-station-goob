@@ -21,16 +21,27 @@ public sealed class DailyRewardWindow : DefaultWindow
     private const string ClockIconPath = "/Textures/_Mini/Interface/Clock.png";
     private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
 
-    private static readonly Color WindowBackgroundColor = Color.FromHex("#101826");
-    private static readonly Color HeroPanelColor = Color.FromHex("#16263f");
-    private static readonly Color AccentColor = Color.FromHex("#f2c14e");
-    private static readonly Color ClaimReadyColor = Color.FromHex("#49c27a");
-    private static readonly Color ClaimedCardColor = Color.FromHex("#1c5a46");
-    private static readonly Color CurrentCardColor = Color.FromHex("#69511a");
-    private static readonly Color FutureCardColor = Color.FromHex("#202b3d");
-    private static readonly Color ClaimedBorderColor = Color.FromHex("#7de2b4");
-    private static readonly Color CurrentBorderColor = Color.FromHex("#ffd978");
-    private static readonly Color FutureBorderColor = Color.FromHex("#5d6d8a");
+// Глубокий фон с синеватым отливом (как тонированное стекло)
+private static readonly Color WindowBackgroundColor = Color.FromHex("#0a0e17");
+
+// Панель героя — эффект молочного стекла с лёгким голубым оттенком
+private static readonly Color HeroPanelColor = Color.FromHex("#1a233a").WithAlpha(0.4f);
+
+// Акцент — жидкое золото/янтарь (как расплавленное стекло)
+private static readonly Color AccentColor = Color.FromHex("#898076");
+
+// Кнопка готова — жидкий изумруд
+private static readonly Color ClaimReadyColor = Color.FromHex("#2a9d8f");
+
+// Карточки — эффект layered glass (наслоение стекла)
+private static readonly Color ClaimedCardColor = Color.FromHex("#1b2a3a").WithAlpha(0.35f);
+private static readonly Color CurrentCardColor = Color.FromHex("#2a3d5c").WithAlpha(0.45f);
+private static readonly Color FutureCardColor = Color.FromHex("#151e2c").WithAlpha(0.25f);
+
+// Рамки — тонкое свечение по краям (как преломление света в стекле)
+private static readonly Color ClaimedBorderColor = Color.FromHex("#2a9d8f").WithAlpha(0.15f);
+private static readonly Color CurrentBorderColor = Color.FromHex("#e9c46a").WithAlpha(0.2f);
+private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithAlpha(0.1f);
 
     public event Action? OnClaimPressed;
 
@@ -54,43 +65,36 @@ public sealed class DailyRewardWindow : DefaultWindow
         _coinTexture = _resourceCache.GetTexture(CoinIconPath);
 
         Title = Loc.GetString("daily-reward-window-title");
-        MinSize = new Vector2(980, 620);
+        MinSize = new Vector2(900, 600);
+        SetSize = new Vector2(900, 600);
 
         var root = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
             SeparationOverride = 12,
-            Margin = new Thickness(14)
+            Margin = new Thickness(12)
         };
 
         var backdrop = new PanelContainer
         {
-            PanelOverride = new StyleBoxFlat
-            {
-                BackgroundColor = WindowBackgroundColor
-            }
+            PanelOverride = new StyleBoxFlat { BackgroundColor = WindowBackgroundColor }
         };
         Contents.AddChild(backdrop);
         backdrop.AddChild(root);
 
         root.AddChild(BuildHeroSection(out _streakValueLabel, out _activeProgressLabel, out _cooldownLabel, out _expiryLabel, out _activeProgressBar, out _claimButton));
 
-        var roadHeader = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 3
-        };
-        root.AddChild(roadHeader);
-
-        roadHeader.AddChild(new Label
+        root.AddChild(new Label
         {
             Text = Loc.GetString("daily-reward-window-road-title"),
-            StyleClasses = { "LabelHeading" }
+            StyleClasses = { "LabelHeading" },
+            Margin = new Thickness(4, 0, 0, 0)
         });
 
         var rewardsPanel = new PanelContainer
         {
             VerticalExpand = true,
+            HorizontalExpand = true,
             PanelOverride = new StyleBoxFlat
             {
                 BackgroundColor = Color.FromHex("#0f1623"),
@@ -107,14 +111,17 @@ public sealed class DailyRewardWindow : DefaultWindow
         var scroll = new ScrollContainer
         {
             HorizontalExpand = true,
-            VerticalExpand = true
+            VerticalExpand = true,
+            HScrollEnabled = true,
+            VScrollEnabled = false
         };
         rewardsPanel.AddChild(scroll);
 
         _rewardTrack = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 0
+            SeparationOverride = 0,
+            VerticalAlignment = VAlignment.Top
         };
         scroll.AddChild(_rewardTrack);
 
@@ -169,7 +176,7 @@ public sealed class DailyRewardWindow : DefaultWindow
 
         var progressRatio = state.RequiredActiveTime <= TimeSpan.Zero
             ? 1f
-            : Math.Clamp((float) (state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
+            : Math.Clamp((float)(state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
 
         _activeProgressBar.MinValue = 0;
         _activeProgressBar.MaxValue = 100;
@@ -182,7 +189,6 @@ public sealed class DailyRewardWindow : DefaultWindow
                 ("required", Format(state.RequiredActiveTime)));
 
         _cooldownLabel.Text = GetAvailabilityText(state);
-
         _expiryLabel.Text = state.HasLastClaim
             ? Loc.GetString("daily-reward-window-expiry", ("time", Format(state.TimeUntilExpiration)))
             : Loc.GetString("daily-reward-window-expiry-idle");
@@ -191,7 +197,6 @@ public sealed class DailyRewardWindow : DefaultWindow
         _claimButton.Text = Loc.GetString(state.CanClaim
             ? "daily-reward-window-claim-ready"
             : "daily-reward-window-claim-locked");
-        _claimButton.Modulate = state.CanClaim ? Color.White : Color.FromHex("#d5dbe8");
 
         _rewardTrack.RemoveAllChildren();
         for (var i = 0; i < state.Rewards.Count; i++)
@@ -209,8 +214,8 @@ public sealed class DailyRewardWindow : DefaultWindow
         var column = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 8,
-            MinSize = new Vector2(170, 0)
+            SeparationOverride = 6,
+            MinSize = new Vector2(150, 0)
         };
 
         column.AddChild(CreateRewardCard(reward));
@@ -225,15 +230,11 @@ public sealed class DailyRewardWindow : DefaultWindow
                 Modulate = Color.FromHex("#dce8ff"),
                 HorizontalAlignment = HAlignment.Center
             };
-
             column.AddChild(CreateCenteredIconLabelRow(_clockTexture, timerLabel));
         }
         else
         {
-            column.AddChild(new Control
-            {
-                MinSize = new Vector2(0, 22)
-            });
+            column.AddChild(new Control { MinSize = new Vector2(0, 20) });
         }
 
         return column;
@@ -268,6 +269,7 @@ public sealed class DailyRewardWindow : DefaultWindow
         };
         panel.AddChild(content);
 
+        // Левая часть
         var left = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
@@ -289,6 +291,7 @@ public sealed class DailyRewardWindow : DefaultWindow
             Modulate = Color.FromHex("#c5d3ed")
         });
 
+        // Панель стрика
         var streakPanel = new PanelContainer
         {
             PanelOverride = new StyleBoxFlat
@@ -297,74 +300,60 @@ public sealed class DailyRewardWindow : DefaultWindow
                 BorderColor = Color.FromHex("#455674"),
                 BorderThickness = new Thickness(1),
                 ContentMarginLeftOverride = 10,
-                ContentMarginTopOverride = 8,
+                ContentMarginTopOverride = 6,
                 ContentMarginRightOverride = 10,
-                ContentMarginBottomOverride = 8
+                ContentMarginBottomOverride = 6
             }
         };
         left.AddChild(streakPanel);
 
         var streakBox = new BoxContainer
         {
-            Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 2
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 8
         };
         streakPanel.AddChild(streakBox);
 
         streakBox.AddChild(new Label
         {
-            Text = Loc.GetString("daily-reward-window-streak"),
+            Text = Loc.GetString("daily-reward-window-streak") + ":",
             Modulate = Color.FromHex("#9fb4d8")
         });
 
-        streakValueLabel = new Label
-        {
-            Modulate = AccentColor
-        };
+        streakValueLabel = new Label { Modulate = AccentColor };
         streakBox.AddChild(streakValueLabel);
 
-        activeProgressLabel = new Label
-        {
-            Modulate = Color.White
-        };
+        // Активное время
+        activeProgressLabel = new Label { Modulate = Color.White };
         left.AddChild(CreateIconLabelRow(_clockTexture, activeProgressLabel));
 
         activeProgressBar = new ProgressBar
         {
-            MinSize = new Vector2(0, 22),
-            BackgroundStyleBoxOverride = new StyleBoxFlat
-            {
-                BackgroundColor = Color.FromHex("#0c1220")
-            },
-            ForegroundStyleBoxOverride = new StyleBoxFlat
-            {
-                BackgroundColor = ClaimReadyColor
-            }
+            MinSize = new Vector2(0, 18),
+            BackgroundStyleBoxOverride = new StyleBoxFlat { BackgroundColor = Color.FromHex("#0c1220") },
+            ForegroundStyleBoxOverride = new StyleBoxFlat { BackgroundColor = ClaimReadyColor }
         };
         left.AddChild(activeProgressBar);
 
-        var metaRow = new BoxContainer
+        // Статусная строка
+        var statusRow = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 10
+            SeparationOverride = 20
         };
-        left.AddChild(metaRow);
+        left.AddChild(statusRow);
 
-        cooldownLabel = new Label
-        {
-            Modulate = Color.FromHex("#d7e2f4")
-        };
-        metaRow.AddChild(CreateIconLabelRow(_clockTexture, cooldownLabel));
+        cooldownLabel = new Label { Modulate = Color.FromHex("#d7e2f4") };
+        // statusRow.AddChild((cooldownLabel));
 
-        expiryLabel = new Label
-        {
-            Modulate = Color.FromHex("#9fb4d8")
-        };
-        metaRow.AddChild(CreateIconLabelRow(_clockTexture, expiryLabel));
+        expiryLabel = new Label { Modulate = Color.FromHex("#9fb4d8") };
+        // statusRow.AddChild((expiryLabel));
 
+        // Правая часть - кнопка
         var right = new PanelContainer
         {
-            MinSize = new Vector2(240, 0),
+            MinSize = new Vector2(200, 0),
+            VerticalAlignment = VAlignment.Center,
             PanelOverride = new StyleBoxFlat
             {
                 BackgroundColor = Color.FromHex("#0f1725"),
@@ -381,7 +370,9 @@ public sealed class DailyRewardWindow : DefaultWindow
         var rightBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 8
+            SeparationOverride = 8,
+            HorizontalAlignment = HAlignment.Center,
+            VerticalAlignment = VAlignment.Center
         };
         right.AddChild(rightBox);
 
@@ -395,7 +386,7 @@ public sealed class DailyRewardWindow : DefaultWindow
         claimButton = new Button
         {
             Text = Loc.GetString("daily-reward-window-claim"),
-            MinSize = new Vector2(0, 42),
+            MinSize = new Vector2(160, 40),
             Modulate = Color.White
         };
         rightBox.AddChild(claimButton);
@@ -415,30 +406,34 @@ public sealed class DailyRewardWindow : DefaultWindow
 
         var panel = new PanelContainer
         {
-            MinSize = new Vector2(170, 248),
-            Margin = new Thickness(0, 0, 10, 0),
+            MinSize = new Vector2(120, 160),
+            Margin = new Thickness(0, 0, 6, 0),
             PanelOverride = new StyleBoxFlat
             {
                 BackgroundColor = backgroundColor,
                 BorderColor = borderColor,
                 BorderThickness = new Thickness(2),
-                ContentMarginLeftOverride = 10,
-                ContentMarginTopOverride = 10,
-                ContentMarginRightOverride = 10,
-                ContentMarginBottomOverride = 10
+                ContentMarginLeftOverride = 8,
+                ContentMarginTopOverride = 8,
+                ContentMarginRightOverride = 8,
+                ContentMarginBottomOverride = 8
             }
         };
 
         var box = new BoxContainer
         {
             Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 8
+            SeparationOverride = 6,
+            VerticalAlignment = VAlignment.Center,
+            HorizontalAlignment = HAlignment.Center,
+            VerticalExpand = true  // Добавлено
         };
         panel.AddChild(box);
 
         var header = new BoxContainer
         {
-            Orientation = LayoutOrientation.Horizontal
+            Orientation = LayoutOrientation.Horizontal,
+            HorizontalAlignment = HAlignment.Center
         };
         box.AddChild(header);
 
@@ -446,74 +441,51 @@ public sealed class DailyRewardWindow : DefaultWindow
         {
             Text = Loc.GetString("daily-reward-card-day", ("day", reward.Day)),
             StyleClasses = { "LabelHeading" },
-            HorizontalExpand = true,
             Modulate = Color.White
         });
 
-        var badge = new PanelContainer
+        // Убран spacer
+
+        if (reward.GrantsToken)
         {
-            PanelOverride = new StyleBoxFlat
+            var tokenRow = new BoxContainer
             {
-                BackgroundColor = borderColor,
-                ContentMarginLeftOverride = 8,
-                ContentMarginTopOverride = 3,
-                ContentMarginRightOverride = 8,
-                ContentMarginBottomOverride = 3
-            }
-        };
-        header.AddChild(badge);
+                Orientation = LayoutOrientation.Horizontal,
+                SeparationOverride = 4,
+                HorizontalAlignment = HAlignment.Center
+            };
 
-        badge.AddChild(new Label
-        {
-            Text = Loc.GetString(GetStatusLocKey(state)),
-            Modulate = Color.Black
-        });
-
-        var imagePanel = new PanelContainer
-        {
-            MinSize = new Vector2(0, 100),
-            PanelOverride = new StyleBoxFlat
+            tokenRow.AddChild(new Label
             {
-                BackgroundColor = Color.FromHex("#0c1220"),
-                BorderColor = borderColor,
-                BorderThickness = new Thickness(1),
-                ContentMarginLeftOverride = 6,
-                ContentMarginTopOverride = 6,
-                ContentMarginRightOverride = 6,
-                ContentMarginBottomOverride = 6
-            }
-        };
-        box.AddChild(imagePanel);
+                Text = reward.TokenName ?? "1",
+                Modulate = AccentColor,
+                StyleClasses = { "LabelHeading" },
+                VerticalAlignment = VAlignment.Center
+            });
 
-        var imageBox = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            SeparationOverride = 4
-        };
-        imagePanel.AddChild(imageBox);
+            tokenRow.AddChild(new TextureRect
+            {
+                Texture = _coinTexture,
+                MinSize = new Vector2(14, 14),
+                TextureScale = new Vector2(0.4f, 0.4f),
+                Stretch = TextureRect.StretchMode.KeepCentered,
+                VerticalAlignment = VAlignment.Center
+            });
 
-        var texture = _coinTexture;
-        imageBox.AddChild(new TextureRect
+            box.AddChild(tokenRow);
+        }
+        else
         {
-            Texture = texture,
-            MinSize = new Vector2(72, 72),
-            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-            HorizontalAlignment = HAlignment.Center,
-            VerticalAlignment = VAlignment.Center,
-            HorizontalExpand = true
-        });
-
-        box.AddChild(new Label
-        {
-            Text = reward.GrantsToken
-                ? Loc.GetString("daily-reward-card-token", ("name", reward.TokenName ?? "-"))
-                : Loc.GetString("daily-reward-card-step"),
-            Modulate = Color.White
-        });
+            box.AddChild(new Label
+            {
+                Text = Loc.GetString("daily-reward-card-step"),
+                Modulate = Color.White,
+                HorizontalAlignment = HAlignment.Center
+            });
+        }
 
         return panel;
     }
-
     private Control CreateConnector(DailyRewardEntry left, DailyRewardEntry right)
     {
         var claimedAhead = left.IsClaimed && right.IsClaimed;
@@ -526,12 +498,9 @@ public sealed class DailyRewardWindow : DefaultWindow
 
         return new PanelContainer
         {
-            MinSize = new Vector2(44, 6),
-            Margin = new Thickness(0, 121, 10, 0),
-            PanelOverride = new StyleBoxFlat
-            {
-                BackgroundColor = color
-            }
+            MinSize = new Vector2(15, 2),
+            Margin = new Thickness(1, 70, 1, 80),
+            PanelOverride = new StyleBoxFlat { BackgroundColor = color }
         };
     }
 
@@ -540,13 +509,14 @@ public sealed class DailyRewardWindow : DefaultWindow
         var row = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6
+            SeparationOverride = 4
         };
 
         row.AddChild(new TextureRect
         {
             Texture = texture,
-            MinSize = new Vector2(12, 12),
+            MinSize = new Vector2(14, 14),
+            TextureScale = new Vector2(0.4f, 0.4f),
             Stretch = TextureRect.StretchMode.KeepCentered,
             VerticalAlignment = VAlignment.Center
         });
@@ -560,14 +530,15 @@ public sealed class DailyRewardWindow : DefaultWindow
         var row = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,
-            SeparationOverride = 6,
+            SeparationOverride = 4,
             HorizontalAlignment = HAlignment.Center
         };
 
         row.AddChild(new TextureRect
         {
             Texture = texture,
-            MinSize = new Vector2(12, 12),
+            MinSize = new Vector2(14, 14),
+            TextureScale = new Vector2(0.4f, 0.4f),
             Stretch = TextureRect.StretchMode.KeepCentered,
             VerticalAlignment = VAlignment.Center
         });
@@ -576,54 +547,30 @@ public sealed class DailyRewardWindow : DefaultWindow
         return row;
     }
 
-    private Texture? TryGetRewardTexture(string? iconPath)
-    {
-        if (string.IsNullOrWhiteSpace(iconPath))
-            return null;
-
-        if (!iconPath.StartsWith('/'))
-            return null;
-
-        try
-        {
-            var path = new ResPath(iconPath);
-            return _resourceCache.TryGetResource<TextureResource>(path, out var textureResource)
-                ? textureResource.Texture
-                : null;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     private static DailyRewardCardState GetCardState(DailyRewardEntry reward)
     {
         if (reward.IsClaimed)
             return DailyRewardCardState.Claimed;
-
         if (reward.IsCurrent)
             return DailyRewardCardState.Current;
-
         return DailyRewardCardState.Future;
     }
 
-    private static string GetStatusLocKey(DailyRewardCardState state)
-    {
-        return state switch
-        {
-            DailyRewardCardState.Claimed => "daily-reward-card-claimed",
-            DailyRewardCardState.Current => "daily-reward-card-current",
-            _ => "daily-reward-card-future"
-        };
-    }
+    // private static string GetStatusLocKey(DailyRewardCardState state)
+    // {
+    //     return state switch
+    //     {
+    //         DailyRewardCardState.Claimed => "daily-reward-card-claimed",
+    //         DailyRewardCardState.Current => "daily-reward-card-current",
+    //         _ => "daily-reward-card-future"
+    //     };
+    // }
 
     private static string Format(TimeSpan span)
     {
         if (span <= TimeSpan.Zero)
             return "00:00:00";
-
-        var totalHours = (int) span.TotalHours;
+        var totalHours = (int)span.TotalHours;
         return $"{totalHours:00}:{span.Minutes:00}:{span.Seconds:00}";
     }
 
@@ -631,22 +578,13 @@ public sealed class DailyRewardWindow : DefaultWindow
     {
         if (state.TimeUntilNextClaim > TimeSpan.Zero)
             return Loc.GetString("daily-reward-window-cooldown-wait", ("time", Format(state.TimeUntilNextClaim)));
-
         if (state.CurrentActiveTime < state.RequiredActiveTime)
             return Loc.GetString("daily-reward-window-active-needed");
-
         return Loc.GetString("daily-reward-window-cooldown-ready");
     }
 
-    private static TimeSpan MaxZero(TimeSpan span)
-    {
-        return span < TimeSpan.Zero ? TimeSpan.Zero : span;
-    }
-
-    private static TimeSpan Min(TimeSpan left, TimeSpan right)
-    {
-        return left <= right ? left : right;
-    }
+    private static TimeSpan MaxZero(TimeSpan span) => span < TimeSpan.Zero ? TimeSpan.Zero : span;
+    private static TimeSpan Min(TimeSpan left, TimeSpan right) => left <= right ? left : right;
 
     private enum DailyRewardCardState : byte
     {

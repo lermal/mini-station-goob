@@ -20,6 +20,6 @@ daily-reward-card-claimed = Собрано
 daily-reward-card-current = Сегодня
 daily-reward-card-future = Скоро
 daily-reward-card-token = Награда: {$name}
-daily-reward-card-step = Награда этого дня
+daily-reward-card-step = Награда
 daily-reward-card-timer-ready = Готово к получению
 daily-reward-card-timer-wait = Через {$time}
