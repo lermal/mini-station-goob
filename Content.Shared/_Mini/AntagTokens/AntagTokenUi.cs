@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Casha
+//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+
 using System;
 using System.Collections.Generic;
 using Robust.Shared.Serialization;

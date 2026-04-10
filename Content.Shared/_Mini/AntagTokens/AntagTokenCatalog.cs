@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Casha
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
+//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Casha
-//
-// SPDX-License-Identifier: AGPL-3.0-or-later
+//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 
 using System;
 using System.Collections.Generic;
@@ -24,6 +23,7 @@ using Content.Server.Roles.Jobs;
 using Content.Shared._Mini.AntagTokens;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
+using Content.Shared.Ghost;
 using Content.Shared.Roles;
 using Robust.Server.Player;
 using Robust.Shared.Enums;
@@ -48,6 +48,16 @@ public sealed class AntagTokenSystem : EntitySystem
     private readonly Dictionary<EntityUid, ReservedGhostRuleState> _reservedGhostRules = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
     private readonly Dictionary<NetUserId, OnlineRewardState> _onlineRewards = new();
+    private readonly HashSet<NetUserId> _roundGrantedAntags = new();
+    private bool _storeEnabled = true;
+    private static readonly HashSet<string> BlockedRoundstartRolePresets = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Extended",
+        "SecretExtended",
+        "Greenshift",
+        "SecretGreenshift",
+        "TheGhost",
+    };
 
     private int GetDonorBonusByLevel(int sponsorLevel)
     {
@@ -110,7 +120,7 @@ public sealed class AntagTokenSystem : EntitySystem
                 AddBalance(session.UserId, rewardAmount, out var granted, out _);
 
                 if (granted > 0)
-                    ShowPopup(session, $"Награда за онлайн: +{granted} мон.");
+                    ShowPopup(session, $"Online reward: +{granted} tokens.");
             }
         }
     }
@@ -127,7 +137,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (state == null)
             return false;
 
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, userId);
 
         var cap = GetMonthlyCap(userId);
         var available = cap.HasValue ? Math.Max(0, cap.Value - state.MonthlyEarned) : amount;
@@ -141,7 +151,7 @@ public sealed class AntagTokenSystem : EntitySystem
         }
 
         if (grantedAmount < amount)
-            note = "Достигнут месячный лимит монет для вашего уровня поддержки.";
+            note = "Monthly token cap reached for your support tier.";
 
         PersistState(userId, state);
         SendState(userId);
@@ -158,13 +168,13 @@ public sealed class AntagTokenSystem : EntitySystem
         var state = EnsureStateExists(userId);
         if (state == null)
         {
-            error = "Профиль валюты ещё не загружен.";
+            error = "Currency profile has not loaded yet.";
             return false;
         }
 
         if (state.Balance < amount)
         {
-            error = $"Недостаточно монет. Нужно: {amount}.";
+            error = $"Not enough tokens. Required: {amount}.";
             return false;
         }
 
@@ -203,7 +213,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (state == null)
             return false;
 
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, userId);
         state.MonthlyEarned = amount;
         PersistState(userId, state);
         SendState(userId);
@@ -231,6 +241,9 @@ public sealed class AntagTokenSystem : EntitySystem
 
     public bool TryOpenForSession(ICommonSession session)
     {
+        if (!_storeEnabled)
+            return false;
+
         if (EnsureStateExists(session.UserId) == null)
             return false;
 
@@ -244,37 +257,66 @@ public sealed class AntagTokenSystem : EntitySystem
         if (state == null)
             return false;
 
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, userId);
         return true;
+    }
+
+    public void SetStoreEnabled(bool enabled)
+    {
+        _storeEnabled = enabled;
+    }
+
+    public bool IsStoreEnabled()
+    {
+        return _storeEnabled;
     }
 
     public bool TryPurchaseForSession(ICommonSession session, string roleId, out string? error)
     {
         error = null;
 
+        if (!_storeEnabled)
+        {
+            error = "Antagonist token menu is currently disabled by an administrator.";
+            return false;
+        }
+
+        if (HasReachedRoundAntagLimit(session.UserId))
+        {
+            error = "You can only receive one antagonist role per round.";
+            return false;
+        }
+
         if (!AntagTokenCatalog.TryGetRole(roleId, out var role))
         {
-            error = "Такой роли нет в магазине.";
+            error = "This role is not available in the store.";
             return false;
         }
 
         var state = EnsureStateExists(session.UserId);
         if (state == null)
         {
-            error = "Профиль валюты ещё не загружен.";
+            error = "Currency profile has not loaded yet.";
             return false;
         }
 
         if (!TryGetRoleAvailability(role, session.UserId, state.PendingDepositRoleId == role.Id, out var statusLocKey))
         {
-            error = statusLocKey == null ? "Роль сейчас недоступна." : Loc.GetString(statusLocKey);
+            error = statusLocKey == null ? "Role is currently unavailable." : Loc.GetString(statusLocKey);
             return false;
         }
 
         var useRoleCredit = state.RoleCredits.GetValueOrDefault(role.Id) > 0;
         if (!useRoleCredit && state.Balance < role.Cost)
         {
-            error = "Недостаточно монет.";
+            error = "Not enough tokens.";
+            return false;
+        }
+
+        if (role.Mode == AntagPurchaseMode.GhostRule &&
+            !IsSessionEligibleForGhostRolePurchase(session))
+        {
+            error = "Ghost roles can only be purchased while you are an observer ghost.";
             return false;
         }
 
@@ -282,19 +324,19 @@ public sealed class AntagTokenSystem : EntitySystem
         {
             if (state.PendingDepositRoleId == role.Id)
             {
-                error = "Эта роль уже выбрана и ожидает раунда.";
+                error = "This role is already selected and waiting for the round.";
                 return false;
             }
 
             if (state.PendingDepositRoleId != null)
             {
-                error = "Сначала снимите текущий депозит роли.";
+                error = "Remove your current role deposit first.";
                 return false;
             }
 
             if (IsRoleSaturated(role.Id, session.UserId))
             {
-                error = "Лимит заявок на эту роль уже занят.";
+                error = "The deposit limit for this role has already been reached.";
                 return false;
             }
 
@@ -308,7 +350,7 @@ public sealed class AntagTokenSystem : EntitySystem
 
         if (role.GameRuleId == null || !_gameTicker.StartGameRule(role.GameRuleId, out var ruleEntity))
         {
-            error = "Не удалось запустить событие для этой роли.";
+            error = "Failed to start the event for this role.";
             return false;
         }
 
@@ -326,13 +368,19 @@ public sealed class AntagTokenSystem : EntitySystem
         var state = EnsureStateExists(userId);
         if (state == null)
         {
-            error = "Профиль валюты ещё не загружен.";
+            error = "Currency profile has not loaded yet.";
             return false;
         }
 
         if (state.PendingDepositRoleId == null)
         {
-            error = "Сейчас нет активного депозита.";
+            error = "There is no active deposit right now.";
+            return false;
+        }
+
+        if (HasActiveAntagMind(userId))
+        {
+            error = "The deposit has already been consumed because you already have an antagonist role.";
             return false;
         }
 
@@ -408,7 +456,7 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = selectedRoleId;
         }
 
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
         _states[player.UserId] = state;
         _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
     }
@@ -425,35 +473,18 @@ public sealed class AntagTokenSystem : EntitySystem
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
-
-        var sponsorLevel = GetEffectiveSponsorLevel(ev.PlayerSession.UserId);
-        if (sponsorLevel > 0)
-        {
-            var userId = ev.PlayerSession.UserId;
-            var now = DateTime.UtcNow;
-
-            // Получаем дату последнего начисления (если не было — null)
-            if (!_lastDonorBonusClaim.TryGetValue(userId, out var lastClaim) ||
-                (now - lastClaim).TotalDays >= 30)
-            {
-                var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
-                if (bonusAmount > 0)
-                {
-                    AddBalance(userId, bonusAmount, out var granted, out _);
-                    ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
-
-                    // Обновляем время последней выдачи
-                    _lastDonorBonusClaim[userId] = now;
-                }
-            }
-        }
-
         SendState(ev.PlayerSession.UserId);
     }
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
+        foreach (var rule in _reservedGhostRules.Keys)
+        {
+            ClearReservedGhostSpawners(rule);
+        }
+
         _reservedGhostRules.Clear();
+        _roundGrantedAntags.Clear();
         SaveAll();
     }
 
@@ -473,13 +504,13 @@ public sealed class AntagTokenSystem : EntitySystem
                 RefundPendingDeposit(session.UserId, state);
                 PersistState(session.UserId, state);
                 SendState(session.UserId);
-                ShowPopup(session, statusLocKey == null ? "Депозит роли отменён, средства возвращены." : $"{Loc.GetString(statusLocKey)} Средства возвращены.");
+                ShowPopup(session, statusLocKey == null ? "Role deposit cancelled. Funds returned." : $"{Loc.GetString(statusLocKey)} Funds returned.");
                 continue;
             }
 
             if (IsReservedRoleBlockedByCurrentJob(session))
             {
-                ShowPopup(session, "Текущая должность из Command/Security блокирует токен-роль. Резерв сохранён до подходящего раунда.");
+                ShowPopup(session, "Your current Command/Security job blocks this token role. The reservation is kept for a later round.");
                 SendState(session.UserId);
                 continue;
             }
@@ -489,15 +520,16 @@ public sealed class AntagTokenSystem : EntitySystem
                 RefundPendingDeposit(session.UserId, state);
                 PersistState(session.UserId, state);
                 SendState(session.UserId);
-                ShowPopup(session, assignError ?? "Не удалось выдать зарезервированную роль. Средства возвращены.");
+                ShowPopup(session, assignError ?? "Failed to assign the reserved role. Funds returned.");
                 continue;
             }
 
             state.PendingDepositRoleId = null;
             state.PendingDepositUsedRoleCredit = false;
+            MarkRoundAntagGranted(session.UserId);
             PersistState(session.UserId, state);
             SendState(session.UserId);
-            ShowPopup(session, $"Зарезервированная роль \"{GetRoleName(role)}\" выдана.");
+            ShowPopup(session, $"Reserved role \"{GetRoleName(role)}\" assigned.");
         }
     }
 
@@ -525,16 +557,22 @@ public sealed class AntagTokenSystem : EntitySystem
         if (state == null)
             return;
 
-        // RefundRolePurchase(state, role, reservedState.UsedRoleCredit);
+        ClearReservedGhostSpawners(ent);
         PersistState(reservedState.UserId, state);
         SendState(reservedState.UserId);
 
         if (_playerManager.TryGetSessionById(reservedState.UserId, out var session))
-            ShowPopup(session, $"Событие для роли \"{GetRoleName(role)}\" не состоялось. Средства возвращены.");
+            ShowPopup(session, $"The event for role \"{GetRoleName(role)}\" did not happen. Funds returned.");
     }
 
     private void OnOpenRequest(AntagTokenOpenRequestEvent _, EntitySessionEventArgs args)
     {
+        if (!_storeEnabled)
+        {
+            ShowPopup(args.SenderSession, "Antagonist token menu is currently disabled by an administrator.");
+            return;
+        }
+
         SendState(args.SenderSession.UserId);
     }
 
@@ -542,7 +580,7 @@ public sealed class AntagTokenSystem : EntitySystem
     {
         if (!TryPurchaseForSession(args.SenderSession, ev.RoleId, out var error))
         {
-            ShowPopup(args.SenderSession, error ?? "Покупка недоступна.");
+            ShowPopup(args.SenderSession, error ?? "Purchase unavailable.");
             SendState(args.SenderSession.UserId);
             return;
         }
@@ -551,8 +589,8 @@ public sealed class AntagTokenSystem : EntitySystem
             return;
 
         var message = role.Mode == AntagPurchaseMode.GhostRule
-            ? "Событие запущено. Только вы сможете занять эту гост-роль."
-            : "Роль поставлена в очередь на следующий подходящий раунд.";
+            ? "Event started. Only you can take this ghost role."
+            : "Role queued for the next suitable round.";
 
         ShowPopup(args.SenderSession, message);
         SendState(args.SenderSession.UserId);
@@ -562,11 +600,11 @@ public sealed class AntagTokenSystem : EntitySystem
     {
         if (!ClearDeposit(args.SenderSession.UserId, out var error))
         {
-            ShowPopup(args.SenderSession, error ?? "Не удалось снять депозит.");
+            ShowPopup(args.SenderSession, error ?? "Failed to clear deposit.");
             return;
         }
 
-        ShowPopup(args.SenderSession, "Депозит роли снят, средства возвращены.");
+        ShowPopup(args.SenderSession, "Role deposit removed. Funds returned.");
         SendState(args.SenderSession.UserId);
     }
 
@@ -580,7 +618,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (args.Player.UserId == ent.Comp.ReservedUserId)
             return;
 
-        ShowPopup(args.Player, "Эта гост-роль зарезервирована другим игроком.");
+        ShowPopup(args.Player, "This ghost role is reserved for another player.");
         args.TookRole = true;
     }
 
@@ -589,8 +627,10 @@ public sealed class AntagTokenSystem : EntitySystem
         if (ent.Comp.Rule is not { } rule)
             return;
 
-        _reservedGhostRules.Remove(rule);
-        RemCompDeferred<ReservedGhostRoleComponent>(ent);
+        if (_reservedGhostRules.Remove(rule, out var reservedState))
+            MarkRoundAntagGranted(reservedState.UserId);
+
+        ClearReservedGhostSpawners(rule);
     }
 
     private void MarkReservedGhostSpawners(EntityUid ruleEntity, NetUserId reservedUserId)
@@ -603,6 +643,18 @@ public sealed class AntagTokenSystem : EntitySystem
 
             var reserved = EnsureComp<ReservedGhostRoleComponent>(uid);
             reserved.ReservedUserId = reservedUserId;
+        }
+    }
+
+    private void ClearReservedGhostSpawners(EntityUid ruleEntity)
+    {
+        var query = EntityQueryEnumerator<GhostRoleAntagSpawnerComponent, ReservedGhostRoleComponent>();
+        while (query.MoveNext(out var uid, out var spawner, out _))
+        {
+            if (spawner.Rule != ruleEntity)
+                continue;
+
+            RemCompDeferred<ReservedGhostRoleComponent>(uid);
         }
     }
 
@@ -634,38 +686,69 @@ public sealed class AntagTokenSystem : EntitySystem
         return TryGetPendingLobbyRole(userId, out _);
     }
 
+    private bool IsSessionEligibleForGhostRolePurchase(ICommonSession session)
+    {
+        if (session.AttachedEntity is not { Valid: true } attached)
+            return false;
+
+        return TryComp<GhostComponent>(attached, out var ghost) && ghost.CanTakeGhostRoles;
+    }
+
+    private bool HasActiveAntagMind(NetUserId userId)
+    {
+        return _playerManager.TryGetSessionById(userId, out var session) &&
+               _mind.TryGetMind(session, out var mindId, out _) &&
+               _role.MindIsAntagonist(mindId);
+    }
+
+    private bool HasReachedRoundAntagLimit(NetUserId userId)
+    {
+        return _roundGrantedAntags.Contains(userId) || HasActiveAntagMind(userId);
+    }
+
+    private void MarkRoundAntagGranted(NetUserId userId)
+    {
+        _roundGrantedAntags.Add(userId);
+    }
+
     private bool TryAssignReservedRoundstartRole(ICommonSession session, AntagRoleDefinition role, out string? error)
     {
         error = null;
 
         if (session.Status is SessionStatus.Disconnected or SessionStatus.Zombie)
         {
-            error = "Игрок сейчас не в валидной сессии для выдачи токен-роли.";
+            error = "Player is not in a valid session for token-role assignment.";
             return false;
         }
 
         if (session.AttachedEntity is not { Valid: true })
         {
-            error = "У игрока ещё нет валидной сущности для выдачи токен-роли.";
+            error = "Player does not have a valid entity for token-role assignment yet.";
             return false;
         }
 
         if (_mind.TryGetMind(session, out var mindId, out _) && _role.MindIsAntagonist(mindId))
         {
-            error = "Игрок уже получил антагонистическую роль другим путём.";
+            error = "Player already received an antagonist role by another method.";
+            return false;
+        }
+
+        if (HasReachedRoundAntagLimit(session.UserId))
+        {
+            error = "Player has already reached the one-antagonist-per-round limit.";
             return false;
         }
 
         var ruleEntity = _gameTicker.AddGameRule(role.GameRuleId!);
         if (!TryComp<AntagSelectionComponent>(ruleEntity, out var selection))
         {
-            error = "У токен-правила нет AntagSelectionComponent.";
+            error = "Token rule is missing AntagSelectionComponent.";
             return false;
         }
 
         if (!TryFindMatchingDefinition(selection, role.AntagId!, out var definition))
         {
-            error = "В токен-правиле не найден подходящий antag definition.";
+            error = "No matching antag definition was found in the token rule.";
             return false;
         }
 
@@ -736,6 +819,13 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
         }
 
+        if (role.Mode == AntagPurchaseMode.LobbyDeposit &&
+            IsRoundstartRoleBlockedByPreset())
+        {
+            statusLocKey = "antag-store-status-unavailable";
+            return false;
+        }
+
         if (role.Mode == AntagPurchaseMode.LobbyDeposit && !purchased && IsRoleSaturated(role.Id, userId))
         {
             statusLocKey = "antag-store-status-saturated";
@@ -753,7 +843,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return;
         }
 
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, userId);
 
         var roles = new List<AntagTokenRoleEntry>(AntagTokenCatalog.Roles.Count);
         foreach (var role in AntagTokenCatalog.Roles.Values)
@@ -830,7 +920,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return null;
 
         state = new PlayerTokenState();
-        NormalizeMonthlyState(state, DateTime.UtcNow);
+        NormalizeMonthlyState(state, DateTime.UtcNow, userId);
         _states[userId] = state;
         _onlineRewards.TryAdd(userId, new OnlineRewardState(DateTime.UtcNow));
         return state;
@@ -841,12 +931,10 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
     if (state.MonthlyYear == nowUtc.Year && state.MonthlyMonth == nowUtc.Month)
         return;
 
-    // Сброс месяца
     state.MonthlyYear = nowUtc.Year;
     state.MonthlyMonth = nowUtc.Month;
     state.MonthlyEarned = 0;
 
-        // Начисляем ежемесячный бонус донатерам
         if (userId != null)
         {
             var sponsorLevel = GetEffectiveSponsorLevel(userId.Value);
@@ -855,11 +943,10 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
                 var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
                 if (bonusAmount > 0)
                 {
-                    // Добавляем бонус в обход лимита (прямо в баланс)
                     state.Balance += bonusAmount;
 
                     if (_playerManager.TryGetSessionById(userId.Value, out var session))
-                        ShowPopup(session, $"Ежемесячный бонус донатера: +{bonusAmount} монет!");
+                        ShowPopup(session, $"Monthly donor bonus: +{bonusAmount} tokens!");
                 }
             }
         }
@@ -868,9 +955,16 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
     private int? GetMonthlyCap(NetUserId userId)
     {
         var sponsorLevel = GetEffectiveSponsorLevel(userId);
-        // Если есть донат (уровень > 0) — лимита нет (null)
-        // Если доната нет — возвращаем лимит, например 100 монет в месяц
         return sponsorLevel > 0 ? null : 100;
+    }
+
+    private bool IsRoundstartRoleBlockedByPreset()
+    {
+        var preset = _gameTicker.RunLevel == GameRunLevel.PreRoundLobby
+            ? _gameTicker.Preset
+            : _gameTicker.CurrentPreset ?? _gameTicker.Preset;
+
+        return preset != null && BlockedRoundstartRolePresets.Contains(preset.ID);
     }
 
     private bool IsRoleSaturated(string roleId, NetUserId exceptUserId)
@@ -919,25 +1013,25 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
     {
         return role.Id switch
         {
-            AntagTokenCatalog.ThiefRole => "Вор",
-            AntagTokenCatalog.AgentRole => "Агент",
-            AntagTokenCatalog.NinjaRole => "Ниндзя",
-            AntagTokenCatalog.DragonRole => "Космический дракон",
-            AntagTokenCatalog.AbductorRole => "Абдуктор",
-            AntagTokenCatalog.InitialInfectedRole => "Нулевой заражённый",
-            AntagTokenCatalog.RevenantRole => "Ревенант",
-            AntagTokenCatalog.YaoRole => "Ядерный оперативник",
-            AntagTokenCatalog.HeadRevRole => "Глава революции",
-            AntagTokenCatalog.CosmicCultRole => "Космический культист",
-            AntagTokenCatalog.DevilRole => "Дьявол",
-            AntagTokenCatalog.BlobRole => "Блоб",
-            AntagTokenCatalog.WizardRole => "Маг",
-            AntagTokenCatalog.SlaughterDemonRole => "Демон резни",
-            AntagTokenCatalog.SlasherRole => "Мясник",
-            AntagTokenCatalog.ChangelingRole => "Генокрад",
-            AntagTokenCatalog.HereticRole => "Еретик",
-            AntagTokenCatalog.ShadowlingRole => "Шедоулинг",
-            AntagTokenCatalog.XenomorphRole => "Ксеноморф",
+            AntagTokenCatalog.ThiefRole => "Thief",
+            AntagTokenCatalog.AgentRole => "Agent",
+            AntagTokenCatalog.NinjaRole => "Ninja",
+            AntagTokenCatalog.DragonRole => "Space Dragon",
+            AntagTokenCatalog.AbductorRole => "Abductor",
+            AntagTokenCatalog.InitialInfectedRole => "Initial Infected",
+            AntagTokenCatalog.RevenantRole => "Revenant",
+            AntagTokenCatalog.YaoRole => "Nuclear Operative",
+            AntagTokenCatalog.HeadRevRole => "Head Revolutionary",
+            AntagTokenCatalog.CosmicCultRole => "Cosmic Cultist",
+            AntagTokenCatalog.DevilRole => "Devil",
+            AntagTokenCatalog.BlobRole => "Blob",
+            AntagTokenCatalog.WizardRole => "Wizard",
+            AntagTokenCatalog.SlaughterDemonRole => "Slaughter Demon",
+            AntagTokenCatalog.SlasherRole => "Slasher",
+            AntagTokenCatalog.ChangelingRole => "Changeling",
+            AntagTokenCatalog.HereticRole => "Heretic",
+            AntagTokenCatalog.ShadowlingRole => "Shadowling",
+            AntagTokenCatalog.XenomorphRole => "Xenomorph",
             _ => role.Id
         };
     }
