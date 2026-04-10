@@ -425,6 +425,19 @@ public sealed class AntagTokenSystem : EntitySystem
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
+
+        // Автовыдача бонуса донатерам при заходе в лобби
+        var sponsorLevel = GetEffectiveSponsorLevel(ev.PlayerSession.UserId);
+        if (sponsorLevel > 0)
+        {
+            var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
+            if (bonusAmount > 0)
+            {
+                AddBalance(ev.PlayerSession.UserId, bonusAmount, out var granted, out _);
+                ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
+            }
+        }
+
         SendState(ev.PlayerSession.UserId);
     }
 
