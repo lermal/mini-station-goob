@@ -515,7 +515,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (state == null)
             return;
 
-        RefundRolePurchase(state, role, reservedState.UsedRoleCredit);
+        // RefundRolePurchase(state, role, reservedState.UsedRoleCredit);
         PersistState(reservedState.UserId, state);
         SendState(reservedState.UserId);
 
@@ -916,7 +916,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
             AntagTokenCatalog.AbductorRole => "Абдуктор",
             AntagTokenCatalog.InitialInfectedRole => "Нулевой заражённый",
             AntagTokenCatalog.RevenantRole => "Ревенант",
-            AntagTokenCatalog.YaoRole => "Яо",
+            AntagTokenCatalog.YaoRole => "Ядерный оперативник",
             AntagTokenCatalog.HeadRevRole => "Глава революции",
             AntagTokenCatalog.CosmicCultRole => "Космический культист",
             AntagTokenCatalog.DevilRole => "Дьявол",
