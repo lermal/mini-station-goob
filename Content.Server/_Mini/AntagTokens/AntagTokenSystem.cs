@@ -426,15 +426,25 @@ public sealed class AntagTokenSystem : EntitySystem
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
 
-        // Автовыдача бонуса донатерам при заходе в лобби
         var sponsorLevel = GetEffectiveSponsorLevel(ev.PlayerSession.UserId);
         if (sponsorLevel > 0)
         {
-            var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
-            if (bonusAmount > 0)
+            var userId = ev.PlayerSession.UserId;
+            var now = DateTime.UtcNow;
+
+            // Получаем дату последнего начисления (если не было — null)
+            if (!_lastDonorBonusClaim.TryGetValue(userId, out var lastClaim) ||
+                (now - lastClaim).TotalDays >= 30)
             {
-                AddBalance(ev.PlayerSession.UserId, bonusAmount, out var granted, out _);
-                ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
+                var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
+                if (bonusAmount > 0)
+                {
+                    AddBalance(userId, bonusAmount, out var granted, out _);
+                    ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
+
+                    // Обновляем время последней выдачи
+                    _lastDonorBonusClaim[userId] = now;
+                }
             }
         }
 
