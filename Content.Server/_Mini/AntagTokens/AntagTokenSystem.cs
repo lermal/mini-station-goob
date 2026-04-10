@@ -49,6 +49,18 @@ public sealed class AntagTokenSystem : EntitySystem
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
     private readonly Dictionary<NetUserId, OnlineRewardState> _onlineRewards = new();
 
+    private int GetDonorBonusByLevel(int sponsorLevel)
+    {
+        return sponsorLevel switch
+        {
+            1 => 10,
+            2 => 20,
+            3 => 30,
+            4 => 40,
+            5 => 50,
+            _ => 0
+        };
+    }
     public override void Initialize()
     {
         base.Initialize();
@@ -801,20 +813,41 @@ public sealed class AntagTokenSystem : EntitySystem
         return state;
     }
 
-    private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc)
-    {
-        if (state.MonthlyYear == nowUtc.Year && state.MonthlyMonth == nowUtc.Month)
-            return;
+private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetUserId? userId = null)
+{
+    if (state.MonthlyYear == nowUtc.Year && state.MonthlyMonth == nowUtc.Month)
+        return;
 
-        state.MonthlyYear = nowUtc.Year;
-        state.MonthlyMonth = nowUtc.Month;
-        state.MonthlyEarned = 0;
+    // Сброс месяца
+    state.MonthlyYear = nowUtc.Year;
+    state.MonthlyMonth = nowUtc.Month;
+    state.MonthlyEarned = 0;
+
+        // Начисляем ежемесячный бонус донатерам
+        if (userId != null)
+        {
+            var sponsorLevel = GetEffectiveSponsorLevel(userId.Value);
+            if (sponsorLevel > 0)
+            {
+                var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
+                if (bonusAmount > 0)
+                {
+                    // Добавляем бонус в обход лимита (прямо в баланс)
+                    state.Balance += bonusAmount;
+
+                    if (_playerManager.TryGetSessionById(userId.Value, out var session))
+                        ShowPopup(session, $"Ежемесячный бонус донатера: +{bonusAmount} монет!");
+                }
+            }
+        }
     }
 
     private int? GetMonthlyCap(NetUserId userId)
     {
         var sponsorLevel = GetEffectiveSponsorLevel(userId);
-        return sponsorLevel <= 0 ? null : AntagTokenCatalog.GetSponsorMonthlyCap(sponsorLevel);
+        // Если есть донат (уровень > 0) — лимита нет (null)
+        // Если доната нет — возвращаем лимит, например 100 монет в месяц
+        return sponsorLevel > 0 ? null : 100;
     }
 
     private bool IsRoleSaturated(string roleId, NetUserId exceptUserId)
