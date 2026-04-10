@@ -418,7 +418,7 @@ public sealed class DailyRewardSystem : EntitySystem
         }
 
         var displayName = tokenAmount > 0
-            ? $"+{tokenAmount} ток."
+            ? $"+{tokenAmount}"
             : "Прогресс стрика";
 
         return new RewardDefinition(displayName, tokenAmount, StreakRewardIconPath, null);
