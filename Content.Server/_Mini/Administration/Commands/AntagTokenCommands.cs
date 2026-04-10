@@ -309,3 +309,43 @@ public sealed class AntagTokenSetMonthlyEarnedCommand : IConsoleCommand
         shell.WriteLine($"Set monthly earned for {session.Name} to {earned}.");
     }
 }
+
+[AdminCommand(AdminFlags.Admin)]
+public sealed class AntagTokenMenuCommand : IConsoleCommand
+{
+    [Dependency] private readonly IEntityManager _entities = default!;
+
+    public string Command => "antagtokenmenu";
+    public string Description => "Enables or disables the antagonist token menu and role выдача.";
+    public string Help => "Usage: antagtokenmenu <on|off|status>";
+
+    public void Execute(IConsoleShell shell, string argStr, string[] args)
+    {
+        if (args.Length != 1)
+        {
+            shell.WriteLine(Help);
+            return;
+        }
+
+        var system = _entities.System<AntagTokenSystem>();
+        switch (args[0].ToLowerInvariant())
+        {
+            case "on":
+                system.SetStoreEnabled(true);
+                shell.WriteLine("Antagonist token menu enabled.");
+                break;
+            case "off":
+                system.SetStoreEnabled(false);
+                shell.WriteLine("Antagonist token menu disabled. UI opening and antagonist issuance are blocked.");
+                break;
+            case "status":
+                shell.WriteLine(system.IsStoreEnabled()
+                    ? "Antagonist token menu is enabled."
+                    : "Antagonist token menu is disabled.");
+                break;
+            default:
+                shell.WriteLine(Help);
+                break;
+        }
+    }
+}
