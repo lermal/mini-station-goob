@@ -29,11 +29,14 @@ using Robust.Server.Player;
 using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Content.Shared.Chat;
+using Content.Server.Chat.Systems;
 
 namespace Content.Server._Mini.AntagTokens;
 
 public sealed class AntagTokenSystem : EntitySystem
 {
+    [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IServerDbManager _db = default!;
     [Dependency] private readonly UserDbDataManager _userDb = default!;
@@ -120,11 +123,23 @@ public sealed class AntagTokenSystem : EntitySystem
                 AddBalance(session.UserId, rewardAmount, out var granted, out _);
 
                 if (granted > 0)
-                    ShowPopup(session, $"Online reward: +{granted} tokens.");
+                {
+                    // Отправка в чат (нужно добавить IChatManager в зависимости)
+                    var hours = threshold.TotalHours;
+                    var message = $"Вы получили {granted} монет за время на сервере!";
+
+                    if (session.AttachedEntity is { Valid: true } uid)
+                    {
+                        // Через чат систему
+                        _chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, false);
+
+                        // Или через попап
+                        _popup.PopupEntity(message, uid, uid);
+                    }
+                }
             }
         }
     }
-
     public bool AddBalance(NetUserId userId, int amount, out int grantedAmount, out string? note)
     {
         grantedAmount = 0;

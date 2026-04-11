@@ -11,7 +11,7 @@ namespace Content.Shared._Mini.DailyRewards;
 public sealed partial class DailyRewardComponent : Component
 {
     [DataField]
-    public TimeSpan MinimumActiveTime = TimeSpan.FromMinutes(15);
+    public TimeSpan MinimumActiveTime = TimeSpan.FromMinutes(30);
 
     [DataField]
     public TimeSpan ClaimCooldown = TimeSpan.FromHours(24);

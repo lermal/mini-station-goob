@@ -39,9 +39,9 @@ public static class AntagTokenCatalog
 
     public static readonly (TimeSpan Threshold, int RewardAmount)[] OnlineRewardMilestones =
     [
-        (TimeSpan.FromMinutes(30), 1),
-        (TimeSpan.FromHours(2), 2),
-        (TimeSpan.FromHours(4), 3),
+        (TimeSpan.FromHours(2), 1),
+        (TimeSpan.FromHours(4), 1),
+        (TimeSpan.FromHours(6), 1),
     ];
 
     private static readonly Dictionary<int, int> SponsorMonthlyCaps = new()
