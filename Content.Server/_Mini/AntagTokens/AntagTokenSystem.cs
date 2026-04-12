@@ -69,8 +69,8 @@ public sealed class AntagTokenSystem : EntitySystem
             1 => 10,
             2 => 20,
             3 => 30,
-            4 => 40,
-            5 => 50,
+            4 => 45,
+            5 => 60,
             _ => 0
         };
     }

@@ -8,14 +8,18 @@ using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Log;
+using Robust.Shared.Timing;
 
 namespace Content.Server.Sponsors;
 
 public sealed class SponsorSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
-    // Структура данных и список
+    private float _updateTimer;
+    private const float UpdateInterval = 5f;
+
     public record struct SponsorInfo(string Uid, int Level);
     public ImmutableList<SponsorInfo> Sponsors { get; private set; } = ImmutableList<SponsorInfo>.Empty;
 
@@ -23,26 +27,55 @@ public sealed class SponsorSystem : EntitySystem
     {
         base.Initialize();
 
-        // Подписываемся на окончание раунда для обновления данных
         SubscribeLocalEvent<RoundEndMessageEvent>(OnRoundEnd);
 
-        // Загружаем данные сразу при старте сервера
+        // Первичная загрузка при старте
         _ = LoadSponsors();
     }
 
     private void OnRoundEnd(RoundEndMessageEvent ev)
     {
-        // Обновляем список асинхронно, чтобы не задерживать показ статистики раунда
+        // Внеочередное обновление после раунда
         _ = Task.Run(async () =>
         {
             try
             {
                 await LoadSponsors();
-                Log.Info("[Sponsors] Данные успешно обновлены после раунда.");
+                Log.Info("[Sponsors] Данные обновлены после раунда.");
             }
             catch (Exception e)
             {
-                Log.Error($"[Sponsors] Ошибка при фоновом обновлении: {e}");
+                Log.Error($"[Sponsors] Ошибка обновления после раунда: {e}");
+            }
+        });
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        // Пропускаем обновление, если игра приостановлена
+        if (!_timing.IsFirstTimePredicted)
+            return;
+
+        _updateTimer += frameTime;
+
+        if (_updateTimer < UpdateInterval)
+            return;
+
+        _updateTimer -= UpdateInterval;
+
+        // Запускаем асинхронную загрузку, не блокируя игровой цикл
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await LoadSponsors();
+                Log.Debug("[Sponsors] Периодическое обновление завершено.");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"[Sponsors] Ошибка периодического обновления: {e}");
             }
         });
     }
