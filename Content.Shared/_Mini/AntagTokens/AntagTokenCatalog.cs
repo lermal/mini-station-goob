@@ -12,6 +12,7 @@ public static class AntagTokenCatalog
     public const string MonthlyEarnedEntryId = "monthly-earned";
     public const string MonthlyYearEntryId = "monthly-year";
     public const string MonthlyMonthEntryId = "monthly-month";
+    public const string LastDonorBonusClaimEntryId = "last-donor-bonus-claim";
     public const string DepositSelectionTokenId = "deposit";
     public const string DepositUsedRoleCreditEntryId = "deposit-used-role-credit";
 

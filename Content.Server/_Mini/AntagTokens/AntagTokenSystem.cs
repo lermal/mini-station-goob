@@ -452,6 +452,9 @@ public sealed class AntagTokenSystem : EntitySystem
                 case AntagTokenCatalog.DepositUsedRoleCreditEntryId:
                     state.PendingDepositUsedRoleCredit = token.Amount > 0;
                     break;
+                case AntagTokenCatalog.LastDonorBonusClaimEntryId:
+                    state.LastDonorBonusClaimUtc = DecodeUnixSeconds(token.Amount);
+                    break;
                 default:
                     if (token.TokenId.StartsWith("role-credit:", StringComparison.Ordinal) &&
                         token.Amount > 0)
@@ -502,10 +505,14 @@ public sealed class AntagTokenSystem : EntitySystem
         if (sponsorLevel > 0)
         {
             var userId = ev.PlayerSession.UserId;
+            var state = EnsureStateExists(userId);
+            if (state == null)
+                return;
+
             var now = DateTime.UtcNow;
 
             // Получаем дату последнего начисления (если не было — null)
-            if (!_lastDonorBonusClaim.TryGetValue(userId, out var lastClaim) ||
+            if (state.LastDonorBonusClaimUtc is not { } lastClaim ||
                 (now - lastClaim).TotalDays >= 30)
             {
                 var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
@@ -515,7 +522,8 @@ public sealed class AntagTokenSystem : EntitySystem
                     ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
 
                     // Обновляем время последней выдачи
-                    _lastDonorBonusClaim[userId] = now;
+                    state.LastDonorBonusClaimUtc = now;
+                    PersistState(userId, state);
                 }
             }
         }
@@ -937,6 +945,7 @@ private async Task PersistStateAsync(NetUserId userId, PlayerTokenState state)
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyEarnedEntryId, state.MonthlyEarned),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyYearEntryId, state.MonthlyYear),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyMonthEntryId, state.MonthlyMonth),
+        _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.LastDonorBonusClaimEntryId, EncodeUnixSeconds(state.LastDonorBonusClaimUtc)),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.DepositUsedRoleCreditEntryId, state.PendingDepositUsedRoleCredit ? 1 : 0)
     };
 
@@ -1058,6 +1067,23 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         state.PendingDepositUsedRoleCredit = false;
     }
 
+    private static int EncodeUnixSeconds(DateTime? value)
+    {
+        if (value == null)
+            return 0;
+
+        var unix = new DateTimeOffset(value.Value).ToUnixTimeSeconds();
+        return unix <= 0 ? 0 : (int)Math.Min(unix, int.MaxValue);
+    }
+
+    private static DateTime? DecodeUnixSeconds(int value)
+    {
+        if (value <= 0)
+            return null;
+
+        return DateTimeOffset.FromUnixTimeSeconds(value).UtcDateTime;
+    }
+
     private static string GetRoleName(AntagRoleDefinition role)
     {
         return role.Id switch
@@ -1105,6 +1131,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         public int MonthlyEarned { get; set; }
         public int MonthlyYear { get; set; }
         public int MonthlyMonth { get; set; }
+        public DateTime? LastDonorBonusClaimUtc { get; set; }
         public string? PendingDepositRoleId { get; set; }
         public bool PendingDepositUsedRoleCredit { get; set; }
         public Dictionary<string, int> RoleCredits { get; } = new();
