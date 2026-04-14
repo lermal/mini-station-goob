@@ -105,3 +105,8 @@
   - Trinkets
   - GroupSpeciesBreathTool
   - TypanPatrolUniform
+
+- type: roleLoadout
+  id: JobTypanBorg
+  nameDataset: NamesBorg
+  canCustomizeName: true

@@ -1,306 +1,348 @@
-# - type: entity
-#   id: BaseBorgChassisTypan
-#   parent: [BaseBorgChassis, BaseBorgTransponder]
-#   abstract: true
-#   description: Гибрид машины и человека, помогающий в работе станции. Они обожают, когда их снова и снова просят назвать свои законы.
-#   suffix: Тайпан
-#   components:
-#   - type: Sprite
-#     sprite: _Mini/Mobs/Silicon/chassis.rsi
-#   - type: RandomMetadata
-#     nameSegments:
-#     - NamesBorg
-#   - type: NpcFactionMember
-#     factions:
-#     - Typan
-#   - type: Access
-#     groups:
-#     - TypanAccess
-#   - type: AccessReader
-#     access: [["TypanCommand"], ["TypanResearch"]]
-#   - type: ShowSyndicateIcons
-#   - type: SiliconLawProvider
-#     laws: TypanStatic
-#     subverted: false
-#   - type: IntrinsicRadioTransmitter
-#     channels:
-#     - Binary # But that has really long range
-#     - Typan
-#   - type: ActiveRadio
-#     channels:
-#     - Typan
-#   - type: Speech
-#     speechVerb: Robotic
-#     speechSounds: SyndieBorg
-#     allowedEmotes:
-#     - Laugh
-#   - type: Vocal
-#     sounds:
-#       Unsexed: UnisexSiliconSyndicate
-#   - type: Damageable
-#     damageModifierSet: CombatBorg
-#   - type: InteractionPopup
-#     interactSuccessString: petting-success-syndicate-cyborg
-#     interactFailureString: petting-failure-syndicate-cyborg
-#     interactSuccessSound:
-#       path: /Audio/Ambience/Objects/periodic_beep.ogg
-#   - type: BorgTransponder
-# #   isTypan: true
-#     name: typan cyborg
+- type: entity
+  id: BaseBorgChassisTypan
+  parent: [BaseBorgChassis, BaseBorgTransponder]
+  abstract: true
+  name: cyborg
+  description: A man-machine hybrid that assists in station activity. They love being asked to state their laws over and over.
+  suffix: Тайпан
+  components:
+    - type: Sprite
+      sprite: _Mini/Mobs/Silicon/chassis.rsi
+    - type: RandomMetadata
+      nameSegments:
+        - NamesBorg
+    - type: NpcFactionMember
+      factions:
+        - Typan
+    - type: Access
+      groups:
+        - TypanAccess
+    - type: AccessReader
+      access: [["TypanCommand"], ["TypanResearch"]]
+    - type: ShowSyndicateIcons
+    - type: SiliconLawProvider
+      laws: TypanStatic
+      subverted: false
+    - type: IntrinsicRadioTransmitter
+      channels:
+        - Binary # But that has really long range
+        - Typan
+    - type: ActiveRadio
+      channels:
+        - Typan
+    - type: Speech
+      speechVerb: Robotic
+      speechSounds: SyndieBorg
+      allowedEmotes:
+        - Laugh
+    - type: Vocal
+      sounds:
+        Unsexed: UnisexSiliconSyndicate
+    - type: Damageable
+      damageModifierSet: CombatBorg
+    - type: InteractionPopup
+      interactSuccessString: petting-success-syndicate-cyborg
+      interactFailureString: petting-failure-syndicate-cyborg
+      interactSuccessSound:
+        path: /Audio/Ambience/Objects/periodic_beep.ogg
+    - type: BorgTransponder
+      #   isTypan: true
+      name: cyborg
+    - type: Tag
+      tags:
+        - DoorBumpOpener
+        - FootstepSound
+        - CanPilot
+        - Unimplantable
+        - SiliconMob
+        - IPCDrinkBlacklist
+        - SiliconEmotes
+        - Typan
 
-# - type: entity
-#   id: BorgChassisTypanSelectable
-#   parent: BaseBorgChassisTypan
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: robot
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: robot_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: robot_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgChassis
-#     maxModules: 0
-#     hasMindState: robot_e
-#     noMindState: robot_e_r
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: robot
-# #   isTypan: true
-#     name: typan cyborg
-#   - type: BorgSwitchableType
-#     inherentRadioChannels:
-#     - Typan
-#   - type: Appearance
+- type: entity
+  id: BorgChassisTypanSelectable
+  parent: BaseBorgChassisTypan
+  name: typan selectable cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: robot
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: robot_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: robot_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgChassis
+      maxModules: 0
+      hasMindState: robot_e
+      noMindState: robot_e_r
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: robot
+      #   isTypan: true
+      name: cyborg
+    - type: BorgSwitchableType
+      inherentRadioChannels:
+        - Typan
+      allowedBorgTypes:
+        - typan-generic
+        - typan-engineering
+        - typan-mining
+        - typan-janitor
+        - typan-medical
+        - typan-security
+    - type: BorgSwitchableSubtype
+      borgSubtype: typan_generic_default
+    - type: Mimicry
+      realState: robot
+      realState1: robot_e_r
+      realState2: robot_l
+      engState: engineer
+      engState1: engineer_e_r
+      engState2: engineer_l
+      disguiseTypeMap:
+        typan-generic: generic
+        typan-engineering: engineering
+        typan-mining: mining
+        typan-janitor: janitor
+        typan-medical: medical
+        typan-security: engineering
+    - type: Appearance
 
-# # Typan Generic
-# - type: entity
-#   id: BorgChassisTypanGeneric
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: robot
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: robot_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: robot_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-generic
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: robot-moving
-#     noMovementLayers:
-#       movement:
-#         state: robot
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: robot
-# #   isTypan: true
-#     name: typan generic cyborg
+# Typan Generic
+- type: entity
+  id: BorgChassisTypanGeneric
+  parent: BorgChassisTypanSelectable
+  name: typan generic cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: robot
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: robot_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: robot_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-generic
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: robot_moving
+      noMovementLayers:
+        movement:
+          state: robot
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: robot
+      #   isTypan: true
+      name: generic cyborg
 
-# # Typan Engineer
-# - type: entity
-#   id: BorgChassisTypanEngineer
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: engineer
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: engineer_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: engineer_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-engineering
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: engineer-moving
-#     noMovementLayers:
-#       movement:
-#         state: engineer
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: engineer
-# #   isTypan: true
-#     name: typan engineer cyborg
+# Typan Engineer
+- type: entity
+  id: BorgChassisTypanEngineer
+  parent: BorgChassisTypanSelectable
+  name: typan engineer cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: engineer
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: engineer_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: engineer_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-engineering
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: engineer_moving
+      noMovementLayers:
+        movement:
+          state: engineer
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: engineer
+      #   isTypan: true
+      name: engineer cyborg
 
-# # Typan Mining
-# - type: entity
-#   id: BorgChassisTypanMining
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: miner
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: miner_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: miner_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-mining
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: miner-moving
-#     noMovementLayers:
-#       movement:
-#         state: miner
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: miner
-# #   isTypan: true
-#     name: typan mining cyborg
+# Typan Mining
+- type: entity
+  id: BorgChassisTypanMining
+  parent: BorgChassisTypanSelectable
+  name: typan mining cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: miner
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: miner_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: miner_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-mining
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: miner_moving
+      noMovementLayers:
+        movement:
+          state: miner
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: miner
+      #   isTypan: true
+      name: mining cyborg
 
-# # Typan Janitor
-# - type: entity
-#   id: BorgChassisTypanJanitor
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: janitor
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: janitor_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: janitor_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-janitor
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: janitor-moving
-#     noMovementLayers:
-#       movement:
-#         state: janitor
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: janitor
-# #   isTypan: true
-#     name: typan janitor cyborg
+# Typan Janitor
+- type: entity
+  id: BorgChassisTypanJanitor
+  parent: BorgChassisTypanSelectable
+  name: typan janitor cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: janitor
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: janitor_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: janitor_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-janitor
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: janitor_moving
+      noMovementLayers:
+        movement:
+          state: janitor
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: janitor
+      #   isTypan: true
+      name: janitor cyborg
 
-# # Typan Medical
-# - type: entity
-#   id: BorgChassisTypanMedical
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: medical
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: medical_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: medical_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-medical
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: medical-moving
-#     noMovementLayers:
-#       movement:
-#         state: medical
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: medical
-# #   isTypan: true
-#     name: typan medical cyborg
+# Typan Medical
+- type: entity
+  id: BorgChassisTypanMedical
+  parent: BorgChassisTypanSelectable
+  name: typan medical cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: medical
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: medical_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: medical_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-medical
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: medical_moving
+      noMovementLayers:
+        movement:
+          state: medical
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: medical
+      #   isTypan: true
+      name: medical cyborg
 
 # # Typan Service
 # - type: entity
 #   id: BorgChassisTypanService
 #   parent: BorgChassisTypanSelectable
+#   name: typan service cyborg
 #   components:
-#   - type: Sprite
-#     layers:
-#     - state: service
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: service_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: service_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-service
-#   - type: TTS # Corvax-TTS
-#     voice: Glados
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: service
-# #   isTypan: true
-#     name: typan service cyborg
+#     - type: Sprite
+#       layers:
+#         - state: service
+#           map: ["enum.BorgVisualLayers.Body", "movement"]
+#         - state: service_e_r
+#           map: ["enum.BorgVisualLayers.Light"]
+#           shader: unshaded
+#           visible: false
+#         - state: service_l
+#           shader: unshaded
+#           map: ["light", "enum.BorgVisualLayers.LightStatus"]
+#           visible: false
+#     - type: BorgSwitchableType
+#       selectedBorgType: typan-service
+#     - type: TTS # Corvax-TTS
+#       voice: Glados
+#     - type: BorgTransponder
+#       sprite:
+#         sprite: _Mini/Mobs/Silicon/chassis.rsi
+#         state: service
+#       #   isTypan: true
+#       name: service cyborg
 
-# # Typan Security
-# - type: entity
-#   id: BorgChassisTypanSecurity
-#   parent: BorgChassisTypanSelectable
-#   components:
-#   - type: Sprite
-#     layers:
-#     - state: sec
-#       map: ["enum.BorgVisualLayers.Body", "movement"]
-#     - state: sec_e_r
-#       map: ["enum.BorgVisualLayers.Light"]
-#       shader: unshaded
-#       visible: false
-#     - state: sec_l
-#       shader: unshaded
-#       map: ["light","enum.BorgVisualLayers.LightStatus"]
-#       visible: false
-#   - type: BorgSwitchableType
-#     selectedBorgType: typan-security
-#   - type: SpriteMovement
-#     movementLayers:
-#       movement:
-#         state: sec-moving
-#     noMovementLayers:
-#       movement:
-#         state: sec
-#   - type: BorgTransponder
-#     sprite:
-#       sprite: _Mini/Mobs/Silicon/chassis.rsi
-#       state: sec
-# #   isTypan: true
-#     name: typan security cyborg
+# Typan Security
+- type: entity
+  id: BorgChassisTypanSecurity
+  parent: BorgChassisTypanSelectable
+  name: typan security cyborg
+  components:
+    - type: Sprite
+      layers:
+        - state: sec
+          map: ["enum.BorgVisualLayers.Body", "movement"]
+        - state: sec_e_r
+          map: ["enum.BorgVisualLayers.Light"]
+          shader: unshaded
+          visible: false
+        - state: sec_l
+          shader: unshaded
+          map: ["light", "enum.BorgVisualLayers.LightStatus"]
+          visible: false
+    - type: BorgSwitchableType
+      selectedBorgType: typan-security
+    - type: SpriteMovement
+      movementLayers:
+        movement:
+          state: sec_moving
+      noMovementLayers:
+        movement:
+          state: sec
+    - type: BorgTransponder
+      sprite:
+        sprite: _Mini/Mobs/Silicon/chassis.rsi
+        state: sec
+      #   isTypan: true
+      name: security cyborg

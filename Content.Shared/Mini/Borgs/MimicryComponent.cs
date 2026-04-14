@@ -1,4 +1,6 @@
 using Content.Shared.Actions;
+using Content.Shared.Silicons.Borgs;
+using System.Collections.Generic;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Prototypes;
@@ -15,6 +17,9 @@ namespace Content.Shared.Borgs
         [DataField("MimicryAction")]
         public EntProtoId MimicryAction = "Mimicry";
 
+        [ViewVariables]
+        public EntityUid? MimicryActionEntity;
+
         [DataField("realState")]
         public string RealState = "synd_engi";
         [DataField("engState")]
@@ -29,6 +34,12 @@ namespace Content.Shared.Borgs
         public string EngState1 = "engineer_e_r";
         [DataField]
         public string EngState2 = "engineer_l";
+
+        [DataField]
+        public string EngSpritePath = "Mobs/Silicon/chassis.rsi";
+
+        [DataField]
+        public Dictionary<ProtoId<BorgTypePrototype>, ProtoId<BorgTypePrototype>> DisguiseTypeMap = new();
 
 
         [ViewVariables(VVAccess.ReadWrite)]
