@@ -32,6 +32,9 @@
   id: CartridgeSilverSaint
 
 - type: Tag
+  id: Typan
+
+- type: Tag
   id: TypanBorgLArm
 
 - type: Tag

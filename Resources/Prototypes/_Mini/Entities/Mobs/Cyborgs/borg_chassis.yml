@@ -2,7 +2,8 @@
   id: BaseBorgChassisTypan
   parent: [BaseBorgChassis, BaseBorgTransponder]
   abstract: true
-  description: Гибрид машины и человека, помогающий в работе станции. Они обожают, когда их снова и снова просят назвать свои законы.
+  name: cyborg
+  description: A man-machine hybrid that assists in station activity. They love being asked to state their laws over and over.
   suffix: Тайпан
   components:
     - type: Sprite
@@ -46,11 +47,22 @@
         path: /Audio/Ambience/Objects/periodic_beep.ogg
     - type: BorgTransponder
       #   isTypan: true
-      name: typan cyborg
+      name: cyborg
+    - type: Tag
+      tags:
+        - DoorBumpOpener
+        - FootstepSound
+        - CanPilot
+        - Unimplantable
+        - SiliconMob
+        - IPCDrinkBlacklist
+        - SiliconEmotes
+        - Typan
 
 - type: entity
   id: BorgChassisTypanSelectable
   parent: BaseBorgChassisTypan
+  name: typan selectable cyborg
   components:
     - type: Sprite
       layers:
@@ -73,7 +85,7 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: robot
       #   isTypan: true
-      name: typan cyborg
+      name: cyborg
     - type: BorgSwitchableType
       inherentRadioChannels:
         - Typan
@@ -108,6 +120,7 @@
 - type: entity
   id: BorgChassisTypanGeneric
   parent: BorgChassisTypanSelectable
+  name: typan generic cyborg
   components:
     - type: Sprite
       layers:
@@ -135,12 +148,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: robot
       #   isTypan: true
-      name: typan generic cyborg
+      name: generic cyborg
 
 # Typan Engineer
 - type: entity
   id: BorgChassisTypanEngineer
   parent: BorgChassisTypanSelectable
+  name: typan engineer cyborg
   components:
     - type: Sprite
       layers:
@@ -168,12 +182,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: engineer
       #   isTypan: true
-      name: typan engineer cyborg
+      name: engineer cyborg
 
 # Typan Mining
 - type: entity
   id: BorgChassisTypanMining
   parent: BorgChassisTypanSelectable
+  name: typan mining cyborg
   components:
     - type: Sprite
       layers:
@@ -201,12 +216,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: miner
       #   isTypan: true
-      name: typan mining cyborg
+      name: mining cyborg
 
 # Typan Janitor
 - type: entity
   id: BorgChassisTypanJanitor
   parent: BorgChassisTypanSelectable
+  name: typan janitor cyborg
   components:
     - type: Sprite
       layers:
@@ -234,12 +250,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: janitor
       #   isTypan: true
-      name: typan janitor cyborg
+      name: janitor cyborg
 
 # Typan Medical
 - type: entity
   id: BorgChassisTypanMedical
   parent: BorgChassisTypanSelectable
+  name: typan medical cyborg
   components:
     - type: Sprite
       layers:
@@ -267,12 +284,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: medical
       #   isTypan: true
-      name: typan medical cyborg
+      name: medical cyborg
 
 # Typan Service
 - type: entity
   id: BorgChassisTypanService
   parent: BorgChassisTypanSelectable
+  name: typan service cyborg
   components:
     - type: Sprite
       layers:
@@ -295,12 +313,13 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: service
       #   isTypan: true
-      name: typan service cyborg
+      name: service cyborg
 
 # Typan Security
 - type: entity
   id: BorgChassisTypanSecurity
   parent: BorgChassisTypanSelectable
+  name: typan security cyborg
   components:
     - type: Sprite
       layers:
@@ -328,4 +347,4 @@
         sprite: _Mini/Mobs/Silicon/chassis.rsi
         state: sec
       #   isTypan: true
-      name: typan security cyborg
+      name: security cyborg

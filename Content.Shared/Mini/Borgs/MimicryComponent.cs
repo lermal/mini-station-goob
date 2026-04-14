@@ -17,6 +17,9 @@ namespace Content.Shared.Borgs
         [DataField("MimicryAction")]
         public EntProtoId MimicryAction = "Mimicry";
 
+        [ViewVariables]
+        public EntityUid? MimicryActionEntity;
+
         [DataField("realState")]
         public string RealState = "synd_engi";
         [DataField("engState")]

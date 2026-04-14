@@ -1,8 +1,10 @@
 using Content.Shared.Borgs;
 using Content.Shared.Silicons.Borgs;
 using Content.Shared.Silicons.Borgs.Components;
+using Content.Shared.Movement.Components;
 using Robust.Client.GameObjects;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Client.Borgs
 {
@@ -61,6 +63,7 @@ namespace Content.Client.Borgs
             args.Sprite!.LayerSetState(BorgVisualLayers.Body, prototype.SpriteBodyState, spritePath);
             args.Sprite.LayerSetState(BorgVisualLayers.Light, mindState, spritePath);
             args.Sprite.LayerSetState("light", prototype.SpriteToggleLightState, spritePath);
+            ApplyMovementVisuals(uid, prototype.SpriteBodyState, prototype.SpriteBodyMovementState);
             return true;
         }
 
@@ -80,7 +83,29 @@ namespace Content.Client.Borgs
             args.Sprite!.LayerSetState(BorgVisualLayers.Body, disguiseType.SpriteBodyState, component.EngSpritePath);
             args.Sprite.LayerSetState(BorgVisualLayers.Light, mindState, component.EngSpritePath);
             args.Sprite.LayerSetState("light", disguiseType.SpriteToggleLightState, component.EngSpritePath);
+            ApplyMovementVisuals(uid, disguiseType.SpriteBodyState, disguiseType.SpriteBodyMovementState);
             return true;
+        }
+
+        private void ApplyMovementVisuals(EntityUid uid, string bodyState, string? movementState)
+        {
+            if (!TryComp(uid, out SpriteMovementComponent? spriteMovement))
+                return;
+
+            spriteMovement.NoMovementLayers.Clear();
+            spriteMovement.NoMovementLayers["movement"] = new PrototypeLayerData
+            {
+                State = bodyState,
+            };
+
+            spriteMovement.MovementLayers.Clear();
+            if (movementState != null)
+            {
+                spriteMovement.MovementLayers["movement"] = new PrototypeLayerData
+                {
+                    State = movementState,
+                };
+            }
         }
     }
 }
