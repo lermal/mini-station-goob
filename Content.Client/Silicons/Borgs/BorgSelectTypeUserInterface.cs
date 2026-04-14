@@ -33,7 +33,23 @@ public sealed class BorgSelectTypeUserInterface : BoundUserInterface
     {
         base.Open();
 
-        _menu = this.CreateWindow<BorgSelectTypeMenu>();
+        // Ministation-Start: Typan Borg Selection and Mimicry
+        _menu = new BorgSelectTypeMenu(Owner);
+        _menu.OpenCentered();
+        _menu.OnClose += Close;
         _menu.ConfirmedBorgType += (prototype, subtype) => SendPredictedMessage(new BorgSelectTypeMessage(prototype, subtype));
+        // Ministation-End: Typan Borg Selection and Mimicry
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (!disposing)
+            return;
+
+        // Ministation-Start: Typan Borg Selection and Mimicry
+        _menu?.Dispose();
+        // Ministation-End: Typan Borg Selection and Mimicry
     }
 }

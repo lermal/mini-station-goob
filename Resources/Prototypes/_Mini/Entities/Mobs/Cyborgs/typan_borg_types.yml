@@ -1,0 +1,176 @@
+- type: borgType
+  id: typan-generic
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanGeneric
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleTool
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgShort
+  spriteBodyState: robot
+  spriteBodyMovementState: robot-moving
+  spriteHasMindState: robot_e
+  spriteNoMindState: robot_e_r
+  spriteToggleLightState: robot_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+
+- type: borgType
+  id: typan-engineering
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanEngineer
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleEngineering
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleTool
+  - BorgModuleConstruction
+  - BorgModuleRCD
+  - BorgModuleCable
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgShort
+  spriteBodyState: engineer
+  spriteBodyMovementState: engineer-moving
+  spriteHasMindState: engineer_e
+  spriteNoMindState: engineer_e_r
+  spriteToggleLightState: engineer_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+
+- type: borgType
+  id: typan-mining
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanMining
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleCargo
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleMining
+  - BorgModuleAppraisal
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgTall
+  spriteBodyState: miner
+  spriteBodyMovementState: miner-moving
+  spriteHasMindState: miner_e
+  spriteNoMindState: miner_e_r
+  spriteToggleLightState: miner_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+
+- type: borgType
+  id: typan-janitor
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanJanitor
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleJanitor
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleCleaning
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgShort
+  spriteBodyState: janitor
+  spriteBodyMovementState: janitor-moving
+  spriteHasMindState: janitor_e
+  spriteNoMindState: janitor_e_r
+  spriteToggleLightState: janitor_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+
+- type: borgType
+  id: typan-medical
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanMedical
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleMedical
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleDiagnosis
+  radioChannels:
+  - Typan
+  addComponents:
+  - type: SolutionScanner
+  - type: ShowHealthBars
+    damageContainers:
+    - Biological
+  - type: ShowHealthIcons
+    damageContainers:
+    - Biological
+  inventoryTemplateId: borgDutch
+  spriteBodyState: medical
+  spriteBodyMovementState: medical-moving
+  spriteHasMindState: medical_e
+  spriteNoMindState: medical_e_r
+  spriteToggleLightState: medical_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+  footstepCollection:
+    collection: FootstepHoverBorg
+
+- type: borgType
+  id: typan-service
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanService
+  extraModuleCount: 3
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleService
+    - BorgModuleSyndicate
+  defaultModules:
+  - BorgModuleMusique
+  - BorgModuleService
+  - BorgModuleClowning
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgTall
+  spriteBodyState: service
+  spriteHasMindState: service_e
+  spriteNoMindState: service_e_r
+  spriteToggleLightState: service_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+
+- type: borgType
+  id: typan-security
+  showInGlobalSelection: false
+  dummyPrototype: BorgChassisTypanSecurity
+  extraModuleCount: 6
+  moduleWhitelist:
+    tags:
+    - BorgModuleGeneric
+    - BorgModuleSyndicate
+    - BorgModuleSyndicateAssault
+  defaultModules:
+  - BorgModuleTool
+  radioChannels:
+  - Typan
+  inventoryTemplateId: borgTall
+  spriteBodyState: sec
+  spriteBodyMovementState: sec-moving
+  spriteHasMindState: sec_e
+  spriteNoMindState: sec_e_r
+  spriteToggleLightState: sec_l
+  petSuccessString: petting-success-syndicate-cyborg
+  petFailureString: petting-failure-syndicate-cyborg
+  footstepCollection:
+    collection: FootstepBorgSec
