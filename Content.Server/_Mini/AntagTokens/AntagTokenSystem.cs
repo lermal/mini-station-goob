@@ -50,6 +50,7 @@ public sealed class AntagTokenSystem : EntitySystem
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<EntityUid, ReservedGhostRuleState> _reservedGhostRules = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
+    private readonly Dictionary<NetUserId, DateTime> _lastDonorBonusClaim = new();
     private readonly Dictionary<NetUserId, OnlineRewardState> _onlineRewards = new();
     private readonly HashSet<NetUserId> _roundGrantedAntags = new();
     private bool _storeEnabled = true;
