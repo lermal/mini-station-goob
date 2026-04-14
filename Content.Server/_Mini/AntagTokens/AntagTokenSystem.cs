@@ -528,6 +528,7 @@ public sealed class AntagTokenSystem : EntitySystem
             }
         }
     }
+
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
         foreach (var rule in _reservedGhostRules.Keys)

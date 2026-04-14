@@ -74,13 +74,19 @@ public sealed partial class BorgSelectTypeMenu : FancyWindow
         if (_entityManager.TryGetComponent(owner, out BorgSwitchableTypeComponent? switchableType) &&
             switchableType.AllowedBorgTypes.Length > 0)
         {
+            var resolvedAny = false;
+
             foreach (var borgTypeId in switchableType.AllowedBorgTypes)
             {
                 if (_prototypeManager.TryIndex(borgTypeId, out BorgTypePrototype? prototype))
+                {
+                    resolvedAny = true;
                     yield return prototype;
+                }
             }
 
-            yield break;
+            if (resolvedAny)
+                yield break;
         }
 
         foreach (var prototype in _prototypeManager.EnumeratePrototypes<BorgTypePrototype>())
