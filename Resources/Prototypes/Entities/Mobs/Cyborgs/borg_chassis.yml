@@ -47,7 +47,7 @@
   parent: BaseBorgChassisNT
   components:
   - type: TTS # CorvaxGoob-TTS
-    voice: TrainingRobot
+    voice: Robot
   - type: Sprite
     layers:
     - state: robot

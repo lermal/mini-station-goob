@@ -30,7 +30,7 @@
   - type: TypingIndicator
     proto: robot
   - type: TTS # CorvaxGoob-TTS
-    voice: Meepo
+    voice: Robot
   - type: Actions
   - type: MobState
     allowedStates:
@@ -54,4 +54,4 @@
     layers:
     - state: icon
   - type: TTS # CorvaxGoob-TTS
-    voice: Zibb
+    voice: Oleg

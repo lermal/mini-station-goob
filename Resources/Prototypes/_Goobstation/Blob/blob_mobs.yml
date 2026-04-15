@@ -157,7 +157,7 @@
       raffle:
         settings: short
     - type: TTS # CorvaxGoob-TTS
-      voice: Gizmo
+      voice: Robot
     - type: GhostTakeoverAvailable
     - type: Blobbernaut
     - type: Physics
