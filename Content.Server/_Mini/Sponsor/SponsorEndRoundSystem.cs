@@ -136,7 +136,7 @@ public sealed class SponsorSystem : EntitySystem
             _nextRetryAt = _timing.CurTime + _retryDelay;
 
             if (_retryDelay == RetryStep)
-                Log.Error($"[Sponsors] Критическая ошибка БД: {ex}");
+                Log.Warning($"[Sponsors] Критическая ошибка БД: {ex}");
             else
                 Log.Warning($"[Sponsors] БД недоступна, следующая попытка через {_retryDelay.TotalSeconds:0} сек.");
 

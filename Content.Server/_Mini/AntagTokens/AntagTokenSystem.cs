@@ -92,6 +92,7 @@ public sealed class AntagTokenSystem : EntitySystem
         SubscribeLocalEvent<GhostRoleAntagSpawnerComponent, GhostRoleSpawnerUsedEvent>(OnReservedGhostSpawnerUsed);
 
         _userDb.AddOnLoadPlayer(LoadPlayerData);
+        _userDb.AddOnFinishLoad(OnPlayerDatabaseLoadFinished);
         _userDb.AddOnPlayerDisconnect(OnPlayerDisconnect);
     }
 
@@ -526,33 +527,27 @@ public sealed class AntagTokenSystem : EntitySystem
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
+    }
 
-        var sponsorLevel = GetEffectiveSponsorLevel(ev.PlayerSession.UserId);
-        if (sponsorLevel > 0)
-        {
-            var userId = ev.PlayerSession.UserId;
-            var state = EnsureStateExists(userId);
-            if (state == null)
-                return;
+    private void OnPlayerDatabaseLoadFinished(ICommonSession session)
+    {
+        TryGrantSponsorRenewalAfterStateLoaded(session);
+    }
 
-            var now = DateTime.UtcNow;
+    internal void TryGrantSponsorRenewalAfterStateLoaded(ICommonSession session)
+    {
+        if (!_states.TryGetValue(session.UserId, out var state))
+            return;
 
-            // Получаем дату последнего начисления (если не было — null)
-            if (state.LastDonorBonusClaimUtc is not { } lastClaim ||
-                (now - lastClaim).TotalDays >= 30)
-            {
-                var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
-                if (bonusAmount > 0)
-                {
-                    AddBalance(userId, bonusAmount, out var granted, out _);
-                    ShowPopup(ev.PlayerSession, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
+        TryGrantSponsorRenewal(session, state, DateTime.UtcNow);
+    }
 
-                    // Обновляем время последней выдачи
-                    state.LastDonorBonusClaimUtc = now;
-                    PersistState(userId, state);
-                }
-            }
-        }
+    internal void TestSetLastDonorBonusClaimUtc(NetUserId userId, DateTime? utc)
+    {
+        if (!_states.TryGetValue(userId, out var state))
+            throw new InvalidOperationException("Antag token state is not loaded for this user.");
+
+        state.LastDonorBonusClaimUtc = utc;
     }
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
