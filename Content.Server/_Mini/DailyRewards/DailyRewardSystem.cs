@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Content.Server._Mini.AntagTokens;
 using Content.Shared._Mini.AntagTokens;
 using Content.Shared._Mini.DailyRewards;
+using Content.Shared._Mini.GhostRolePurchase;
 using Content.Server.Database;
 using Content.Server.GameTicking;
 using Content.Server.Popups;
@@ -153,6 +154,9 @@ public sealed class DailyRewardSystem : EntitySystem
             if (!_states.ContainsKey(session.UserId))
                 continue;
 
+            // Grant tickets for playtime milestones
+            GrantTicketsForPlaytime(session);
+
             SendState(session);
         }
     }
@@ -233,7 +237,12 @@ public sealed class DailyRewardSystem : EntitySystem
         if (!_states.TryGetValue(session.UserId, out var state))
             return;
 
+        var previousDate = state.Progress.PendingActiveDate;
         EnsureCurrentDay(state.Progress, DateTime.UtcNow);
+
+        // Reset ticket milestones if day changed
+        if (previousDate != state.Progress.PendingActiveDate)
+            ResetTicketMilestones(session);
 
         if (state.ActiveSince != null || session.AttachedEntity == null)
             return;
@@ -331,6 +340,9 @@ public sealed class DailyRewardSystem : EntitySystem
         state.Progress.CurrentStreak = nextDay;
         state.Progress.LastClaimTime = now;
         state.Progress.PendingActiveTime = TimeSpan.Zero;
+
+        // Grant tickets for streak milestones
+        GrantTicketsForStreak(session, nextDay);
 
         _ = _db.UpsertDailyRewardProgress(state.Progress);
 
@@ -492,6 +504,22 @@ public sealed class DailyRewardSystem : EntitySystem
         progress.PendingActiveTime = TimeSpan.Zero;
     }
 
+    /// <summary>
+    /// Resets ticket milestones for a new day.
+    /// Should be called when the day changes.
+    /// </summary>
+    private void ResetTicketMilestones(ICommonSession session)
+    {
+        if (session.AttachedEntity is not { Valid: true } uid)
+            return;
+
+        if (!TryComp<GhostRoleTicketComponent>(uid, out var tickets))
+            return;
+
+        tickets.TicketMilestones.Clear();
+        Dirty(uid, tickets);
+    }
+
     private static void AccumulateActiveTime(DailyRewardProgress progress, DateTime startedAtUtc, DateTime endedAtUtc)
     {
         if (endedAtUtc <= startedAtUtc)
@@ -523,6 +551,86 @@ public sealed class DailyRewardSystem : EntitySystem
         var todayStart = nowUtc.Date;
         var effectiveStart = activeStartedAtUtc.Value < todayStart ? todayStart : activeStartedAtUtc.Value;
         return progress.PendingActiveTime + (nowUtc - effectiveStart);
+    }
+
+    /// <summary>
+    /// Ensures the player has a ticket component.
+    /// </summary>
+    private void EnsureTicketComponent(EntityUid uid)
+    {
+        EnsureComp<GhostRoleTicketComponent>(uid);
+    }
+
+    /// <summary>
+    /// Grants tickets for playtime milestones.
+    /// </summary>
+    private void GrantTicketsForPlaytime(ICommonSession session)
+    {
+        if (session.AttachedEntity is not { Valid: true } uid)
+            return;
+
+        if (!_states.TryGetValue(session.UserId, out var state))
+            return;
+
+        EnsureTicketComponent(uid);
+        var tickets = Comp<GhostRoleTicketComponent>(uid);
+
+        FlushActiveSegment(session);
+        var activeTime = state.Progress.PendingActiveTime;
+
+        var milestones = new[]
+        {
+            (TimeSpan.FromMinutes(30), 1),
+            (TimeSpan.FromHours(2), 2),
+            (TimeSpan.FromHours(4), 3),
+        };
+
+        foreach (var (threshold, amount) in milestones)
+        {
+            if (activeTime >= threshold && !tickets.TicketMilestones.Contains(threshold))
+            {
+                tickets.TicketMilestones.Add(threshold);
+                tickets.Tickets += amount;
+                Dirty(uid, tickets);
+
+                _popup.PopupEntity($"Получено билетов: {amount}", uid, uid);
+                RaiseNetworkEvent(new GhostRoleTicketUpdateEvent(tickets.Tickets), session);
+            }
+        }
+
+        StartTracking(session);
+    }
+
+    /// <summary>
+    /// Grants tickets for streak milestones.
+    /// </summary>
+    private void GrantTicketsForStreak(ICommonSession session, int streak)
+    {
+        if (session.AttachedEntity is not { Valid: true } uid)
+            return;
+
+        EnsureTicketComponent(uid);
+        var tickets = Comp<GhostRoleTicketComponent>(uid);
+
+        // Define streak milestones: 15 days, 30 days
+        var milestones = new[]
+        {
+            (15, 3),
+            (30, 4)
+        };
+
+        foreach (var (threshold, amount) in milestones)
+        {
+            if (streak >= threshold && !tickets.StreakMilestones.Contains(threshold))
+            {
+                tickets.StreakMilestones.Add(threshold);
+                tickets.Tickets += amount;
+                Dirty(uid, tickets);
+
+                _popup.PopupEntity($"Получено билетов за стрик {threshold} дней: {amount}", uid, uid);
+                RaiseNetworkEvent(new GhostRoleTicketUpdateEvent(tickets.Tickets), session);
+            }
+        }
     }
 
     private sealed class SessionRewardState(DailyRewardProgress progress)

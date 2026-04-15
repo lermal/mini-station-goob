@@ -37,6 +37,7 @@ public static class AntagTokenCatalog
     public const string HereticRole = "heretic";
     public const string ShadowlingRole = "shadowling";
     public const string XenomorphRole = "xenomorph";
+    public const string BingleRole = "bingle";
 
     public static readonly (TimeSpan Threshold, int RewardAmount)[] OnlineRewardMilestones =
     [
@@ -136,6 +137,10 @@ public static class AntagTokenCatalog
             TagLocKey: "antag-token-window-tag-queue",
             MinimumPlayers: 30,
             RequiresPreRoundLobby: true),
+        [BingleRole] = new(BingleRole, "antag-store-role-bingle-name", "antag-store-role-bingle-description", 5,
+            "/Textures/_Mini/Interface/Antags/slasher.png", AntagPurchaseMode.GhostRule, null, "TokenBingleSpawn",
+            TagLocKey: "antag-token-window-tag-ghost",
+            RequiresInRound: true),
     };
 
     public static IReadOnlyDictionary<string, AntagRoleDefinition> Roles => RoleDefinitions;
