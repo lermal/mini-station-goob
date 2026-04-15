@@ -13,8 +13,6 @@
     jobPrototype: CentralCommandOfficer
     allowedSpecies:
     - Human
-    - Shark
-    - Demon
     - Vulpkanin
     - Tajaran
   - type: GhostRole
@@ -55,7 +53,6 @@
     eyes: ClothingEyesGlassesHiddenSecurity
     suitstorage: WeaponEnergyShotgun
     pocket1: TelescopicShield
-    pocket2: WeaponPistolX01
   storage:
     back:
     - BoxZiptie

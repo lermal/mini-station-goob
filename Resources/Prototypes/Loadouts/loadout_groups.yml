@@ -1730,11 +1730,11 @@
   - GreenBoxingGloves
   - YellowBoxingGloves
 
-- type: loadoutGroup
-  id: SyndicateCoat
-  name: Синдикат, верхняя одежда
-  loadouts:
-  - SyndiWintercoat
+# - type: loadoutGroup
+#   id: SyndicateCoat
+#   name: Синдикат, верхняя одежда
+#   loadouts:
+#   - SyndiWintercoat
 
 # Other
 - type: loadoutGroup

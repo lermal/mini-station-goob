@@ -1,7 +1,7 @@
 - type: job
   id: TypanPatrol
   name: job-name-typan-patrol
-  playTimeTracker: TypanPatrol
+  playTimeTracker: JobTypanPatrol
   description: job-description-typan-patrol
   startingGear: TypanPatrol
   icon: "JobIconSyndicateOfficer"

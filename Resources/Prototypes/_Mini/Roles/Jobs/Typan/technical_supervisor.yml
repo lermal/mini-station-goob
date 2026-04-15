@@ -23,7 +23,6 @@
   - TypanMedical
   - TypanResearch
   - TypanService
-  - TypanTechnicalOperationsSupervisor
   - TypanExternal
   special:
   - !type:AddImplantSpecial

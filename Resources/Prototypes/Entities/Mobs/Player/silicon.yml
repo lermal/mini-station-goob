@@ -617,7 +617,6 @@
         - TypanResearchDirector
         - TypanScience
         - TypanService
-        - TypanTechnicalOperationsSupervisor
         - TypanVault
         - TypanExternal
         - SyndicateAgent

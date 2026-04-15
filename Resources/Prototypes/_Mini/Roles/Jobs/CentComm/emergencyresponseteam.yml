@@ -147,7 +147,7 @@
   description: job-description-ertsecurity
   skills: # CorvaxGoob-Skills
   - All
-  playTimeTracker: JobERTSecurityAmber
+  playTimeTracker: JobERTSecurity
   setPreference: false
   startingGear: ERTSecurityGearAmber
   icon: "JobIconERT"
@@ -195,7 +195,7 @@
   description: job-description-ertsecurity
   skills: # CorvaxGoob-Skills
   - All
-  playTimeTracker: JobERTSecurityRed
+  playTimeTracker: JobERTSecurity
   setPreference: false
   startingGear: ERTSecurityGearRed
   icon: "JobIconERT"
@@ -239,7 +239,7 @@
   description: job-description-ertsecurity
   skills: # CorvaxGoob-Skills
   - All
-  playTimeTracker: JobERTSecurityGamma
+  playTimeTracker: JobERTSecurity
   setPreference: false
   startingGear: ERTSecurityGearGamma
   icon: "JobIconERT"
