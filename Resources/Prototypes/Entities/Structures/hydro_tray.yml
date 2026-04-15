@@ -179,7 +179,7 @@
   - type: Machine
     board: HydroponicsTrayMachineCircuitboard
   - type: TTS # CorvaxGoob-TTS
-    voice: TrainingRobot
+    voice: Robot
   - type: WiresPanel
   - type: AmbientSound
     volume: -9

@@ -475,7 +475,7 @@
         - Schechi
         - NewKinPidgin
     - type: TTS # CorvaxGoob-TTS
-      voice: Glados
+      voice: Kseniya
   # CorvaxGoob-Revert : DB conflicts
   # - type: SpeechSynthesis # Corvax-Frontier-Barks
   #   voice: Borg

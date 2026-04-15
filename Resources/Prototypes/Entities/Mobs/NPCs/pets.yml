@@ -244,7 +244,7 @@
       proper: true
       gender: female
   - type: TTS # CorvaxGoob-TTS
-    voice: Dryad
+    voice: Vika
   - type: Inventory
     speciesId: dog
     templateId: petAdvanced
