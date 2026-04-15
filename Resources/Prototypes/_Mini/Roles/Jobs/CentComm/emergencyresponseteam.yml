@@ -1,724 +1,724 @@
 # Leader
 ## Amber
-- type: job
-  id: ERTLeaderAmber
-  name: job-name-ertleader-amber
-  skills: # CorvaxGoob-Skills
-  - All
-  description: job-description-ertleader
-  playTimeTracker: JobERTLeaderAmber
-  setPreference: false
-  startingGear: ERTLeaderGearAmber
-  icon: "JobIconERTLeader"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  - ErtTeamLeader
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: job
+#   id: ERTLeaderAmber
+#   name: job-name-ertleader-amber
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   description: job-description-ertleader
+#   playTimeTracker: JobERTLeaderAmber
+#   setPreference: false
+#   startingGear: ERTLeaderGearAmber
+#   icon: "JobIconERTLeader"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   - ErtTeamLeader
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTLeaderGearAmber
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTLeader
-    back: ClothingBackpackERTLeader
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    neck: ClothingNeckMantleERTLeader
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterArmorBulletproof
-    shoes: ClothingShoesBootsJackFilled
-    head: ClothingHeadHelmetERTLeader
-    id: ERTLeaderPDA
-    belt: ClothingBeltAssaultFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - WeaponDisabler
-    - CrowbarRed
-    - PinpointerNuclear
-    - EmergencyMedipen
+# - type: startingGear
+#   id: ERTLeaderGearAmber
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTLeader
+#     back: ClothingBackpackERTLeader
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     neck: ClothingNeckMantleERTLeader
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterArmorBulletproof
+#     shoes: ClothingShoesBootsJackFilled
+#     head: ClothingHeadHelmetERTLeader
+#     id: ERTLeaderPDA
+#     belt: ClothingBeltAssaultFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - WeaponDisabler
+#     - CrowbarRed
+#     - PinpointerNuclear
+#     - EmergencyMedipen
 
 ## Red
-- type: job
-  id: ERTLeaderRed
-  name: job-name-ertleader-red
-  description: job-description-ertleader
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTLeaderRed
-  setPreference: false
-  startingGear: ERTLeaderGearRed
-  icon: "JobIconERTLeader"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  - ErtTeamLeader
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: job
+#   id: ERTLeaderRed
+#   name: job-name-ertleader-red
+#   description: job-description-ertleader
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTLeaderRed
+#   setPreference: false
+#   startingGear: ERTLeaderGearRed
+#   icon: "JobIconERTLeader"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   - ErtTeamLeader
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTLeaderGearRed
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTLeader
-    back: ClothingBackpackERTLeader
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    neck: ClothingNeckMantleERTLeader
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTLeader
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTLeaderPDA
-    belt: ClothingBeltSecurityWebbingFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - ADTBaseUplinkBOBERT
-    - PinpointerNuclear
-    - CrowbarRed
-    - DoorRemoteAll
-    - EmergencyMedipen
-    - WeaponDisabler
+# - type: startingGear
+#   id: ERTLeaderGearRed
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTLeader
+#     back: ClothingBackpackERTLeader
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     neck: ClothingNeckMantleERTLeader
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTLeader
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTLeaderPDA
+#     belt: ClothingBeltSecurityWebbingFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - ADTBaseUplinkBOBERT
+#     - PinpointerNuclear
+#     - CrowbarRed
+#     - DoorRemoteAll
+#     - EmergencyMedipen
+#     - WeaponDisabler
 
 
 ## Gamma
-- type: job
-  id: ERTLeaderGamma
-  name: job-name-ertleader-gamma
-  description: job-description-ertleader
-  playTimeTracker: JobERTLeaderGamma
-  setPreference: false
-  startingGear: ERTLeaderGearGamma
-  icon: "JobIconERTLeader"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  skills: # CorvaxGoob-Skills
-  - All
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  - ErtTeamLeader
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: job
+#   id: ERTLeaderGamma
+#   name: job-name-ertleader-gamma
+#   description: job-description-ertleader
+#   playTimeTracker: JobERTLeaderGamma
+#   setPreference: false
+#   startingGear: ERTLeaderGearGamma
+#   icon: "JobIconERTLeader"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   - ErtTeamLeader
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTLeaderGearGamma
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTLeader
-    back: ClothingBackpackERTLeader
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    neck: ClothingNeckMantleERTLeader
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTLeader
-    suitstorage: JetpackMiniFilled
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTLeaderPDA
-    belt: ClothingBeltSecurityWebbingFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-    pocket2: DoorRemoteAll
-  storage:
-    back:
-    - ADTBaseUplinkBOBERT
-    - PinpointerNuclear
-    - CrowbarRed
-    - EmergencyMedipen
-    - WeaponDisabler
-    - ClothingEyesNightVisionGoggles
+# - type: startingGear
+#   id: ERTLeaderGearGamma
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTLeader
+#     back: ClothingBackpackERTLeader
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     neck: ClothingNeckMantleERTLeader
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTLeader
+#     suitstorage: JetpackMiniFilled
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTLeaderPDA
+#     belt: ClothingBeltSecurityWebbingFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#     pocket2: DoorRemoteAll
+#   storage:
+#     back:
+#     - ADTBaseUplinkBOBERT
+#     - PinpointerNuclear
+#     - CrowbarRed
+#     - EmergencyMedipen
+#     - WeaponDisabler
+#     - ClothingEyesNightVisionGoggles
 
 # Security
 ## Amber
-- type: job
-  id: ERTSecurityAmber
-  name: job-name-ertsecurity-amber
-  description: job-description-ertsecurity
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTSecurity
-  setPreference: false
-  startingGear: ERTSecurityGearAmber
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: job
+#   id: ERTSecurityAmber
+#   name: job-name-ertsecurity-amber
+#   description: job-description-ertsecurity
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTSecurity
+#   setPreference: false
+#   startingGear: ERTSecurityGearAmber
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTSecurityGearAmber
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTSecurity
-    back: ClothingBackpackERTSecurity
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterArmorBulletproof
-    shoes: ClothingShoesBootsJackSecFilled
-    head: ClothingHeadHelmetERTSecurity
-    id: ERTSecurityPDA
-    belt: ClothingBeltAssaultFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-    pocket2: WeaponPistolMk58
-  storage:
-    back:
-    - TelescopicShield
-    - WeaponDisabler
-    - CrowbarRed
-    - EmergencyMedipen
-    - MagazinePistol
-    - MagazinePistol
+# - type: startingGear
+#   id: ERTSecurityGearAmber
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTSecurity
+#     back: ClothingBackpackERTSecurity
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterArmorBulletproof
+#     shoes: ClothingShoesBootsJackSecFilled
+#     head: ClothingHeadHelmetERTSecurity
+#     id: ERTSecurityPDA
+#     belt: ClothingBeltAssaultFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#     pocket2: WeaponPistolMk58
+#   storage:
+#     back:
+#     - TelescopicShield
+#     - WeaponDisabler
+#     - CrowbarRed
+#     - EmergencyMedipen
+#     - MagazinePistol
+#     - MagazinePistol
 
 
-
-## Red
-- type: job
-  id: ERTSecurityRed
-  name: job-name-ertsecurity-red
-  description: job-description-ertsecurity
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTSecurity
-  setPreference: false
-  startingGear: ERTSecurityGearRed
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
-
-- type: startingGear
-  id: ERTSecurityGearRed
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTSecurity
-    back: ClothingBackpackERTSecurity
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTSecurity
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTSecurityPDA
-    belt: ClothingBeltSecurityWebbingFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - TelescopicShield
-    - WeaponDisabler
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - CrowbarRed
-    - PinpointerNuclear
-
-## Gamma
-- type: job
-  id: ERTSecurityGamma
-  name: job-name-ertsecurity-gamma
-  description: job-description-ertsecurity
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTSecurity
-  setPreference: false
-  startingGear: ERTSecurityGearGamma
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
-
-- type: startingGear
-  id: ERTSecurityGearGamma
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTSecurity
-    back: ClothingBackpackERTSecurity
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTSecurity
-    suitstorage: JetpackMiniFilled
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTSecurityPDA
-    belt: ClothingBeltSecurityWebbingFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - TelescopicShield
-    - WeaponDisabler
-    - CrowbarRed
-    - ADTBaseUplinkBOBERT
-    - EmergencyMedipen
-    - PinpointerNuclear
-    - ClothingEyesNightVisionGoggles
-
-# Medical
-## Amber
-- type: job
-  id: ERTMedicalAmber
-  name: job-name-ertmedic-amber
-  skills: # CorvaxGoob-Skills
-  - All
-  description: job-description-ertmedic
-  playTimeTracker: JobERTMedicalAmber
-  setPreference: false
-  startingGear: ERTMedicalGearAmber
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
-
-- type: startingGear
-  id: ERTMedicalGearAmber
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTMedic
-    back: ClothingBackpackERTMedical
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterArmorBulletproof
-    shoes: ClothingShoesColorWhite
-    head: ClothingHeadHelmetERTMedic
-    id: ERTMedicPDA
-    belt: ClothingBeltMedicalFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - Defibrillator
-    - ADTBaseUplinkBOBERT
-    - WeaponDisabler
-    - HandheldHealthAnalyzer
-    - ChemistryBottleOmnizine
-    - ChemistryBottleEpinephrine
-    - Cautery
-    - CrowbarRed
-    - Hypospray
-    - EmergencyMedipen
 
 ## Red
-- type: job
-  id: ERTMedicalRed
-  name: job-name-ertmedic-red
-  description: job-description-ertmedic
-  playTimeTracker: JobERTMedicalRed
-  setPreference: false
-  startingGear: ERTMedicalGearRed
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  skills: # CorvaxGoob-Skills
-  - All
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: job
+#   id: ERTSecurityRed
+#   name: job-name-ertsecurity-red
+#   description: job-description-ertsecurity
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTSecurity
+#   setPreference: false
+#   startingGear: ERTSecurityGearRed
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTMedicalGearRed
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTMedic
-    back: ClothingBackpackERTMedical
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTMedical
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTMedicPDA
-    belt: ClothingBeltSecurityWebbingFilledMedical
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - ChemistryBottleOmnizine
-    - ChemistryBottleOmnizine
-    - ChemistryBottleEpinephrine
-    - ChemistryBottleEpinephrine
-    - Cautery
-    - CrowbarRed
-    - Hypospray
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - DefibrillatorCompact
-    - WeaponDisabler
-    - HandheldHealthAnalyzer
+# - type: startingGear
+#   id: ERTSecurityGearRed
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTSecurity
+#     back: ClothingBackpackERTSecurity
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTSecurity
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTSecurityPDA
+#     belt: ClothingBeltSecurityWebbingFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - TelescopicShield
+#     - WeaponDisabler
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - CrowbarRed
+#     - PinpointerNuclear
 
-## Gamma
-- type: job
-  id: ERTMedicalGamma
-  name: job-name-ertmedic-gamma
-  description: job-description-ertmedic
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTMedicalGamma
-  setPreference: false
-  startingGear: ERTMedicalGearGamma
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# ## Gamma
+# - type: job
+#   id: ERTSecurityGamma
+#   name: job-name-ertsecurity-gamma
+#   description: job-description-ertsecurity
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTSecurity
+#   setPreference: false
+#   startingGear: ERTSecurityGearGamma
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTMedicalGearGamma
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTMedic
-    back: ClothingBackpackERTMedical
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTMedical
-    suitstorage: JetpackMiniFilled
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTMedicPDA
-    belt: ClothingBeltSecurityWebbingFilledMedical
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - ChemistryBottleOmnizine
-    - ChemistryBottleOmnizine
-    - ChemistryBottleOmnizine
-    - ChemistryBottleEpinephrine
-    - ChemistryBottleEpinephrine
-    - ChemistryBottleEpinephrine
-    - Cautery
-    - CrowbarRed
-    - Hypospray
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - DefibrillatorCompact
-    - WeaponDisabler
-    - HandheldHealthAnalyzer
-    - PinpointerNuclear
-    - ClothingEyesNightVisionGoggles
+# - type: startingGear
+#   id: ERTSecurityGearGamma
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTSecurity
+#     back: ClothingBackpackERTSecurity
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTSecurity
+#     suitstorage: JetpackMiniFilled
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTSecurityPDA
+#     belt: ClothingBeltSecurityWebbingFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - TelescopicShield
+#     - WeaponDisabler
+#     - CrowbarRed
+#     - ADTBaseUplinkBOBERT
+#     - EmergencyMedipen
+#     - PinpointerNuclear
+#     - ClothingEyesNightVisionGoggles
 
-# Engineer
-## Amber
-- type: job
-  id: ERTEngineerAmber
-  name: job-name-ertengineer-amber
-  description: job-description-ertengineer
-  skills: # CorvaxGoob-Skills
-  - All
-  playTimeTracker: JobERTEngineerAmber
-  setPreference: false
-  startingGear: ERTEngineerGearAmber
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# # Medical
+# ## Amber
+# - type: job
+#   id: ERTMedicalAmber
+#   name: job-name-ertmedic-amber
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   description: job-description-ertmedic
+#   playTimeTracker: JobERTMedicalAmber
+#   setPreference: false
+#   startingGear: ERTMedicalGearAmber
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTEngineerGearAmber
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTEngineer
-    back: ClothingBackpackERTEngineer
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterArmorBulletproof
-    shoes: ClothingShoesBootsWork
-    head: ClothingHeadHelmetERTEngineer
-    id: ERTEngineerPDA
-    belt: ClothingBeltChiefEngineerFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - FlashlightLantern
-    - WeaponDisabler
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - RCD
-    - RCDAmmo
+# - type: startingGear
+#   id: ERTMedicalGearAmber
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTMedic
+#     back: ClothingBackpackERTMedical
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterArmorBulletproof
+#     shoes: ClothingShoesColorWhite
+#     head: ClothingHeadHelmetERTMedic
+#     id: ERTMedicPDA
+#     belt: ClothingBeltMedicalFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - Defibrillator
+#     - ADTBaseUplinkBOBERT
+#     - WeaponDisabler
+#     - HandheldHealthAnalyzer
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleEpinephrine
+#     - Cautery
+#     - CrowbarRed
+#     - Hypospray
+#     - EmergencyMedipen
 
-## Red
-- type: job
-  id: ERTEngineerRed
-  name: job-name-ertengineer-red
-  description: job-description-ertengineer
-  playTimeTracker: JobERTEngineerRed
-  setPreference: false
-  startingGear: ERTEngineerGearRed
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  skills: # CorvaxGoob-Skills
-  - All
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# ## Red
+# - type: job
+#   id: ERTMedicalRed
+#   name: job-name-ertmedic-red
+#   description: job-description-ertmedic
+#   playTimeTracker: JobERTMedicalRed
+#   setPreference: false
+#   startingGear: ERTMedicalGearRed
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTEngineerGearRed
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTEngineer
-    back: ClothingBackpackERTEngineer
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTEngineer
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTEngineerPDA
-    belt: ClothingBeltChiefEngineerFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - RCD
-    - RCDAmmo
-    - RCDAmmo
-    - ADTBaseUplinkBOBERT
-    - EmergencyMedipen
-    - RemoteSignaller
-    - WeaponDisabler
+# - type: startingGear
+#   id: ERTMedicalGearRed
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTMedic
+#     back: ClothingBackpackERTMedical
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTMedical
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTMedicPDA
+#     belt: ClothingBeltSecurityWebbingFilledMedical
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleEpinephrine
+#     - ChemistryBottleEpinephrine
+#     - Cautery
+#     - CrowbarRed
+#     - Hypospray
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - DefibrillatorCompact
+#     - WeaponDisabler
+#     - HandheldHealthAnalyzer
 
-## Gamma
-- type: job
-  id: ERTEngineerGamma
-  name: job-name-ertengineer-gamma
-  skills: # CorvaxGoob-Skills
-  - All
-  description: job-description-ertengineer
-  playTimeTracker: JobERTEngineerGamma
-  setPreference: false
-  startingGear: ERTEngineerGearGamma
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# ## Gamma
+# - type: job
+#   id: ERTMedicalGamma
+#   name: job-name-ertmedic-gamma
+#   description: job-description-ertmedic
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTMedicalGamma
+#   setPreference: false
+#   startingGear: ERTMedicalGearGamma
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTEngineerGearGamma
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTEngineer
-    back: ClothingBackpackERTEngineer
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTEngineer
-    suitstorage: JetpackMiniFilled
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTEngineerPDA
-    belt: ClothingBeltChiefEngineerFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - WeaponDisabler
-    - RCDRecharging
-    - RCDAmmo
-    - RCDAmmo
-    - C4
-    - C4
-    - C4
-    - C4
-    - RemoteSignallerAdvanced
-    - ADTBaseUplinkBOBERT
-    - EmergencyMedipen
-    - PinpointerNuclear
-    - ClothingEyesNightVisionGoggles
+# - type: startingGear
+#   id: ERTMedicalGearGamma
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTMedic
+#     back: ClothingBackpackERTMedical
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTMedical
+#     suitstorage: JetpackMiniFilled
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTMedicPDA
+#     belt: ClothingBeltSecurityWebbingFilledMedical
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleOmnizine
+#     - ChemistryBottleEpinephrine
+#     - ChemistryBottleEpinephrine
+#     - ChemistryBottleEpinephrine
+#     - Cautery
+#     - CrowbarRed
+#     - Hypospray
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - DefibrillatorCompact
+#     - WeaponDisabler
+#     - HandheldHealthAnalyzer
+#     - PinpointerNuclear
+#     - ClothingEyesNightVisionGoggles
 
-# Janitor
-## Amber
-- type: job
-  id: ERTJanitorAmber
-  skills: # CorvaxGoob-Skills
-  - All
-  name: job-name-ertjanitor-amber
-  description: job-description-ertjanitor
-  playTimeTracker: JobERTJanitorAmber
-  setPreference: false
-  startingGear: ERTJanitorGearAmber
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# # Engineer
+# ## Amber
+# - type: job
+#   id: ERTEngineerAmber
+#   name: job-name-ertengineer-amber
+#   description: job-description-ertengineer
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   playTimeTracker: JobERTEngineerAmber
+#   setPreference: false
+#   startingGear: ERTEngineerGearAmber
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTJanitorGearAmber
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTJanitor
-    back: ClothingBackpackERTJanitor
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterArmorBulletproof
-    shoes: ClothingShoesGaloshes
-    head: ClothingHeadHelmetERTJanitor
-    id: ERTJanitorPDA
-    belt: ClothingBeltJanitorFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - SoapNT
-    - MopItem
-    - LightReplacer
-    - Holoprojector
-    - CrowbarRed
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - WeaponDisabler
+# - type: startingGear
+#   id: ERTEngineerGearAmber
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTEngineer
+#     back: ClothingBackpackERTEngineer
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterArmorBulletproof
+#     shoes: ClothingShoesBootsWork
+#     head: ClothingHeadHelmetERTEngineer
+#     id: ERTEngineerPDA
+#     belt: ClothingBeltChiefEngineerFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - FlashlightLantern
+#     - WeaponDisabler
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - RCD
+#     - RCDAmmo
 
-## Red
-- type: job
-  id: ERTJanitorRed
-  skills: # CorvaxGoob-Skills
-  - All
-  name: job-name-ertjanitor-red
-  description: job-description-ertjanitor
-  playTimeTracker: JobERTJanitorRed
-  setPreference: false
-  startingGear: ERTJanitorGearRed
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# ## Red
+# - type: job
+#   id: ERTEngineerRed
+#   name: job-name-ertengineer-red
+#   description: job-description-ertengineer
+#   playTimeTracker: JobERTEngineerRed
+#   setPreference: false
+#   startingGear: ERTEngineerGearRed
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-- type: startingGear
-  id: ERTJanitorGearRed
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTJanitor
-    back: ClothingBackpackERTJanitor
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTJanitor
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTJanitorPDA
-    belt: ClothingBeltJanitorFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - SoapNT
-    - AdvMopItem
-    - LightReplacer
-    - Holoprojector
-    - CrowbarRed
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - TrashBagBlue
+# - type: startingGear
+#   id: ERTEngineerGearRed
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTEngineer
+#     back: ClothingBackpackERTEngineer
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTEngineer
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTEngineerPDA
+#     belt: ClothingBeltChiefEngineerFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - RCD
+#     - RCDAmmo
+#     - RCDAmmo
+#     - ADTBaseUplinkBOBERT
+#     - EmergencyMedipen
+#     - RemoteSignaller
+#     - WeaponDisabler
 
-    - WeaponDisabler
+# ## Gamma
+# - type: job
+#   id: ERTEngineerGamma
+#   name: job-name-ertengineer-gamma
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   description: job-description-ertengineer
+#   playTimeTracker: JobERTEngineerGamma
+#   setPreference: false
+#   startingGear: ERTEngineerGearGamma
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
 
-## Gamma
-- type: job
-  id: ERTJanitorGamma
-  skills: # CorvaxGoob-Skills
-  - All
-  name: job-name-ertjanitor-gamma
-  description: job-description-ertjanitor
-  playTimeTracker: JobERTJanitorGamma
-  setPreference: false
-  startingGear: ERTJanitorGearGamma
-  icon: "JobIconERT"
-  supervisors: job-supervisors-centcom
-  canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
-  special:
-  - !type:AddImplantSpecial
-    implants: [ MindShieldImplant, TrackingImplant ]
+# - type: startingGear
+#   id: ERTEngineerGearGamma
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTEngineer
+#     back: ClothingBackpackERTEngineer
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTEngineer
+#     suitstorage: JetpackMiniFilled
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTEngineerPDA
+#     belt: ClothingBeltChiefEngineerFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - WeaponDisabler
+#     - RCDRecharging
+#     - RCDAmmo
+#     - RCDAmmo
+#     - C4
+#     - C4
+#     - C4
+#     - C4
+#     - RemoteSignallerAdvanced
+#     - ADTBaseUplinkBOBERT
+#     - EmergencyMedipen
+#     - PinpointerNuclear
+#     - ClothingEyesNightVisionGoggles
 
-- type: startingGear
-  id: ERTJanitorGearGamma
-  equipment:
-    jumpsuit: ClothingUniformJumpsuitERTJanitor
-    back: ClothingBackpackERTJanitor
-    mask: ClothingMaskGasERT
-    eyes: ClothingEyesGlassesSecurity
-    ears: ClothingHeadsetCentCom
-    gloves: ClothingHandsGlovesCombat
-    outerClothing: ClothingOuterHardsuitERTJanitor
-    suitstorage: JetpackMiniFilled
-    shoes: ClothingShoesBootsMagEmergencyResponseTeam
-    id: ERTJanitorPDA
-    belt: ClothingBeltJanitorFilled
-    pocket1: DoubleEmergencyOxygenTankFilled
-  storage:
-    back:
-    - SoapOmega
-    - AdvMopItem
-    - LightReplacer
-    - Holoprojector
-    - Zipties
-    - EmergencyMedipen
-    - ADTBaseUplinkBOBERT
-    - CrowbarRed
-    - WeaponDisabler
-    - TrashBagBlue
-    - PinpointerNuclear
-    - ClothingEyesNightVisionGoggles
+# # Janitor
+# ## Amber
+# - type: job
+#   id: ERTJanitorAmber
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   name: job-name-ertjanitor-amber
+#   description: job-description-ertjanitor
+#   playTimeTracker: JobERTJanitorAmber
+#   setPreference: false
+#   startingGear: ERTJanitorGearAmber
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
+
+# - type: startingGear
+#   id: ERTJanitorGearAmber
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTJanitor
+#     back: ClothingBackpackERTJanitor
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterArmorBulletproof
+#     shoes: ClothingShoesGaloshes
+#     head: ClothingHeadHelmetERTJanitor
+#     id: ERTJanitorPDA
+#     belt: ClothingBeltJanitorFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - SoapNT
+#     - MopItem
+#     - LightReplacer
+#     - Holoprojector
+#     - CrowbarRed
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - WeaponDisabler
+
+# ## Red
+# - type: job
+#   id: ERTJanitorRed
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   name: job-name-ertjanitor-red
+#   description: job-description-ertjanitor
+#   playTimeTracker: JobERTJanitorRed
+#   setPreference: false
+#   startingGear: ERTJanitorGearRed
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
+
+# - type: startingGear
+#   id: ERTJanitorGearRed
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTJanitor
+#     back: ClothingBackpackERTJanitor
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTJanitor
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTJanitorPDA
+#     belt: ClothingBeltJanitorFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - SoapNT
+#     - AdvMopItem
+#     - LightReplacer
+#     - Holoprojector
+#     - CrowbarRed
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - TrashBagBlue
+
+#     - WeaponDisabler
+
+# ## Gamma
+# - type: job
+#   id: ERTJanitorGamma
+#   skills: # CorvaxGoob-Skills
+#   - All
+#   name: job-name-ertjanitor-gamma
+#   description: job-description-ertjanitor
+#   playTimeTracker: JobERTJanitorGamma
+#   setPreference: false
+#   startingGear: ERTJanitorGearGamma
+#   icon: "JobIconERT"
+#   supervisors: job-supervisors-centcom
+#   canBeAntag: false
+#   accessGroups:
+#   - AllAccess
+#   access:
+#   - CentralCommand
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ MindShieldImplant, TrackingImplant ]
+
+# - type: startingGear
+#   id: ERTJanitorGearGamma
+#   equipment:
+#     jumpsuit: ClothingUniformJumpsuitERTJanitor
+#     back: ClothingBackpackERTJanitor
+#     mask: ClothingMaskGasERT
+#     eyes: ClothingEyesGlassesSecurity
+#     ears: ClothingHeadsetCentCom
+#     gloves: ClothingHandsGlovesCombat
+#     outerClothing: ClothingOuterHardsuitERTJanitor
+#     suitstorage: JetpackMiniFilled
+#     shoes: ClothingShoesBootsMagEmergencyResponseTeam
+#     id: ERTJanitorPDA
+#     belt: ClothingBeltJanitorFilled
+#     pocket1: DoubleEmergencyOxygenTankFilled
+#   storage:
+#     back:
+#     - SoapOmega
+#     - AdvMopItem
+#     - LightReplacer
+#     - Holoprojector
+#     - Zipties
+#     - EmergencyMedipen
+#     - ADTBaseUplinkBOBERT
+#     - CrowbarRed
+#     - WeaponDisabler
+#     - TrashBagBlue
+#     - PinpointerNuclear
+#     - ClothingEyesNightVisionGoggles
