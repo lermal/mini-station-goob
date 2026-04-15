@@ -146,6 +146,18 @@
   - TypanLightHeadBorg
   - TypanTorsoBorg
 
+- type: latheRecipePack
+  id: TypanBorgModulesWeaponry
+  recipes:
+  - BorgModuleAdvancedChemical
+  - BorgModuleAdvancedSurgery
+  - BorgModuleSyndicateWeapon
+  - BorgModuleSyndicateWeaponAdvanced
+  - BorgModuleOperative
+  - BorgModuleMartyr
+  - BorgModuleEsword
+  - BorgModuleL6C
+
 ## Mechs
 - type: latheRecipePack
   id: TypanMech

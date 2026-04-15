@@ -71,6 +71,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 - type: entity
   id: PlayerBorgTypanEngineer
@@ -82,6 +85,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 - type: entity
   id: PlayerBorgTypanMining
@@ -93,6 +99,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 - type: entity
   id: PlayerBorgTypanJanitor
@@ -104,6 +113,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 - type: entity
   id: PlayerBorgTypanMedical
@@ -115,6 +127,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 # - type: entity
 #   id: PlayerBorgTypanService
@@ -137,6 +152,9 @@
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellHyper
+  - type: StartingMindRole
+    mindRole: "MindRoleSiliconBrainTypan"
+    silent: true
 
 - type: entity
   parent: BaseMindRole

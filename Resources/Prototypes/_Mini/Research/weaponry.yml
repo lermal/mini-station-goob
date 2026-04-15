@@ -222,6 +222,19 @@
   - TypanMagnetsTech
   # Goobstation R&D Console rework end
 
+- type: technology
+  id: TypanBorgModulesT1
+  name: research-technology-typan-borg-modules-t1
+  icon:
+    entity: BorgModuleSyndicateWeapon
+  discipline: TypanWeaponry
+  tier: 1
+  cost: 7500
+  recipeUnlocks:
+  - BorgModuleSyndicateWeapon
+  - BorgModuleOperative
+  position: 1,2
+
 # Tier 2
 
 - type: technology
@@ -378,6 +391,21 @@
   - TypanBasicRifles
   # Goobstation R&D Console rework end
 
+- type: technology
+  id: TypanBorgModulesT2
+  name: research-technology-typan-borg-modules-t2
+  icon:
+    entity: BorgModuleSyndicateWeaponAdvanced
+  discipline: TypanWeaponry
+  tier: 2
+  cost: 15000
+  recipeUnlocks:
+  - BorgModuleSyndicateWeaponAdvanced
+  - BorgModuleMartyr
+  position: 1,1
+  technologyPrerequisites:
+  - TypanBorgModulesT1
+
 # Tier 3
 
 - type: technology
@@ -449,3 +477,18 @@
   # technologyPrerequisites:
   # - TypanGrenades
   # Goobstation R&D Console rework end
+
+- type: technology
+  id: TypanBorgModulesT3
+  name: research-technology-typan-borg-modules-t3
+  icon:
+    entity: BorgModuleL6C
+  discipline: TypanWeaponry
+  tier: 3
+  cost: 30000
+  recipeUnlocks:
+  - BorgModuleEsword
+  - BorgModuleL6C
+  position: 1,0
+  technologyPrerequisites:
+  - TypanBorgModulesT2
