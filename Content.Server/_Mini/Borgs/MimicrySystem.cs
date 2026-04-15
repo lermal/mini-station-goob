@@ -24,13 +24,20 @@ namespace Content.Server.Borgs
             base.Initialize();
 
             SubscribeLocalEvent<MimicryComponent, PlayerAttachedEvent>(OnPlayerAttached);
+            SubscribeLocalEvent<MimicryComponent, ComponentShutdown>(OnShutdown);
             SubscribeLocalEvent<MimicryComponent, MimicryEvent>(OnMimicry);
             SubscribeLocalEvent<MimicryComponent, MobStateChangedEvent>(OnStateChanged);
         }
 
         private void OnPlayerAttached(EntityUid uid, MimicryComponent component, PlayerAttachedEvent args)
         {
-            _actions.AddAction(uid, component.MimicryAction);
+            _actions.AddAction(uid, ref component.MimicryActionEntity, component.MimicryAction);
+        }
+
+        private void OnShutdown(EntityUid uid, MimicryComponent component, ComponentShutdown args)
+        {
+            _actions.RemoveAction(uid, component.MimicryActionEntity);
+            component.MimicryActionEntity = null;
         }
         private void OnMimicry(EntityUid uid, MimicryComponent component, MimicryEvent args)
         {

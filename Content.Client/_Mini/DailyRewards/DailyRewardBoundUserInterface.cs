@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Casha
+//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 using System;
 using Content.Shared._Mini.DailyRewards;
 using JetBrains.Annotations;

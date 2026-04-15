@@ -23,7 +23,6 @@
             TypanScience: [ 2, 2 ]
             TypanPatrol: [ 2, 2 ]
             TypanBorg: [ 2, 2 ]
-            TypanBorgMedic: [ 1, 1 ]
             TypanCommander: [ 1, 1 ]
         - type: StationCargoShuttle
           path: Maps/Shuttles/typan_cargo_shuttle.yml

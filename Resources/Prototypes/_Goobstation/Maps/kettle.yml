@@ -95,7 +95,7 @@
             ShaftMiner: [ 3, 3 ]
             CargoTechnician: [ 3, 3 ]
             #civillian
-            Passenger: [ -1, -1 ]
+            Passenger: [ 1, 1 ]
             Clown: [ 1, 2 ]
             Mime: [ 1, 2 ]
             Musician: [ 1, 2 ]

@@ -49,7 +49,7 @@ public sealed class AntagTokenStatusCommand : IConsoleCommand
     }
 }
 
-[AdminCommand(AdminFlags.Admin)]
+[AdminCommand(AdminFlags.Host)]
 public sealed class AntagTokenAddCommand : IConsoleCommand
 {
     [Dependency] private readonly IPlayerManager _playerManager = default!;

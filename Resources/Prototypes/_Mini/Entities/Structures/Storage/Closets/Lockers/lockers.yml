@@ -249,7 +249,7 @@
     stateDoorOpen: door_open
     stateDoorClosed: ts_door
   - type: AccessReader
-    access: [["TypanTechnicalOperationsSupervisor"]]
+    access: [["TypanCommand"]]
 
 # Cargotech
 - type: entity

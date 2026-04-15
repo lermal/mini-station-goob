@@ -1,0 +1,41 @@
+- type: borgSubtype
+  parentBorgType: typan-generic
+  id: typan_generic_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanGeneric
+
+- type: borgSubtype
+  parentBorgType: typan-engineering
+  id: typan_engineer_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanEngineer
+
+- type: borgSubtype
+  parentBorgType: typan-mining
+  id: typan_miner_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanMining
+
+- type: borgSubtype
+  parentBorgType: typan-janitor
+  id: typan_janitor_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanJanitor
+
+- type: borgSubtype
+  parentBorgType: typan-medical
+  id: typan_medical_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanMedical
+
+# - type: borgSubtype
+#   parentBorgType: typan-service
+#   id: typan_service_default
+#   spritePath: _Mini/Mobs/Silicon/chassis.rsi
+#   dummyPrototype: BorgChassisTypanService
+
+- type: borgSubtype
+  parentBorgType: typan-security
+  id: typan_security_default
+  spritePath: _Mini/Mobs/Silicon/chassis.rsi
+  dummyPrototype: BorgChassisTypanSecurity

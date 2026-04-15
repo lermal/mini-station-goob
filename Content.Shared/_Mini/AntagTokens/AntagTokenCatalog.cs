@@ -12,6 +12,7 @@ public static class AntagTokenCatalog
     public const string MonthlyEarnedEntryId = "monthly-earned";
     public const string MonthlyYearEntryId = "monthly-year";
     public const string MonthlyMonthEntryId = "monthly-month";
+    public const string LastDonorBonusClaimEntryId = "last-donor-bonus-claim";
     public const string DepositSelectionTokenId = "deposit";
     public const string DepositUsedRoleCreditEntryId = "deposit-used-role-credit";
 
@@ -40,9 +41,9 @@ public static class AntagTokenCatalog
 
     public static readonly (TimeSpan Threshold, int RewardAmount)[] OnlineRewardMilestones =
     [
-        (TimeSpan.FromMinutes(30), 1),
-        (TimeSpan.FromHours(2), 2),
-        (TimeSpan.FromHours(4), 3),
+        (TimeSpan.FromHours(2), 1),
+        (TimeSpan.FromHours(4), 1),
+        (TimeSpan.FromHours(6), 1),
     ];
 
     private static readonly Dictionary<int, int> SponsorMonthlyCaps = new()
@@ -68,7 +69,7 @@ public static class AntagTokenCatalog
             "/Textures/_Mini/Interface/Antags/ninja.png", AntagPurchaseMode.GhostRule, null, "TokenNinjaSpawn",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
-        [DragonRole] = new(DragonRole, "antag-store-role-dragon-name", "antag-store-role-dragon-description", 3,
+        [DragonRole] = new(DragonRole, "antag-store-role-dragon-name", "antag-store-role-dragon-description", 4,
             "/Textures/_Mini/Interface/Antags/dragon.png", AntagPurchaseMode.GhostRule, null, "TokenDragonSpawn",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
@@ -76,11 +77,11 @@ public static class AntagTokenCatalog
             "/Textures/_Mini/Interface/Antags/abductor.png", AntagPurchaseMode.GhostRule, null, "TokenLoneAbductorSpawn",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
-        [InitialInfectedRole] = new(InitialInfectedRole, "antag-store-role-initial-infected-name", "antag-store-role-initial-infected-description", 3,
+        [InitialInfectedRole] = new(InitialInfectedRole, "antag-store-role-initial-infected-name", "antag-store-role-initial-infected-description", 5,
             "/Textures/_Mini/Interface/Antags/zombie.png", AntagPurchaseMode.LobbyDeposit, "InitialInfected", "Zombie",
             TagLocKey: "antag-token-window-tag-queue",
             RequiresPreRoundLobby: true),
-        [RevenantRole] = new(RevenantRole, "antag-store-role-revenant-name", "antag-store-role-revenant-description", 2,
+        [RevenantRole] = new(RevenantRole, "antag-store-role-revenant-name", "antag-store-role-revenant-description", 3,
             "/Textures/_Mini/Interface/Antags/revenant.png", AntagPurchaseMode.GhostRule, null, "TokenRevenantSpawn",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
@@ -104,11 +105,11 @@ public static class AntagTokenCatalog
             "/Textures/_Mini/Interface/Antags/blob.png", AntagPurchaseMode.GhostRule, null, "TokenBlobMidround",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
-        [WizardRole] = new(WizardRole, "antag-store-role-wizard-name", "antag-store-role-wizard-description", 8,
+        [WizardRole] = new(WizardRole, "antag-store-role-wizard-name", "antag-store-role-wizard-description", 10,
             "/Textures/_Mini/Interface/Antags/wizard.png", AntagPurchaseMode.GhostRule, null, "TokenWizard",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
-        [SlaughterDemonRole] = new(SlaughterDemonRole, "antag-store-role-slaughter-demon-name", "antag-store-role-slaughter-demon-description", 10,
+        [SlaughterDemonRole] = new(SlaughterDemonRole, "antag-store-role-slaughter-demon-name", "antag-store-role-slaughter-demon-description", 6,
             "/Textures/_Mini/Interface/Antags/slaughter_demon.png", AntagPurchaseMode.GhostRule, null, "TokenSlaughterDemon",
             TagLocKey: "antag-token-window-tag-ghost",
             RequiresInRound: true),
@@ -121,7 +122,7 @@ public static class AntagTokenCatalog
             TagLocKey: "antag-token-window-tag-queue",
             MinimumPlayers: 25,
             RequiresPreRoundLobby: true),
-        [HereticRole] = new(HereticRole, "antag-store-role-heretic-name", "antag-store-role-heretic-description", 6,
+        [HereticRole] = new(HereticRole, "antag-store-role-heretic-name", "antag-store-role-heretic-description", 5,
             "/Textures/_Mini/Interface/Antags/heretic.png", AntagPurchaseMode.LobbyDeposit, "Heretic", "Heretic",
             TagLocKey: "antag-token-window-tag-queue",
             MinimumPlayers: 20,

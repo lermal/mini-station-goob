@@ -6,105 +6,162 @@
     "x": 32,
     "y": 32
   },
-    "states": [
-        {
-            "name": "tajaran_m"
-        },
-        {
-            "name": "full"
-        },
-        {
-            "name": "head_m",
-            "directions": 4
-        },
-        {
-            "name": "head_f",
-            "directions": 4
-        },
-        {
-            "name": "l_arm",
-            "directions": 4
-        },
-        {
-            "name": "l_foot",
-            "directions": 4
-        },
-        {
-            "name": "l_hand",
-            "directions": 4
-        },
-        {
-            "name": "l_leg",
-            "directions": 4
-        },
-        {
-            "name": "overlay_husk",
-            "directions": 4
-        },
-        {
-            "name": "r_arm",
-            "directions": 4
-        },
-        {
-            "name": "r_foot",
-            "directions": 4
-        },
-        {
-            "name": "r_hand",
-            "directions": 4
-        },
-        {
-            "name": "r_leg",
-            "directions": 4
-        },
-        {
-            "name": "chest_m",
-            "directions": 4
-        },
-        {
-            "name": "chest_f",
-            "directions": 4
-        },
-        {
-            "name": "groin_m",
-            "directions": 4
-        },
-        {
-            "name": "groin_f",
-            "directions": 4
-        },
-        {
-            "name": "tail_m",
-            "directions": 4
-
-        },
-        {
-            "name": "tail_m_wagging",
-            "directions": 4,
-            "delays": [
-                [ 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15 ],
-                [ 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15 ],
-                [ 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15 ],
-                [ 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15 ]
-            ]
-        },
-        {
-            "name": "tajaran_eyes",
-            "directions": 4,
-            "delays": [
-                [
-                    1.0
-                ],
-                [
-                    1.0
-                ],
-                [
-                    1.0
-                ],
-                [
-                    1.0
-                ]
-            ]
-        }
-    ]
+  "states": [
+    {
+      "name": "tajaran_m"
+    },
+    {
+      "name": "full"
+    },
+    {
+      "name": "head_m",
+      "directions": 4
+    },
+    {
+      "name": "head_f",
+      "directions": 4
+    },
+    {
+      "name": "l_arm",
+      "directions": 4
+    },
+    {
+      "name": "l_foot",
+      "directions": 4
+    },
+    {
+      "name": "l_hand",
+      "directions": 4
+    },
+    {
+      "name": "l_leg",
+      "directions": 4
+    },
+    {
+      "name": "overlay_husk",
+      "directions": 4
+    },
+    {
+      "name": "r_arm",
+      "directions": 4
+    },
+    {
+      "name": "r_foot",
+      "directions": 4
+    },
+    {
+      "name": "r_hand",
+      "directions": 4
+    },
+    {
+      "name": "r_leg",
+      "directions": 4
+    },
+    {
+      "name": "chest_m",
+      "directions": 4
+    },
+    {
+      "name": "chest_f",
+      "directions": 4
+    },
+    {
+      "name": "groin_m",
+      "directions": 4
+    },
+    {
+      "name": "groin_f",
+      "directions": 4
+    },
+    {
+      "name": "tail_m",
+      "directions": 4
+    },
+    {
+      "name": "tail_m_wagging",
+      "directions": 4,
+      "delays": [
+        [
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15
+        ],
+        [
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15
+        ],
+        [
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15
+        ],
+        [
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15,
+          0.15
+        ]
+      ]
+    },
+    {
+      "name": "tajaran_eyes",
+      "directions": 4,
+      "delays": [
+        [
+          1.0
+        ],
+        [
+          1.0
+        ],
+        [
+          1.0
+        ],
+        [
+          1.0
+        ]
+      ]
+    },
+    {
+      "name": "torso_f"
+    },
+    {
+      "name": "torso_m"
+    }
+  ]
 }

@@ -6,7 +6,7 @@
   description: Ключ карта 0 уровня доступа
   components:
   - type: Sprite
-    sprite: _mini/Objects/Misc/lvl-0.rsi
+    sprite: _Mini/Objects/Misc/lvl-0.rsi
     layers:
     - state: icon
   - type: Access

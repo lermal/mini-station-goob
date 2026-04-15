@@ -1074,7 +1074,6 @@
     - TypanResearchDirector
     - TypanScience
     - TypanService
-    - TypanTechnicalOperationsSupervisor
     - TypanVault
     - TypanExternal
   - type: NanoChatCard # DeltaV

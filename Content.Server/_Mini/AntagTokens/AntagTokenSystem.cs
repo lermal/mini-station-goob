@@ -29,11 +29,14 @@ using Robust.Server.Player;
 using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Content.Shared.Chat;
+using Content.Server.Chat.Systems;
 
 namespace Content.Server._Mini.AntagTokens;
 
 public sealed class AntagTokenSystem : EntitySystem
 {
+    [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IServerDbManager _db = default!;
     [Dependency] private readonly UserDbDataManager _userDb = default!;
@@ -66,8 +69,8 @@ public sealed class AntagTokenSystem : EntitySystem
             1 => 10,
             2 => 20,
             3 => 30,
-            4 => 40,
-            5 => 50,
+            4 => 45,
+            5 => 60,
             _ => 0
         };
     }
@@ -89,6 +92,7 @@ public sealed class AntagTokenSystem : EntitySystem
         SubscribeLocalEvent<GhostRoleAntagSpawnerComponent, GhostRoleSpawnerUsedEvent>(OnReservedGhostSpawnerUsed);
 
         _userDb.AddOnLoadPlayer(LoadPlayerData);
+        _userDb.AddOnFinishLoad(OnPlayerDatabaseLoadFinished);
         _userDb.AddOnPlayerDisconnect(OnPlayerDisconnect);
     }
 
@@ -120,9 +124,47 @@ public sealed class AntagTokenSystem : EntitySystem
                 AddBalance(session.UserId, rewardAmount, out var granted, out _);
 
                 if (granted > 0)
-                    ShowPopup(session, $"Online reward: +{granted} tokens.");
+                {
+                    // Отправка в чат (нужно добавить IChatManager в зависимости)
+                    var hours = threshold.TotalHours;
+                    var message = $"Вы получили {granted} монет за время на сервере!";
+
+                    if (session.AttachedEntity is { Valid: true } uid)
+                    {
+                        // Через чат систему
+                        _chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, false);
+
+                        // Или через попап
+                        _popup.PopupEntity(message, uid, uid);
+                    }
+                }
             }
         }
+    }
+
+    private void TryGrantSponsorRenewal(ICommonSession session, PlayerTokenState state, DateTime nowUtc)
+    {
+        var sponsorLevel = GetEffectiveSponsorLevel(session.UserId);
+        if (sponsorLevel <= 0)
+            return;
+
+        var bonusAmount = GetDonorBonusByLevel(sponsorLevel);
+        if (bonusAmount <= 0)
+            return;
+
+        if (state.LastDonorBonusClaimUtc is { } lastClaim &&
+            nowUtc - lastClaim < TimeSpan.FromDays(30))
+        {
+            return;
+        }
+
+        AddBalance(session.UserId, bonusAmount, out var granted, out _);
+        if (granted <= 0)
+            return;
+
+        state.LastDonorBonusClaimUtc = nowUtc;
+        PersistState(session.UserId, state);
+        ShowPopup(session, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
     }
 
     public bool AddBalance(NetUserId userId, int amount, out int grantedAmount, out string? note)
@@ -437,6 +479,9 @@ public sealed class AntagTokenSystem : EntitySystem
                 case AntagTokenCatalog.DepositUsedRoleCreditEntryId:
                     state.PendingDepositUsedRoleCredit = token.Amount > 0;
                     break;
+                case AntagTokenCatalog.LastDonorBonusClaimEntryId:
+                    state.LastDonorBonusClaimUtc = DecodeUnixSeconds(token.Amount);
+                    break;
                 default:
                     if (token.TokenId.StartsWith("role-credit:", StringComparison.Ordinal) &&
                         token.Amount > 0)
@@ -456,9 +501,13 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = selectedRoleId;
         }
 
+        var prevMonthlyYear = state.MonthlyYear;
+        var prevMonthlyMonth = state.MonthlyMonth;
         NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
         _states[player.UserId] = state;
         _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
+        if (prevMonthlyYear != state.MonthlyYear || prevMonthlyMonth != state.MonthlyMonth)
+            PersistState(player.UserId, state);
     }
 
     private async void OnPlayerDisconnect(ICommonSession player)
@@ -482,7 +531,27 @@ public sealed class AntagTokenSystem : EntitySystem
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
-        SendState(ev.PlayerSession.UserId);
+    }
+
+    private void OnPlayerDatabaseLoadFinished(ICommonSession session)
+    {
+        TryGrantSponsorRenewalAfterStateLoaded(session);
+    }
+
+    internal void TryGrantSponsorRenewalAfterStateLoaded(ICommonSession session)
+    {
+        if (!_states.TryGetValue(session.UserId, out var state))
+            return;
+
+        TryGrantSponsorRenewal(session, state, DateTime.UtcNow);
+    }
+
+    internal void TestSetLastDonorBonusClaimUtc(NetUserId userId, DateTime? utc)
+    {
+        if (!_states.TryGetValue(userId, out var state))
+            throw new InvalidOperationException("Antag token state is not loaded for this user.");
+
+        state.LastDonorBonusClaimUtc = utc;
     }
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
@@ -901,6 +970,7 @@ private async Task PersistStateAsync(NetUserId userId, PlayerTokenState state)
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyEarnedEntryId, state.MonthlyEarned),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyYearEntryId, state.MonthlyYear),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.MonthlyMonthEntryId, state.MonthlyMonth),
+        _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.LastDonorBonusClaimEntryId, EncodeUnixSeconds(state.LastDonorBonusClaimUtc)),
         _db.SetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.DepositUsedRoleCreditEntryId, state.PendingDepositUsedRoleCredit ? 1 : 0)
     };
 
@@ -957,6 +1027,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
                 if (bonusAmount > 0)
                 {
                     state.Balance += bonusAmount;
+                    state.LastDonorBonusClaimUtc = nowUtc;
 
                     if (_playerManager.TryGetSessionById(userId.Value, out var session))
                         ShowPopup(session, $"Monthly donor bonus: +{bonusAmount} tokens!");
@@ -1022,6 +1093,23 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         state.PendingDepositUsedRoleCredit = false;
     }
 
+    private static int EncodeUnixSeconds(DateTime? value)
+    {
+        if (value == null)
+            return 0;
+
+        var unix = new DateTimeOffset(value.Value).ToUnixTimeSeconds();
+        return unix <= 0 ? 0 : (int)Math.Min(unix, int.MaxValue);
+    }
+
+    private static DateTime? DecodeUnixSeconds(int value)
+    {
+        if (value <= 0)
+            return null;
+
+        return DateTimeOffset.FromUnixTimeSeconds(value).UtcDateTime;
+    }
+
     private static string GetRoleName(AntagRoleDefinition role)
     {
         return role.Id switch
@@ -1069,6 +1157,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         public int MonthlyEarned { get; set; }
         public int MonthlyYear { get; set; }
         public int MonthlyMonth { get; set; }
+        public DateTime? LastDonorBonusClaimUtc { get; set; }
         public string? PendingDepositRoleId { get; set; }
         public bool PendingDepositUsedRoleCredit { get; set; }
         public Dictionary<string, int> RoleCredits { get; } = new();

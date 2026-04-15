@@ -69,7 +69,7 @@
             Mime: [ 1, 1 ]
             Musician: [ 1, 1 ]
             ServiceWorker: [ 2, 2 ]
-            Passenger: [ -1, -1 ]
+            Passenger: [ 1, 1 ]
             # silicon
             StationAi: [ 1, 1 ]
             Borg: [ 2, 2 ]
