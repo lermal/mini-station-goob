@@ -1358,6 +1358,9 @@
     {
       "name": "ipc_screen_l",
       "directions": 4
+    },
+    {
+      "name": "ipc_small_eye"
     }
   ]
 }

@@ -605,61 +605,67 @@
       "name": "representative_door"
     },
     {
-       "name": "brigmedlocked"
+      "name": "brigmedlocked"
     },
     {
-       "name": "blueshield"
+      "name": "blueshield"
     },
     {
-       "name": "blueshield_door"
+      "name": "blueshield_door"
     },
     {
-       "name": "blueshield_open"
+      "name": "blueshield_open"
     },
     {
-       "name": "coroner_secure"
+      "name": "coroner_secure"
     },
     {
-       "name": "coroner_secure_door"
+      "name": "coroner_secure_door"
     },
     {
-       "name": "coroner_secure_open"
+      "name": "coroner_secure_open"
     },
     {
-       "name": "typanatm"
+      "name": "typanatm"
     },
     {
-       "name": "typanatm_door"
+      "name": "typanatm_door"
     },
     {
-       "name": "typanatm_open"
+      "name": "typanatm_open"
     },
     {
-       "name": "typancargo"
+      "name": "typancargo"
     },
     {
-       "name": "typancargo_door"
+      "name": "typancargo_door"
     },
     {
-       "name": "typancargo_open"
+      "name": "typancargo_open"
     },
     {
-       "name": "typanmed_door"
+      "name": "typanmed_door"
     },
     {
-       "name": "typanmed"
+      "name": "typanmed"
     },
     {
-       "name": "typan_sci"
+      "name": "typan_sci"
     },
     {
-       "name": "typan_sci_door"
+      "name": "typan_sci_door"
     },
     {
-       "name": "typanbot"
+      "name": "typanbot"
     },
     {
-       "name": "typanbot_door"
+      "name": "typanbot_door"
+    },
+    {
+      "name": "eng_evac_door"
+    },
+    {
+      "name": "typan_cargo"
     }
   ]
 }

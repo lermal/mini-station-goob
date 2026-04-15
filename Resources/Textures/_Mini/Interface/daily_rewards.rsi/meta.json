@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "license": "All Rights Reserved",
+  "license": "CC-BY-SA-3.0",
   "copyright": "by Egorik1 for ministation",
   "size": {
     "x": 64,
@@ -18,5 +18,5 @@
         ]
       ]
     }
-    ]
+  ]
 }

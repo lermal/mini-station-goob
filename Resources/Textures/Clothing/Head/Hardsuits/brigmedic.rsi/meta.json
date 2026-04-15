@@ -44,6 +44,12 @@
     {
       "name": "off-equipped-HELMET-vulpkanin",
       "directions": 4
+    },
+    {
+      "name": "off-inhand-left"
+    },
+    {
+      "name": "off-inhand-right"
     }
   ]
 }
