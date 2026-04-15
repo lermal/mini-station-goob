@@ -9,6 +9,7 @@
     - BorgModuleSyndicate
   defaultModules:
   - BorgModuleTool
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   inventoryTemplateId: borgShort
@@ -35,6 +36,7 @@
   - BorgModuleConstruction
   - BorgModuleRCD
   - BorgModuleCable
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   inventoryTemplateId: borgShort
@@ -59,6 +61,7 @@
   defaultModules:
   - BorgModuleMining
   - BorgModuleAppraisal
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   inventoryTemplateId: borgTall
@@ -82,6 +85,7 @@
     - BorgModuleSyndicate
   defaultModules:
   - BorgModuleCleaning
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   inventoryTemplateId: borgShort
@@ -105,6 +109,7 @@
     - BorgModuleSyndicate
   defaultModules:
   - BorgModuleDiagnosis
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   addComponents:
@@ -162,6 +167,7 @@
     - BorgModuleSyndicateAssault
   defaultModules:
   - BorgModuleTool
+  - BorgModuleSyndicateWeapon
   radioChannels:
   - Typan
   inventoryTemplateId: borgTall

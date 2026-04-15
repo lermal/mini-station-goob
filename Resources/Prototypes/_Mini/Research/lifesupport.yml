@@ -148,6 +148,7 @@
   cost: 15000
   recipeUnlocks:
   - BorgModuleAdvancedChemical
+  - BorgModuleAdvancedSurgery
   # Goobstation R&D Console rework start
   position: 0,-4
   # technologyPrerequisites:

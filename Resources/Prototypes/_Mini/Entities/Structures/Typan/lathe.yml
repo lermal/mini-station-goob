@@ -234,6 +234,7 @@
     dynamicPacks:
     - Robotics
     - BorgModules
+    - TypanBorgModulesWeaponry
     - TypanMech
   - type: MaterialStorage
     whitelist:
