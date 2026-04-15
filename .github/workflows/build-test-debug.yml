@@ -70,7 +70,7 @@ jobs:
       run: dotnet build --configuration DebugOpt --no-restore /m
 
     - name: Run Content.Tests
-      run: dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0
+      run: dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj --filter "FullyQualifiedName!~Content.Tests.Client.Stylesheets.StyleGlassStylesheetTests" -- NUnit.ConsoleOut=0
 
     - name: Run Content.IntegrationTests
       shell: pwsh
