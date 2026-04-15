@@ -1,12 +1,4 @@
 - type: ertShuttle
-  id: RevSupShuttle
-  path: /Maps/Shuttles/ERT/rev_sup.yml
-
-- type: ertShuttle
-  id: CriticalForceShuttle
-  path: /Maps/Shuttles/ERT/ds_cf_septofil.yml
-
-- type: ertShuttle
   id: CburnShuttle
   path: /Maps/Shuttles/ERT/cburn.yml
 
@@ -25,15 +17,3 @@
 - type: ertShuttle
   id: CentCommOfficialShuttle
   path: /Maps/Shuttles/ERT/official.yml
-
-- type: ertShuttle
-  id: JanitorsShuttle
-  path: /Maps/Shuttles/ERT/janitors.yml
-
-- type: ertShuttle
-  id: EngineersShuttle
-  path: /Maps/Shuttles/ERT/engineers.yml
-
-- type: ertShuttle
-  id: SierraShuttle
-  path: /Maps/Shuttles/ERT/sierra.yml
