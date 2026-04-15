@@ -5,6 +5,7 @@
   description: Консоль для кодирования пропускных карт агентов Синдиката.
   components:
   - type: IdCardConsole
+    showFullAccessButton: true
     privilegedIdSlot:
       name: id-card-console-privileged-id
       ejectSound: /Audio/Machines/id_swipe.ogg
@@ -81,6 +82,8 @@
   description: Данное устройство реализует протокол Σ-трансмутации, применяя контролируемый обратный коллапс Шрёдингеровской информационной матрицы, запечатлённой в дисках исследований. При активации запускается нелинейная дематериализация по схеме. Проще говоря превращает диски исследований в телекристаллы.
   components:
   - type: Converter
+  - type: AccessReader
+    access: [["TypanScience"]]
   - type: Sprite
     sprite: _Mini/Structures/Machines/computers.rsi
     layers:
@@ -114,7 +117,7 @@
     key: enum.StoreUiKey.Key
   - type: Store
     balance:
-      Telecrystal: 1
+      Telecrystal: 0
   - type: Anchorable
     flags: None
 
@@ -260,7 +263,8 @@
       path: /Audio/_Mini/Announcements/announce_typan.ogg
       params:
         volume: -2
-    canShuttle: False
+    canCallShuttle: False
+    canRecallShuttle: False
 #    canCallERT: False
 #    canCallShuttle: False
     color: "#5c0006"
