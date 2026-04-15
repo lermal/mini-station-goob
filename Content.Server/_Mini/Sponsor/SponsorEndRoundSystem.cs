@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Threading;
 using System.Threading.Tasks;
 using Content.Shared.GameTicking;
 using Npgsql;
@@ -19,6 +20,12 @@ public sealed class SponsorSystem : EntitySystem
 
     private float _updateTimer;
     private const float UpdateInterval = 5f;
+    private static readonly TimeSpan RetryStep = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan RetryMax = TimeSpan.FromMinutes(10);
+    private TimeSpan _retryDelay = TimeSpan.Zero;
+    private TimeSpan _nextRetryAt = TimeSpan.Zero;
+    private int _loadInProgress;
+    private bool _dbUnavailable;
 
     public record struct SponsorInfo(string Uid, int Level);
     public ImmutableList<SponsorInfo> Sponsors { get; private set; } = ImmutableList<SponsorInfo>.Empty;
@@ -30,24 +37,13 @@ public sealed class SponsorSystem : EntitySystem
         SubscribeLocalEvent<RoundEndMessageEvent>(OnRoundEnd);
 
         // Первичная загрузка при старте
-        _ = LoadSponsors();
+        TryScheduleLoad("первичной загрузки", logSuccess: false);
     }
 
     private void OnRoundEnd(RoundEndMessageEvent ev)
     {
         // Внеочередное обновление после раунда
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                await LoadSponsors();
-                Log.Info("[Sponsors] Данные обновлены после раунда.");
-            }
-            catch (Exception e)
-            {
-                Log.Error($"[Sponsors] Ошибка обновления после раунда: {e}");
-            }
-        });
+        TryScheduleLoad("обновления после раунда", logSuccess: true);
     }
 
     public override void Update(float frameTime)
@@ -66,21 +62,33 @@ public sealed class SponsorSystem : EntitySystem
         _updateTimer -= UpdateInterval;
 
         // Запускаем асинхронную загрузку, не блокируя игровой цикл
+        TryScheduleLoad("периодического обновления", logSuccess: true);
+    }
+
+    private void TryScheduleLoad(string source, bool logSuccess)
+    {
+        if (_timing.CurTime < _nextRetryAt)
+            return;
+
+        if (Interlocked.CompareExchange(ref _loadInProgress, 1, 0) != 0)
+            return;
+
         _ = Task.Run(async () =>
         {
             try
             {
-                await LoadSponsors();
-                Log.Debug("[Sponsors] Периодическое обновление завершено.");
+                var loaded = await LoadSponsors();
+                if (loaded && logSuccess)
+                    Log.Debug($"[Sponsors] Данные обновлены после {source}.");
             }
-            catch (Exception e)
+            finally
             {
-                Log.Error($"[Sponsors] Ошибка периодического обновления: {e}");
+                Interlocked.Exchange(ref _loadInProgress, 0);
             }
         });
     }
 
-    public async Task LoadSponsors()
+    public async Task<bool> LoadSponsors()
     {
         var builder = new NpgsqlConnectionStringBuilder
         {
@@ -112,11 +120,27 @@ public sealed class SponsorSystem : EntitySystem
             }
 
             Sponsors = tempList.ToImmutableList();
+            if (_dbUnavailable)
+                Log.Info("[Sponsors] Подключение к БД восстановлено.");
+
+            _dbUnavailable = false;
+            _retryDelay = TimeSpan.Zero;
+            _nextRetryAt = TimeSpan.Zero;
             Log.Info($"[Sponsors] Загружено {Sponsors.Count} спонсоров из БД.");
+            return true;
         }
         catch (Exception ex)
         {
-            Log.Error($"[Sponsors] Критическая ошибка БД: {ex}");
+            _dbUnavailable = true;
+            _retryDelay = _retryDelay == TimeSpan.Zero ? RetryStep : TimeSpan.FromSeconds(Math.Min(RetryMax.TotalSeconds, _retryDelay.TotalSeconds + RetryStep.TotalSeconds));
+            _nextRetryAt = _timing.CurTime + _retryDelay;
+
+            if (_retryDelay == RetryStep)
+                Log.Error($"[Sponsors] Критическая ошибка БД: {ex}");
+            else
+                Log.Warning($"[Sponsors] БД недоступна, следующая попытка через {_retryDelay.TotalSeconds:0} сек.");
+
+            return false;
         }
     }
 }
