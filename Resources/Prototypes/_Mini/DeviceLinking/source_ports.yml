@@ -1,0 +1,4 @@
+- type: sourcePort
+  id: ShuttleConsoleSender
+  name: signal-port-name-shuttle-sender
+  description: signal-port-description-shuttle-sender

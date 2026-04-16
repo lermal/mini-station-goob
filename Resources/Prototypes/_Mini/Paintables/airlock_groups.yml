@@ -1,0 +1,34 @@
+- type: paintableGroup
+  id: TypanStandard
+  time: 3
+  cost: 3
+  defaultStyle: basic
+  styles:
+    atmospherics: AirlockTypanAtmospherics
+    basic: AirlockTypan
+    cargo: AirlockTypanCargo
+    command: AirlockTypanCommand
+    engineering: AirlockTypanEngineering
+    freezer: AirlockTypanFreezer
+    maintenance: AirlockTypanMaint
+    medical: AirlockTypanMedical
+    science: AirlockTypanScience
+    service: AirlockTypanService
+    virology: AirlockTypanVirology
+
+- type: paintableGroup
+  id: TypanGlass
+  time: 3
+  cost: 3
+  defaultStyle: basic
+  styles:
+    atmospherics: AirlockTypanGlassAtmospherics
+    basic: AirlockTypanGlass
+    cargo: AirlockTypanGlassCargo
+    command: AirlockTypanGlassCommand
+    engineering: AirlockTypanGlassEngineering
+    maintenance: AirlockTypanGlassMaint
+    medical: AirlockTypanGlassMedical
+    science: AirlockTypanGlassScience
+    service: AirlockTypanGlassService
+    virology: AirlockTypanGlassVirology

@@ -1,0 +1,51 @@
+- type: job
+  id: CentralCommandAdministrator
+  name: job-name-centcom-administrator
+  description: job-description-centcom-administrator
+  playTimeTracker: JobCentralCommandAdministrator
+  setPreference: false
+  startingGear: CentralCommandAdministratorStartingGear
+  icon: JobIconNanotrasen
+  supervisors: job-supervisors-centcom
+  canBeAntag: false
+
+- type: startingGear
+  id: CentralCommandAdministratorStartingGear
+  equipment:
+    back: ClothingBackpackSatchel
+
+- type: job
+  id: CentralCommandOfficer
+  name: job-name-centcom-officer-spawner
+  description: job-description-centcom-officer-spawner
+  playTimeTracker: JobCentralCommandOfficer
+  setPreference: false
+  startingGear: CentralCommandOfficerStartingGear
+  icon: JobIconNanotrasen
+  supervisors: job-supervisors-centcom
+  canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 108000
+
+- type: startingGear
+  id: CentralCommandOfficerStartingGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitCentcomOfficer
+
+- type: job
+  id: CentralCommandOperator
+  name: job-name-centcom-operator-spawner
+  description: job-description-centcom-operator-spawner
+  playTimeTracker: JobCentralCommandOperator
+  setPreference: false
+  startingGear: CentralCommandOperatorStartingGear
+  icon: JobIconNanotrasen
+  supervisors: job-supervisors-centcom
+  canBeAntag: false
+
+- type: startingGear
+  id: CentralCommandOperatorStartingGear
+  equipment:
+    back: ClothingBackpackSatchel

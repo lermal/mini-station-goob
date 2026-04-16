@@ -25,7 +25,6 @@
       subverted: false
     - type: IntrinsicRadioTransmitter
       channels:
-        - Binary # But that has really long range
         - Typan
     - type: ActiveRadio
       channels:
@@ -39,7 +38,7 @@
       sounds:
         Unsexed: UnisexSiliconSyndicate
     - type: Damageable
-      damageModifierSet: CombatBorg
+      damageModifierSet: Silicon
     - type: InteractionPopup
       interactSuccessString: petting-success-syndicate-cyborg
       interactFailureString: petting-failure-syndicate-cyborg

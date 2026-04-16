@@ -17,7 +17,7 @@
 
 - type: loadoutGroup
   id: SyndicateBackpack
-  name: Синдикат, спина
+  name: loadout-group-syndicate-backpack
   loadouts:
   - SyndiBackpack
   - SyndiDuffel

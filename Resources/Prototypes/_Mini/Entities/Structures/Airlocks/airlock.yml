@@ -38,6 +38,8 @@
   - type: ContainerFill
     containers:
       board: [ DoorElectronicsTypan ]
+  - type: Paintable
+    group: TypanStandard
   # - type: PaintableAirlock
   #   group: TypanStandard
 
@@ -52,6 +54,8 @@
     sprite: _Mini/Structures/Doors/Airlocks/typan_glass.rsi
   # - type: PaintableAirlock
   #   group: TypanGlass
+  - type: Paintable
+    group: TypanGlass
   - type: ContainerFill
     containers:
       board: [ DoorElectronicsTypan ]
@@ -342,3 +346,15 @@
     sprite: Structures/Doors/Airlocks/Glass/salvage.rsi
   - type: Wires
     layoutId: AirlockCargo
+
+- type: entity
+  parent: AirlockAssembly
+  id: AirlockTypanAssembly
+  suffix: Тайпан
+  components:
+  - type: Sprite
+    sprite: _Mini/Structures/Doors/Airlocks/typan.rsi
+    state: assembly
+  - type: Construction
+    graph: AirlockTypan
+    node: assembly

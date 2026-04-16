@@ -14,6 +14,16 @@
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -34,7 +44,7 @@
     gloves: ClothingHandsGlovesCombat
     outerClothing: ClothingOuterHardsuitCBURNLeader
     shoes: ClothingShoesBootsCombatFilled
-    id: CBURNLeaderPDA
+    id: CBURNPDA
     pocket1: DoubleEmergencyOxygenTankFilled
     pocket2: DoorRemoteAll
 
@@ -54,6 +64,13 @@
   - All
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 14400
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 50400
   accessGroups:
   - AllAccess
   access:

@@ -21,6 +21,13 @@
   icon: "JobIconNanotrasen"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 48000
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 18000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:

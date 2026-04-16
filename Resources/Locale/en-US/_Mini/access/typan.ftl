@@ -1,0 +1,16 @@
+id-card-access-taypan-armory = Armory
+id-card-access-taypan-atmospherics = Atmospherics
+id-card-access-taypan-cargo = Cargo
+id-card-access-taypan-command = Command
+id-card-access-taypan-comm-ofc = Communications Officer
+id-card-access-taypan-engineering = Engineering
+id-card-access-taypan-maint = Maintenance
+id-card-access-taypan-medical = Medical
+id-card-access-taypan-security = Security
+id-card-access-taypan-rd = Research Director
+id-card-access-taypan-science = Science
+id-card-access-taypan-research = Research
+id-card-access-taypan-tos = Technical Operations Supervisor
+id-card-access-taypan-service = Service
+id-card-access-taypan-vault = Vault
+id-card-access-taypan-external = External

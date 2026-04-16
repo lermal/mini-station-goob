@@ -66,8 +66,7 @@
       minAngle: 0
       maxAngle: 25
       angleDecay: 15
-      angleIncreasePerShot: 1
-      angleIncreasePerSecond: 4
+      angleIncrease: 1
       soundGunshot:
         path: /Audio/_Mini/LMGs/gunshotsaint.ogg
     - type: Sprite

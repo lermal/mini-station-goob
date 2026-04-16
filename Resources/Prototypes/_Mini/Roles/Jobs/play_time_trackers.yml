@@ -33,3 +33,52 @@
 
 - type: playTimeTracker
   id: JobTypanTechnician
+
+- type: playTimeTracker
+  id: JobTypanTechnicalOperationsSupervisor
+
+- type: playTimeTracker
+  id: JobERTLeaderAmber
+- type: playTimeTracker
+  id: JobERTLeaderRed
+- type: playTimeTracker
+  id: JobERTLeaderGamma
+- type: playTimeTracker
+  id: JobERTSecurityAmber
+- type: playTimeTracker
+  id: JobERTSecurityRed
+- type: playTimeTracker
+  id: JobERTSecurityGamma
+- type: playTimeTracker
+  id: JobERTMedicalAmber
+- type: playTimeTracker
+  id: JobERTMedicalRed
+- type: playTimeTracker
+  id: JobERTMedicalGamma
+- type: playTimeTracker
+  id: JobERTEngineerAmber
+- type: playTimeTracker
+  id: JobERTEngineerRed
+- type: playTimeTracker
+  id: JobERTEngineerGamma
+- type: playTimeTracker
+  id: JobERTJanitorAmber
+- type: playTimeTracker
+  id: JobERTJanitorRed
+- type: playTimeTracker
+  id: JobERTJanitorGamma
+
+- type: playTimeTracker
+  id: JobCBURNLeader
+- type: playTimeTracker
+  id: JobCBURNAgent
+
+- type: playTimeTracker
+  id: JobCentralCommandSpecialOperationsOfficer
+
+- type: playTimeTracker
+  id: JobCentralCommandAdministrator
+- type: playTimeTracker
+  id: JobCentralCommandOfficer
+- type: playTimeTracker
+  id: JobCentralCommandOperator

@@ -1,0 +1,45 @@
+- type: loadoutEffectGroup
+  id: MaleUnderwear
+  effects:
+  - !type:SpeciesLoadoutEffect
+    species:
+    - Arachnid
+    - Diona
+    - Dwarf
+    - Human
+    - Moth
+    - Reptilian
+    - Vulpkanin
+    - Felinid
+    - Harpy
+    - Gingerbread
+    - Rodentia
+    - Yowie
+    - Oni
+    - Resomi
+    - Tajaran
+    - Chitinid
+    - Shadowkin
+
+- type: loadoutEffectGroup
+  id: FemaleUnderwear
+  effects:
+  - !type:SpeciesLoadoutEffect
+    species:
+    - Arachnid
+    - Diona
+    - Dwarf
+    - Human
+    - Moth
+    - Reptilian
+    - Vulpkanin
+    - Felinid
+    - Harpy
+    - Gingerbread
+    - Rodentia
+    - Yowie
+    - Oni
+    - Resomi
+    - Tajaran
+    - Chitinid
+    - Shadowkin

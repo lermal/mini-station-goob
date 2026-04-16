@@ -12,6 +12,16 @@
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -57,6 +67,16 @@
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -102,6 +122,16 @@
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
+  - !type:DepartmentTimeRequirement
+    department: Command
+    time: 36000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:
@@ -153,6 +183,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 14400
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
   accessGroups:
   - AllAccess
   access:
@@ -201,6 +238,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 14400
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
   accessGroups:
   - AllAccess
   access:
@@ -245,6 +289,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 14400
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 72000
   accessGroups:
   - AllAccess
   access:
@@ -292,6 +343,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -339,6 +397,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:
@@ -391,6 +456,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Medical
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -447,6 +519,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Engineering
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -490,6 +569,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Engineering
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:
@@ -537,6 +623,13 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Engineering
+    time: 36000
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -590,6 +683,10 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -637,6 +734,10 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:
@@ -685,6 +786,10 @@
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
+  requirements:
+  - !type:DepartmentTimeRequirement
+    department: Security
+    time: 36000
   accessGroups:
   - AllAccess
   access:

@@ -261,7 +261,7 @@
 
 - type: technology
   id: TypanHUD
-  name: Технология визоров
+  name: research-technology-typan-hud
   icon:
     sprite: _Mini/Clothing/Eyes/Hud/typan_advhud.rsi
     state: icon

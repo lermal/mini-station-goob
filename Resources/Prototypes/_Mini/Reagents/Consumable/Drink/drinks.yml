@@ -1,8 +1,8 @@
 - type: reagent
   id: Kumis
-  name: кумыс
+  name: reagent-name-kumis
   parent: BaseDrink
-  desc: Беловатая, пенистая жидкость
+  desc: reagent-desc-kumis
   physicalDesc: reagent-physical-desc-bubbly
   flavor: milk
   color: "#FFFDD0"

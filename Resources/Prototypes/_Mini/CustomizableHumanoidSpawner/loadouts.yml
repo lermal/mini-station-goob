@@ -38,3 +38,14 @@
   id: SocksCentcomm
   equipment:
     socks: ClothingUnderwearSocksNormal
+
+- type: loadoutGroup
+  id: BlueShieldOfficerUnderwear
+  name: loadout-group-blueshield-officer-underwear
+  minLimit: 3
+  hidden: true
+  loadouts:
+  - UnderwearBottomBoxersCentcomm
+  - UnderwearBottomPantiesCentcomm
+  - UnderwearTopBraCentcomm
+  - SocksCentcomm

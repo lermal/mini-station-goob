@@ -1,0 +1,27 @@
+- type: material
+  id: Copper
+  stackEntity: SheetSteel1
+  name: materials-copper
+  icon: { sprite: Objects/Materials/Sheets/metal.rsi, state: steel }
+  price: 0.15
+
+- type: material
+  id: Zinc
+  stackEntity: SheetSteel1
+  name: materials-zinc
+  icon: { sprite: Objects/Materials/Sheets/metal.rsi, state: steel }
+  price: 0.15
+
+- type: material
+  id: Titanium
+  stackEntity: SheetPlasteel1
+  name: materials-titanium
+  icon: { sprite: Objects/Materials/Sheets/metal.rsi, state: plasteel }
+  price: 0.3
+
+- type: material
+  id: ADTBScrystal
+  stackEntity: SheetSteel1
+  name: materials-adt-bs-crystal
+  icon: { sprite: Objects/Materials/Sheets/metal.rsi, state: steel }
+  price: 0.2

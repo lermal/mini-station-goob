@@ -13,8 +13,6 @@
     jobPrototype: CentralCommandOperator
     allowedSpecies:
     - Human
-    - Shark
-    - Demon
     - Vulpkanin
     - Tajaran
 

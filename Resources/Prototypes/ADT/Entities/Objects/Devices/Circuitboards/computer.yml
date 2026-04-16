@@ -24,7 +24,7 @@
   id: MinesweeperCircuitboard
   components:
     - type: ComputerBoard
-      prototype: MinesweeperArcade
+      prototype: BlockGameArcade
 
 - type: entity
   parent: BaseComputerCircuitboard

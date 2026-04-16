@@ -24,16 +24,7 @@
       name: ghost-role-information-centcom-official-name
       description: ghost-role-information-centcom-official-description
       rules: ghost-role-information-centcom-personal-rules
-      category: ghost-role-information-centcomm-category
-      requirements:
-        - !type:OverallPlaytimeRequirement
-          time: 75h
-        - !type:DepartmentTimeRequirement
-          department: Security
-          time: 5h
-        - !type:RoleTimeRequirement
-          role: JobCaptain
-          time: 6h
+      job: CentralCommandOfficial
       raffle:
         settings: default
     - type: Loadout

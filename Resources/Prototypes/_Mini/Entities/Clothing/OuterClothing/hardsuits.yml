@@ -208,7 +208,7 @@
   - type: StorageFill
     contents:
         - id: OxygenTankFilled
-        - id: ClothingOuterHardsuitSalvageSindi
+        - id: ClothingOuterHardsuitSalvage
         - id: ClothingMaskGasSyndicate
   - type: AccessReader
     access: [["TypanCargo"]]

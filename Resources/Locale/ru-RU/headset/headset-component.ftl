@@ -12,9 +12,9 @@ chat-radio-security = Безопасность
 chat-radio-service = Сервис
 chat-radio-supply = Снабжение
 chat-radio-syndicate = Синдикат
+chat-radio-typan = Тайпан
 chat-radio-freelance = Фриланс
 # not headset but whatever
 chat-radio-handheld = Портативный
-chat-radio-binary = Двоичный
 chat-radio-xenoborg = Xenoborg
 chat-radio-mothership = Mothership

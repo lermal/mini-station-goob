@@ -59,7 +59,7 @@
     - id: ClothingHandsGlovesNitrile
     - id: ClothingMaskSterile
     - id: HandheldGPSBasic
-    - id: SpyCrewMonitor
+    - id: HandheldCrewMonitor
     - id: MedkitFilled
       prob: 0.3
     - id: MedkitAdvancedFilled
@@ -243,9 +243,6 @@
   components:
   - type: StorageFill
     contents:
-    - id: CargoBountyComputerCircuitboardTypan
-    - id: CargoRequestComputerCircuitboardTypan
-    - id: CargoSaleComputerCircuitboardTypan
     - id: SalvageMagnetMachineCircuitboard
     - id: TypanDoorRemote
     - id: MailTeleporterMachineCircuitboard

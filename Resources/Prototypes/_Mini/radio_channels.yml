@@ -1,0 +1,7 @@
+- type: radioChannel
+  id: Typan
+  name: chat-radio-typan
+  keycode: "я"
+  frequency: 1212
+  color: "#c45eb8"
+  longRange: true

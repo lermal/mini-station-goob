@@ -1,231 +1,226 @@
-  - type: additionalMap
-    id: Atlas
-    maps:
+- type: additionalMap
+  id: Atlas
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Amber
-    maps:
+- type: additionalMap
+  id: Amber
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Bagel
-    maps:
+- type: additionalMap
+  id: Bagel
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: MiniSilly
-    maps:
+- type: additionalMap
+  id: MiniSilly
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: MiniCluster
-    maps:
+- type: additionalMap
+  id: MiniCluster
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: MiniOmega
-    maps:
+- type: additionalMap
+  id: MiniOmega
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: MiniPacked
-    maps:
+- type: additionalMap
+  id: MiniPacked
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Lambda
-    maps:
+- type: additionalMap
+  id: Lambda
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Box
-    maps:
+- type: additionalMap
+  id: Box
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Cluster
-    maps:
+- type: additionalMap
+  id: Cluster
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Fland
-    maps:
+- type: additionalMap
+  id: Fland
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Loop
-    maps:
+- type: additionalMap
+  id: Loop
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Marathon
-    maps:
+- type: additionalMap
+  id: Marathon
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Meta
-    maps:
+- type: additionalMap
+  id: Meta
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Oasis
-    maps:
+- type: additionalMap
+  id: Oasis
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Omega
-    maps:
+- type: additionalMap
+  id: Omega
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Origin
-    maps:
+- type: additionalMap
+  id: Origin
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Saltern
-    maps:
+- type: additionalMap
+  id: Saltern
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Packed
-    maps:
+- type: additionalMap
+  id: Packed
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Reach
-    maps:
+- type: additionalMap
+  id: Reach
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: FlandHighPop
-    maps:
+- type: additionalMap
+  id: FlandHighPop
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: OasisHighPop
-    maps:
+- type: additionalMap
+  id: OasisHighPop
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Barratry
-    maps:
+- type: additionalMap
+  id: Barratry
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Kettle
-    maps:
+- type: additionalMap
+  id: Kettle
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Submarine
-    maps:
+- type: additionalMap
+  id: Leonid
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Leonid
-    maps:
+- type: additionalMap
+  id: Delta
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Delta
-    maps:
+- type: additionalMap
+  id: Chloris
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Chloris
-    maps:
+- type: additionalMap
+  id: Cog
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Cog
-    maps:
+- type: additionalMap
+  id: Serpentcrest
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: Serpentcrest
-    maps:
+- type: additionalMap
+  id: CorvaxAstra
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxAstra
-    maps:
+- type: additionalMap
+  id: CorvaxBox
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxBox
-    maps:
+- type: additionalMap
+  id: CorvaxChloris
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxChloris
-    maps:
+- type: additionalMap
+  id: CorvaxGlacier
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxGlacier
-    maps:
+- type: additionalMap
+  id: CorvaxPilgrim
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxPilgrim
-    maps:
+# Midpop 25–55
+- type: additionalMap
+  id: CorvaxAwesome
+  maps:
     - Typan
 
-  # Midpop 25–55
-  - type: additionalMap
-    id: CorvaxAwesome
-    maps:
+- type: additionalMap
+  id: CorvaxBagel
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxBagel
-    maps:
+- type: additionalMap
+  id: CorvaxMascara
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxMascara
-    maps:
+- type: additionalMap
+  id: CorvaxOutpost
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxOutpost
-    maps:
+- type: additionalMap
+  id: CorvaxPaper
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxPaper
-    maps:
+- type: additionalMap
+  id: CorvaxVoid
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxVoid
-    maps:
+# Lowpop 0–25
+- type: additionalMap
+  id: CorvaxMaus
+  maps:
     - Typan
 
-  # Lowpop 0–25
-  - type: additionalMap
-    id: CorvaxMaus
-    maps:
+- type: additionalMap
+  id: CorvaxOmega
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxOmega
-    maps:
+- type: additionalMap
+  id: CorvaxPacked
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxPacked
-    maps:
+- type: additionalMap
+  id: CorvaxTushkan
+  maps:
     - Typan
 
-  - type: additionalMap
-    id: CorvaxTushkan
-    maps:
-    - Typan
-
-  - type: additionalMap
-    id: CorvaxCluster
-    maps:
+- type: additionalMap
+  id: CorvaxCluster
+  maps:
     - Typan

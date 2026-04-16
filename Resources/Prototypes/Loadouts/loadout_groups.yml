@@ -1732,7 +1732,7 @@
 
 - type: loadoutGroup
   id: SyndicateCoat
-  name: Синдикат, верхняя одежда
+  name: loadout-group-syndicate-coat-outer
   loadouts:
   - SyndiWintercoat
 

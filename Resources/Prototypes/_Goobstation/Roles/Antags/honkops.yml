@@ -38,7 +38,7 @@
   parent: SyndicateOperativeGearFullNoUplinkHonkops
   equipment:
     neck: SyndicateWhistle
-    pocket2: BaseUplinkRadio40TC
+    pocket2: BaseUplinkRadio50TC
   inhand:
   - NukeOpsDeclarationOfWar
 

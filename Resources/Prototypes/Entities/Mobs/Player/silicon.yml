@@ -194,7 +194,7 @@
     - type: RadarConsole
       followEntity: false
     - type: CommunicationsConsole
-      canShuttle: false
+      canCallShuttle: false
       title: comms-console-announcement-title-station-ai
       color: "#5ed7aa"
       sound: /Audio/_CorvaxGoob/Announcements/aiannounce.ogg # CorvaxGoob-Announcements
@@ -628,7 +628,7 @@
   parent: BaseAction
   name: action-name-mimicry
   description: action-description-mimicry
-  noSpawn: true
+  categories: [ HideSpawnMenu ]
   components:
     - type: Action
       itemIconStyle: NoItem

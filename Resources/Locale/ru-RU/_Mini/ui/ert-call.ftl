@@ -39,3 +39,4 @@ ert-critical-force-unknown-player = неизвестного
 
 ghost-role-information-centcomofficer-name = Офицер Центрального Командования
 ghost-role-information-centcomofficer-description = Вы - Офицер Центрального Командования. Вы должны защищать довереное вам место на котором вы появились и выполнять приказы вышестоящих сотрудников Центрального Командования.
+ghost-role-information-centcomm-category = Центральное Командование

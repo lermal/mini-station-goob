@@ -5,7 +5,6 @@
   playTimeTracker: JobTypanTechnicalOperationsSupervisor
   setPreference: false
   overrideConsoleVisibility: true
-  isTypan: true
   startingGear: TypanTechnicalOperationsSupervisorGear
   icon: "JobIconTypanTechnicalOperationsSupervisor"
   supervisors: job-supervisors-syndicate
@@ -32,9 +31,9 @@
 - type: startingGear
   id: TypanTechnicalOperationsSupervisorGear
   equipment:
-    ears: ClothingHeadsetAltTypan
+    ears: ClothingHeadsetAltSyndicate
     shoes: ClothingShoesBootsLaceup
-    id: TypanTechnicalOperationsSupervisorPDA
+    id: SyndiPDAEng
 
 - type: chameleonOutfit
   id: TypanTechnicalOperationsSupervisorChameleonOutfit

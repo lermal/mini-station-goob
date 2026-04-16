@@ -286,3 +286,264 @@
     sprite: Mobs/Ghosts/revenant.rsi
     layers:
     - state: active
+
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanCommunicationsOfficer
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanCommunicationsOfficer
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanCommunicationsOfficer
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanResearcher
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanResearcher
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanResearcher
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanResearchDirector
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanResearchDirector
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanResearchDirector
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanTechnicalOperationsSupervisor
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanTechnicalOperationsSupervisor
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanTechnicalOperationsSupervisor
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanParamedic
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanParamedic
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanParamedic
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersTypanTechnician
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesTypanTechnician
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraTypanTechnician
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  id: ClothingUnderwearBottomBoxersCentcomm
+  parent: ClothingUnderwearBottomBoxersTechnicalAssistant
+- type: entity
+  id: ClothingUnderwearBottomPantiesCentcomm
+  parent: ClothingUnderwearBottomPantiesChiefEngineer
+- type: entity
+  id: ClothingUnderwearTopBraCentcomm
+  parent: ClothingUnderwearTopBraChiefEngineer
+- type: entity
+  parent: BaseItem
+  id: ClothingUnderwearSocksNormal
+  name: socks
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  id: ClothingMaskBandBotanyTypan
+  parent: ClothingMaskBandBotany
+- type: entity
+  id: ClothingBeltPlantTypan
+  parent: ClothingBeltPlant
+
+- type: entity
+  parent: BaseItem
+  id: ADTPlantAnalyzerEmpty
+  name: plant analyzer
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTAdvancedPlantAnalyzerEmpty
+  name: plant analyzer
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTHydroponicsTrayAdvancedMachineCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTBotanistBagOfHolding
+  name: bag
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTWateringCan
+  name: watering can
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTAdvancedWateringCan
+  name: watering can
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTIndustrialChargerCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTAdvancedMicrowaveMachineCircuitBoard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTColdplateMachineCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTMedicalAssemblerMachineCircuitBoard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTKitchenAssemblerMachineCircuitBoard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTElectricRangeMachineCircuitBoard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTCoffeeMachineCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTCoffeeMachineBluespaceCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTMegaCellRechargerCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTMachineBluespaceHarvesterCircuitboard
+  name: machine board
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTComputerShuttleSalvage
+  name: computer
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+
+- type: entity
+  parent: BaseItem
+  id: ADTComputerSecShuttle
+  name: computer
+  components:
+  - type: Sprite
+    sprite: Mobs/Ghosts/revenant.rsi
+    layers:
+    - state: active
+

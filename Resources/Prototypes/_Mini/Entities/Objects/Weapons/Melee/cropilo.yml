@@ -8,7 +8,7 @@
     state: produce
   - type: Produce
   - type: PotencyVisuals
-  - type: Appearance
+  - type: Extractable
     grindableSolutionName: food
 
 - type: entity
@@ -31,7 +31,7 @@
         Blunt: 0
         Holy: 25
     soundHit:
-        path: /Audio/Weapons/cropilo1.ogg
+      collection: AlienClaw
   - type: MeleeChemicalInjector
     transferAmount: 5
     solution: food
