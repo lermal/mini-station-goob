@@ -833,6 +833,46 @@ namespace Content.Server.Database
             await db.DbContext.SaveChangesAsync();
         }
 
+        public async Task<PlayerGhostRoleTickets?> GetPlayerGhostRoleTickets(Guid playerId, CancellationToken cancel = default)
+        {
+            await using var db = await GetDb(cancel);
+
+            return await db.DbContext.PlayerGhostRoleTickets
+                .SingleOrDefaultAsync(t => t.PlayerId == playerId, cancel);
+        }
+
+        public async Task UpsertPlayerGhostRoleTickets(PlayerGhostRoleTickets tickets)
+        {
+            await using var db = await GetDb();
+
+            var existing = await db.DbContext.PlayerGhostRoleTickets
+                .SingleOrDefaultAsync(t => t.PlayerId == tickets.PlayerId);
+
+            if (existing == null)
+            {
+                db.DbContext.PlayerGhostRoleTickets.Add(new PlayerGhostRoleTickets
+                {
+                    PlayerId = tickets.PlayerId,
+                    Tickets = tickets.Tickets,
+                    LastGrantTime = tickets.LastGrantTime,
+                    TicketMilestones = tickets.TicketMilestones,
+                    StreakMilestones = tickets.StreakMilestones,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                existing.Tickets = tickets.Tickets;
+                existing.LastGrantTime = tickets.LastGrantTime;
+                existing.TicketMilestones = tickets.TicketMilestones;
+                existing.StreakMilestones = tickets.StreakMilestones;
+                existing.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await db.DbContext.SaveChangesAsync();
+        }
+
         public async Task ClearPlayerAntagTokenSelection(Guid playerId)
         {
             await using var db = await GetDb();

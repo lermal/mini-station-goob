@@ -19,7 +19,7 @@ public sealed class SponsorSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private float _updateTimer;
-    private const float UpdateInterval = 5f;
+    private const float UpdateInterval = 30f;
     private static readonly TimeSpan RetryStep = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan RetryMax = TimeSpan.FromMinutes(10);
     private TimeSpan _retryDelay = TimeSpan.Zero;
@@ -99,6 +99,11 @@ public sealed class SponsorSystem : EntitySystem
             Password = _cfg.GetCVar<string>("database.pg_password")
         };
 
+        if (IsPostgresUnconfigured(builder))
+        {
+            Log.Warning("[Sponsors] PostgreSQL is not configured, skipping sponsor sync.");
+        }
+
         try
         {
             await using var dataSource = NpgsqlDataSource.Create(builder.ConnectionString);
@@ -142,5 +147,13 @@ public sealed class SponsorSystem : EntitySystem
 
             return false;
         }
+    }
+
+    private static bool IsPostgresUnconfigured(NpgsqlConnectionStringBuilder builder)
+    {
+        if (!string.IsNullOrWhiteSpace(builder.Password))
+            return false;
+
+        return builder.Host is "localhost" or "127.0.0.1";
     }
 }

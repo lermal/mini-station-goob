@@ -37,6 +37,10 @@
     layers:
       - state: stand
       - state: typan
+        map: [ "enum.DeployableTurretVisuals.Weapon" ]
+        visible: false
+      - state: stand
+        map: [ "enum.DeployableTurretVisuals.Turret" ]
   - type: AccessReader
     access: [["StationAi"], ["TypanResearchDirector"]]
   - type: StationAiTurret
@@ -62,6 +66,10 @@
     layers:
       - state: stand
       - state: typan
+        map: [ "enum.DeployableTurretVisuals.Weapon" ]
+        visible: false
+      - state: stand
+        map: [ "enum.DeployableTurretVisuals.Turret" ]
   - type: AccessReader
     access: [["StationAi"], ["TypanProtection"]]
   - type: TurretTargetSettings
@@ -87,6 +95,10 @@
     layers:
       - state: stand
       - state: typan
+        map: [ "enum.DeployableTurretVisuals.Weapon" ]
+        visible: false
+      - state: stand
+        map: [ "enum.DeployableTurretVisuals.Turret" ]
   - type: AccessReader
     access: [["StationAi"], ["TypanCommand"]]
   - type: TurretTargetSettings

@@ -119,6 +119,9 @@
       maxFillLevels: 1
       fillBaseName: sink_wide-fill-
       solutionName: drainBuffer
+    - type: Construction
+      graph: SinkWideGraph
+      node: sinkWide
 
 #Stemless Sink
 

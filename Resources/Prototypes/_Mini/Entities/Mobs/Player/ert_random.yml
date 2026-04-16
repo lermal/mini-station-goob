@@ -1,20 +1,20 @@
-# ERT
-## Leader
-### Amber
-- type: entity
-  id: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT leader amber
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertleadereva
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERTLeader
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: ERTLeaderAmber
+# # ERT
+# ## Leader
+# ### Amber
+# - type: entity
+#   id: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT leader amber
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertleadereva
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERTLeader
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: ERTLeaderAmber
 
 - type: randomHumanoidSettings
   id: ERTLeaderAmber
@@ -30,24 +30,24 @@
         settings: short
       job: ERTLeaderAmber
     - type: Loadout
-      prototypes: [ ERTLeaderGearAmber ]
+      prototypes: [ ERTLeaderGear ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
       - NamesLastERT
       nameFormat: name-format-ert
 
-### Red
-- type: entity
-  id: RandomHumanoidSpawnerERTLeaderRed
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT leader red
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertleadereva
-    - type: RandomHumanoidSpawner
-      settings: ERTLeaderRed
+# ### Red
+# - type: entity
+#   id: RandomHumanoidSpawnerERTLeaderRed
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT leader red
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertleadereva
+#     - type: RandomHumanoidSpawner
+#       settings: ERTLeaderRed
 
 - type: randomHumanoidSettings
   id: ERTLeaderRed
@@ -63,24 +63,24 @@
         settings: short
       job: ERTLeaderRed
     - type: Loadout
-      prototypes: [ ERTLeaderGearRed ]
+      prototypes: [ ERTLeaderGearEVA ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
       - NamesLastERT
       nameFormat: name-format-ert
 
-### Gamma
-- type: entity
-  id: RandomHumanoidSpawnerERTLeaderGamma
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT leader gamma
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertleadereva
-    - type: RandomHumanoidSpawner
-      settings: ERTLeaderGamma
+# ### Gamma
+# - type: entity
+#   id: RandomHumanoidSpawnerERTLeaderGamma
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT leader gamma
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertleadereva
+#     - type: RandomHumanoidSpawner
+#       settings: ERTLeaderGamma
 
 - type: randomHumanoidSettings
   id: ERTLeaderGamma
@@ -96,24 +96,24 @@
         settings: short
       job: ERTLeaderGamma
     - type: Loadout
-      prototypes: [ ERTLeaderGearGamma ]
+      prototypes: [ ERTLeaderGearEVA ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
       - NamesLastERT
       nameFormat: name-format-ert
 
-### CBURN
-- type: entity
-  id: RandomHumanoidSpawnerCBURNLeader
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: CBURN leader
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: cburn
-    - type: RandomHumanoidSpawner
-      settings: CBURNLeader
+# ### CBURN
+# - type: entity
+#   id: RandomHumanoidSpawnerCBURNLeader
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: CBURN leader
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: cburn
+#     - type: RandomHumanoidSpawner
+#       settings: CBURNLeader
 
 - type: randomHumanoidSettings
   id: CBURNLeader
@@ -137,23 +137,23 @@
       prototypes: [ CBURNLeaderGear ]
       roleLoadout: [ RoleSurvivalExtended ]
 
-## Security
-### Amber
-- type: entity
-  id: RandomHumanoidSpawnerERTSecurityAmber
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT security amber
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertsecurity
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERT
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: ERTSecurityAmber
+# ## Security
+# ### Amber
+# - type: entity
+#   id: RandomHumanoidSpawnerERTSecurityAmber
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT security amber
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertsecurity
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERT
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: ERTSecurityAmber
 
 - type: randomHumanoidSettings
   id: ERTSecurityAmber
@@ -174,16 +174,16 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTSecurityGearAmber ]
+      prototypes: [ ERTSecurityGear ]
 
-### Red
-- type: entity
-  id: RandomHumanoidSpawnerERTSecurityRed
-  parent: RandomHumanoidSpawnerERTSecurityAmber
-  name: ERT security red
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTSecurityRed
+# ### Red
+# - type: entity
+#   id: RandomHumanoidSpawnerERTSecurityRed
+#   parent: RandomHumanoidSpawnerERTSecurityAmber
+#   name: ERT security red
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTSecurityRed
 
 - type: randomHumanoidSettings
   id: ERTSecurityRed
@@ -199,16 +199,16 @@
         settings: short
       job: ERTSecurityRed
     - type: Loadout
-      prototypes: [ ERTSecurityGearRed ]
+      prototypes: [ ERTSecurityGearEVA ]
 
-### Gamma
-- type: entity
-  id: RandomHumanoidSpawnerERTSecurityGamma
-  parent: RandomHumanoidSpawnerERTSecurityAmber
-  name: ERT security gamma
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTSecurityGamma
+# ### Gamma
+# - type: entity
+#   id: RandomHumanoidSpawnerERTSecurityGamma
+#   parent: RandomHumanoidSpawnerERTSecurityAmber
+#   name: ERT security gamma
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTSecurityGamma
 
 - type: randomHumanoidSettings
   id: ERTSecurityGamma
@@ -224,25 +224,25 @@
         settings: short
       job: ERTSecurityGamma
     - type: Loadout
-      prototypes: [ ERTSecurityGearGamma ]
+      prototypes: [ ERTSecurityGearEVA ]
 
-## Medical
-### Amber
-- type: entity
-  id: RandomHumanoidSpawnerERTMedicalAmber
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT medic amber
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertmedical
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERT
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: ERTMedicalAmber
+# ## Medical
+# ### Amber
+# - type: entity
+#   id: RandomHumanoidSpawnerERTMedicalAmber
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT medic amber
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertmedical
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERT
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: ERTMedicalAmber
 
 - type: randomHumanoidSettings
   id: ERTMedicalAmber
@@ -263,16 +263,16 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTMedicalGearAmber ]
+      prototypes: [ ERTMedicalGear ]
 
-### Red
-- type: entity
-  id: RandomHumanoidSpawnerERTMedicalRed
-  parent: RandomHumanoidSpawnerERTMedicalAmber
-  name: ERT medic red
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTMedicalRed
+# ### Red
+# - type: entity
+#   id: RandomHumanoidSpawnerERTMedicalRed
+#   parent: RandomHumanoidSpawnerERTMedicalAmber
+#   name: ERT medic red
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTMedicalRed
 
 - type: randomHumanoidSettings
   id: ERTMedicalRed
@@ -288,16 +288,16 @@
         settings: short
       job: ERTMedicalRed
     - type: Loadout
-      prototypes: [ ERTMedicalGearRed ]
+      prototypes: [ ERTMedicalGearEVA ]
 
-### Gamma
-- type: entity
-  id: RandomHumanoidSpawnerERTMedicalGamma
-  parent: RandomHumanoidSpawnerERTMedicalAmber
-  name: ERT medic gamma
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTMedicalGamma
+# ### Gamma
+# - type: entity
+#   id: RandomHumanoidSpawnerERTMedicalGamma
+#   parent: RandomHumanoidSpawnerERTMedicalAmber
+#   name: ERT medic gamma
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTMedicalGamma
 
 - type: randomHumanoidSettings
   id: ERTMedicalGamma
@@ -313,25 +313,25 @@
         settings: short
       job: ERTMedicalGamma
     - type: Loadout
-      prototypes: [ ERTMedicalGearGamma ]
+      prototypes: [ ERTMedicalGearEVA ]
 
-## Janitor
-### Amber
-- type: entity
-  id: RandomHumanoidSpawnerERTJanitorAmber
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT janitor amber
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertjanitor
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERT
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: ERTJanitorAmber
+# ## Janitor
+# ### Amber
+# - type: entity
+#   id: RandomHumanoidSpawnerERTJanitorAmber
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT janitor amber
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertjanitor
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERT
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: ERTJanitorAmber
 
 - type: randomHumanoidSettings
   id: ERTJanitorAmber
@@ -352,16 +352,16 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTJanitorGearAmber ]
+      prototypes: [ ERTJanitorGear ]
 
-### Red
-- type: entity
-  id: RandomHumanoidSpawnerERTJanitorRed
-  parent: RandomHumanoidSpawnerERTJanitorAmber
-  name: ERT janitor red
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTJanitorRed
+# ### Red
+# - type: entity
+#   id: RandomHumanoidSpawnerERTJanitorRed
+#   parent: RandomHumanoidSpawnerERTJanitorAmber
+#   name: ERT janitor red
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTJanitorRed
 
 - type: randomHumanoidSettings
   id: ERTJanitorRed
@@ -377,16 +377,16 @@
         settings: short
       job: ERTJanitorRed
     - type: Loadout
-      prototypes: [ ERTJanitorGearRed ]
+      prototypes: [ ERTJanitorGearEVA ]
 
-### Gamma
-- type: entity
-  id: RandomHumanoidSpawnerERTJanitorGamma
-  parent: RandomHumanoidSpawnerERTJanitorAmber
-  name: ERT janitor gamma
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTJanitorGamma
+# ### Gamma
+# - type: entity
+#   id: RandomHumanoidSpawnerERTJanitorGamma
+#   parent: RandomHumanoidSpawnerERTJanitorAmber
+#   name: ERT janitor gamma
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTJanitorGamma
 
 - type: randomHumanoidSettings
   id: ERTJanitorGamma
@@ -402,25 +402,25 @@
         settings: short
       job: ERTJanitorGamma
     - type: Loadout
-      prototypes: [ ERTJanitorGearGamma ]
+      prototypes: [ ERTJanitorGearEVA ]
 
-## Engineer
-### Amber
-- type: entity
-  id: RandomHumanoidSpawnerERTEngineerAmber
-  parent: RandomHumanoidSpawnerERTLeaderAmber
-  name: ERT engineer amber
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: ertengineer
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERT
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: ERTEngineerAmber
+# ## Engineer
+# ### Amber
+# - type: entity
+#   id: RandomHumanoidSpawnerERTEngineerAmber
+#   parent: RandomHumanoidSpawnerERTLeaderAmber
+#   name: ERT engineer amber
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: ertengineer
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERT
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: ERTEngineerAmber
 
 - type: randomHumanoidSettings
   id: ERTEngineerAmber
@@ -441,16 +441,16 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTEngineerGearAmber ]
+      prototypes: [ ERTEngineerGear ]
 
-### Red
-- type: entity
-  id: RandomHumanoidSpawnerERTEngineerRed
-  parent: RandomHumanoidSpawnerERTEngineerAmber
-  name: ERT engineer red
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTEngineerRed
+# ### Red
+# - type: entity
+#   id: RandomHumanoidSpawnerERTEngineerRed
+#   parent: RandomHumanoidSpawnerERTEngineerAmber
+#   name: ERT engineer red
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTEngineerRed
 
 - type: randomHumanoidSettings
   id: ERTEngineerRed
@@ -466,16 +466,16 @@
         settings: short
       job: ERTEngineerRed
     - type: Loadout
-      prototypes: [ ERTEngineerGearRed ]
+      prototypes: [ ERTEngineerGearEVA ]
 
-### Gamma
-- type: entity
-  id: RandomHumanoidSpawnerERTEngineerGamma
-  parent: RandomHumanoidSpawnerERTEngineerAmber
-  name: ERT engineer gamma
-  components:
-    - type: RandomHumanoidSpawner
-      settings: ERTEngineerGamma
+# ### Gamma
+# - type: entity
+#   id: RandomHumanoidSpawnerERTEngineerGamma
+#   parent: RandomHumanoidSpawnerERTEngineerAmber
+#   name: ERT engineer gamma
+#   components:
+#     - type: RandomHumanoidSpawner
+#       settings: ERTEngineerGamma
 
 - type: randomHumanoidSettings
   id: ERTEngineerGamma
@@ -491,24 +491,24 @@
         settings: short
       job: ERTEngineerGamma
     - type: Loadout
-      prototypes: [ ERTEngineerGearGamma ]
+      prototypes: [ ERTEngineerGearEVA ]
 
-## CBURN Agent
-- type: entity
-  id: RandomHumanoidSpawnerCBURNAgent
-  parent: RandomHumanoidSpawnerCBURNLeader
-  name: CBURN Agent
-  components:
-    - type: Sprite
-      sprite: Markers/jobs.rsi
-      state: cburn
-    - type: RandomMetadata
-      nameSegments:
-      - NamesFirstERT
-      - NamesLastERT
-      nameFormat: name-format-ert
-    - type: RandomHumanoidSpawner
-      settings: CBURNAgent
+# ## CBURN Agent
+# - type: entity
+#   id: RandomHumanoidSpawnerCBURNAgent
+#   parent: RandomHumanoidSpawnerCBURNLeader
+#   name: CBURN Agent
+#   components:
+#     - type: Sprite
+#       sprite: Markers/jobs.rsi
+#       state: cburn
+#     - type: RandomMetadata
+#       nameSegments:
+#       - NamesFirstERT
+#       - NamesLastERT
+#       nameFormat: name-format-ert
+#     - type: RandomHumanoidSpawner
+#       settings: CBURNAgent
 
 - type: randomHumanoidSettings
   id: CBURNAgent

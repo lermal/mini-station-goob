@@ -87,7 +87,7 @@
       name: cyborg
     - type: BorgSwitchableType
       inherentRadioChannels:
-        - Typan
+        - Syndicate
       allowedBorgTypes:
         - typan-generic
         - typan-engineering
@@ -110,7 +110,7 @@
         typan-mining: mining
         typan-janitor: janitor
         typan-medical: medical
-        typan-security: engineering
+        typan-security: generic
     - type: Appearance
 
 # Typan Generic

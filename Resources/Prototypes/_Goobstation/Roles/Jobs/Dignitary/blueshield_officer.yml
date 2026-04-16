@@ -111,7 +111,7 @@
   storage:
     back:
     - Flash
-    - ClothingBSOMaskGasSwat
+#   - ClothingBSOMaskGasSwat # CorvaxGoob-loadouts: replaced on a BSOMask loadout
     - CombatKnife
 
 - type: chameleonOutfit

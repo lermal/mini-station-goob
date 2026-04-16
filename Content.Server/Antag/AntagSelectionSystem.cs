@@ -63,6 +63,7 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
     [Dependency] private readonly InventorySystem _inventory = default!; // Goobstation
     [Dependency] private readonly SkillsSystem _skills = default!; // CorvaxGoob-Skills
+    [Dependency] private readonly SponsorSystem _sponsor = default!; // mini-station donate privellege
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
 
     // arbitrary random number to give late joining some mild interest.
@@ -599,8 +600,7 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
             {
                 preferredList.Add(session);
                 //mini-station donate privellege
-                var sponsorSys = EntitySystem.Get<SponsorSystem>();
-                var sponsor = sponsorSys.Sponsors.FirstOrDefault(s => s.Uid == session.UserId.ToString());
+                var sponsor = _sponsor.Sponsors.FirstOrDefault(s => s.Uid == session.UserId.ToString());
 
                 if (sponsor.Level > 0)
                 {

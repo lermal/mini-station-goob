@@ -46,6 +46,7 @@ namespace Content.Server.Database
         public DbSet<DailyRewardProgress> DailyRewardProgresses { get; set; } = default!;
         public DbSet<PlayerAntagToken> PlayerAntagTokens { get; set; } = default!;
         public DbSet<PlayerAntagTokenSelection> PlayerAntagTokenSelections { get; set; } = default!;
+        public DbSet<PlayerGhostRoleTickets> PlayerGhostRoleTickets { get; set; } = default!;
         public DbSet<UploadedResourceLog> UploadedResourceLog { get; set; } = default!;
         public DbSet<AdminNote> AdminNotes { get; set; } = null!;
         public DbSet<AdminWatchlist> AdminWatchlists { get; set; } = null!;
@@ -853,6 +854,30 @@ namespace Content.Server.Database
         public string AntagId { get; set; } = string.Empty;
 
         public DateTime SelectedAt { get; set; }
+    }
+
+    [Table("player_ghost_role_tickets")]
+    public sealed class PlayerGhostRoleTickets
+    {
+        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required, ForeignKey("player")]
+        public Guid PlayerId { get; set; }
+
+        public int Tickets { get; set; }
+
+        public DateTime? LastGrantTime { get; set; }
+
+        [Column(TypeName = "jsonb")]
+        public List<TimeSpan> TicketMilestones { get; set; } = new();
+
+        [Column(TypeName = "jsonb")]
+        public List<int> StreakMilestones { get; set; } = new();
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 
     [Table("uploaded_resource_log")]

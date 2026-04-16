@@ -30,7 +30,6 @@
     - CentralCommandOfficerLoadout
     - Survival
     - GroupSpeciesBreathTool
-    - CentcommOfficerUnderwear
 
 - type: loadoutGroup
   id: CentralCommandOfficerLoadout

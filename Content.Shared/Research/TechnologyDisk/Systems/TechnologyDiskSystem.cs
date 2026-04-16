@@ -1,29 +1,36 @@
+using Content.Shared.Access.Components;
+using Content.Shared.Access.Systems;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Lathe;
+using Content.Shared._Mini.Converter;
 using Content.Shared.Popups;
 using Content.Shared.Random.Helpers;
 using Content.Shared.Research.Components;
 using Content.Shared.Research.Prototypes;
 using Content.Shared.Research.Systems;
 using Content.Shared.Research.TechnologyDisk.Components;
+using Content.Shared.Power.EntitySystems;
+using Content.Shared.Stacks;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using Content.Shared._Mini.Converter;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.Research.TechnologyDisk.Systems;
 
 public sealed class TechnologyDiskSystem : EntitySystem
 {
+    [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly IPrototypeManager _protoMan = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedPowerReceiverSystem _powerReceiver = default!;
     [Dependency] private readonly SharedResearchSystem _research = default!;
     [Dependency] private readonly SharedLatheSystem _lathe = default!;
+    [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
 
     public override void Initialize()
@@ -65,15 +72,70 @@ public sealed class TechnologyDiskSystem : EntitySystem
         if (args.Handled || !args.CanReach || args.Target is not { } target)
             return;
 
-        if (HasComp<ConverterComponent>(target))
+        if (TryComp<ConverterComponent>(target, out var converter))
         {
             if (!_net.IsServer)
                 return;
 
-            _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Mini/Misc/convert.ogg"), target, AudioParams.Default.WithVolume(-11f));
-            _popup.PopupClient(Loc.GetString("tech-disk-exchanged"), target, args.User);
-            Spawn("Telecrystal1", Transform(target).Coordinates);
+            if (converter.PointsPerTelecrystal <= 0)
+            {
+                _popup.PopupClient(Loc.GetString("mini-converter-examine-disabled"), target, args.User);
+                return;
+            }
 
+            if (!_powerReceiver.IsPowered(target))
+            {
+                _popup.PopupClient(Loc.GetString("tech-disk-converter-no-power-popup"), target, args.User);
+                return;
+            }
+
+            if (TryComp<AccessReaderComponent>(target, out var reader) &&
+                !_accessReader.IsAllowed(args.User, target, reader))
+            {
+                _popup.PopupClient(Loc.GetString("tech-disk-converter-no-access-popup"), target, args.User);
+                return;
+            }
+
+            var value = ent.Comp.TierWeightPrototype == "RareTechDiskTierWeights"
+                ? converter.RareTechnologyDiskPoints
+                : converter.TechnologyDiskPoints;
+
+            if (value < 0)
+                value = 0;
+
+            converter.StoredPoints += value;
+
+            var payout = 0;
+            if (converter.PointsPerTelecrystal > 0)
+            {
+                payout = converter.StoredPoints / converter.PointsPerTelecrystal;
+                converter.StoredPoints %= converter.PointsPerTelecrystal;
+            }
+
+            if (payout > 0)
+            {
+                var telecrystalStack = Spawn("Telecrystal1", Transform(target).Coordinates);
+                _stack.SetCount(telecrystalStack, payout);
+                _stack.TryMergeToContacts(telecrystalStack);
+
+                _popup.PopupClient(Loc.GetString("tech-disk-exchanged-yield",
+                        ("amount", payout),
+                        ("progress", converter.StoredPoints),
+                        ("needed", converter.PointsPerTelecrystal)),
+                    target,
+                    args.User);
+            }
+            else
+            {
+                _popup.PopupClient(Loc.GetString("tech-disk-exchanged",
+                        ("value", value),
+                        ("progress", converter.StoredPoints),
+                        ("needed", converter.PointsPerTelecrystal)),
+                    target,
+                    args.User);
+            }
+
+            _audio.PlayPvs(new SoundPathSpecifier("/Audio/_Mini/Misc/convert.ogg"), target, AudioParams.Default.WithVolume(-11f));
             QueueDel(ent);
             args.Handled = true;
             return;

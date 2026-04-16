@@ -4,6 +4,7 @@
 
 using System.Linq;
 using Content.IntegrationTests.Pair;
+using NUnit.Framework;
 using Content.Server._Mini.AntagTokens;
 using Content.Server.Database;
 using Robust.Server.Player;

@@ -1102,6 +1102,51 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.ToTable("player_antag_token_selection", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.PlayerGhostRoleTickets", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("player_ghost_role_tickets_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("LastGrantTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_grant_time");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("player_id");
+
+                    b.Property<List<int>>("StreakMilestones")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("streak_milestones");
+
+                    b.Property<List<TimeSpan>>("TicketMilestones")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("ticket_milestones");
+
+                    b.Property<int>("Tickets")
+                        .HasColumnType("integer")
+                        .HasColumnName("tickets");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("PK_player_ghost_role_tickets");
+
+                    b.ToTable("player_ghost_role_tickets", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.Preference", b =>
                 {
                     b.Property<int>("Id")

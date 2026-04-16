@@ -39,6 +39,3 @@
   id: TypanTechnicalOperationsSupervisorChameleonOutfit
   job: TypanTechnicalOperationsSupervisor
   startingGear: TypanTechnicalOperationsSupervisorGear
-  equipment:
-    id: PassengerPDA
-    neck: ClothingNeckGoldmedal

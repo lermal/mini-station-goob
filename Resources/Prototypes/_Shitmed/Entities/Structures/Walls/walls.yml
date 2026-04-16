@@ -63,7 +63,7 @@
         - WallLayer
   - type: Construction
     graph: Girder
-    node: diagonalshuttleWall
+    node: shuttleWall
   - type: RustRequiresPathStage
     pathStage: 10 # Ascension
 

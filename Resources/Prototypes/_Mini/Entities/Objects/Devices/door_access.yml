@@ -108,7 +108,7 @@
   suffix: Typan, Technical Operations Supervisor, Closed
   components:
   - type: AccessReader
-    access: [["TypanTechnicalOperationsSupervisor"]]
+    access: [["TypanCommand"]]
 
 - type: entity
   parent: DoorElectronicsTypan

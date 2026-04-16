@@ -1,14 +1,16 @@
 # SPDX-FileCopyrightText: 2026 Casha
+# Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+
 antag-token-window-title = Antagonist Store
-antag-token-window-subtitle = Earn coins from streaks and playtime, buy antagonist access, and place roundstart deposits from the lobby.
+antag-token-window-subtitle = Earn tickets from streaks and playtime, buy antagonist access, and place roundstart deposits from the lobby.
 antag-token-window-action-title = Active deposit
 antag-token-window-clear = Clear deposit
-antag-token-window-balance = Coin balance: {$amount}
+antag-token-window-balance = Ticket balance: {$amount}
 antag-token-window-cap = Earned this month: {$earned} / {$cap}
 antag-token-window-cap-free = Earned this month: {$earned}
 antag-token-window-deposit = Current deposited role: {$role}
 antag-token-window-no-deposit = No role is currently deposited.
-antag-token-window-role-title = {$name} - {$cost} coins
+antag-token-window-role-title = {$name} - {$cost} tickets
 antag-token-window-mode-ghost = Mode: ghost role. Buying this starts a dedicated event and only you can claim the role.
 antag-token-window-mode-deposit = Mode: roundstart deposit. The role is reserved for the next matching round.
 antag-token-window-button-ghost = Buy and trigger
@@ -20,12 +22,12 @@ antag-token-window-free-unlocks = Free unlocks: {$amount}
 antag-token-window-roles-title = Antagonists
 antag-token-window-tag-ghost = Ghost role
 antag-token-window-tag-queue = Roundstart queue
-antag-token-window-tooltip-ghost = Spend coins and reserve the resulting ghost role for yourself.
-antag-token-window-tooltip-deposit = Spend coins to queue this role for the next matching roundstart.
-antag-token-window-tooltip-free = Use a stored free unlock instead of spending coins.
+antag-token-window-tooltip-ghost = Spend tickets and reserve the resulting ghost role for yourself.
+antag-token-window-tooltip-deposit = Spend tickets to queue this role for the next matching roundstart.
+antag-token-window-tooltip-free = Use a stored free unlock instead of spending tickets.
 
 antag-store-status-deposited = This role is already deposited and waiting for a matching round.
-antag-store-status-not-enough = You do not have enough coins.
+antag-store-status-not-enough = You do not have enough tickets.
 antag-store-status-saturated = The deposit cap for this role is already filled.
 antag-store-status-has-other-deposit = You already have another active deposit.
 antag-store-status-unavailable = This role is temporarily unavailable.
@@ -35,40 +37,61 @@ antag-store-status-lobby-only = This role can only be queued from the preround l
 antag-store-unavailable-yao = This role still needs its real prototype ID in the fork.
 
 antag-store-role-thief-name = Thief
-antag-store-role-thief-description = Cheap roundstart role and the entry point into the store.
+antag-store-role-thief-description = Cheap roundstart role and the entry point into the store. Available in any mode.
+
 antag-store-role-agent-name = Agent
-antag-store-role-agent-description = Classic traitor access, chosen in advance from the lobby.
+antag-store-role-agent-description = Classic traitor access, chosen in advance from the lobby. Available in calm, medium, survival, chaos, and traitor modes.
+
 antag-store-role-ninja-name = Ninja
-antag-store-role-ninja-description = Starts a dedicated ninja event with an exclusive ghost role for the buyer.
-antag-store-role-dragon-name = Space Dragon
-antag-store-role-dragon-description = Triggers the dragon event and reserves the ghost role for the buyer.
+antag-store-role-ninja-description = Starts a dedicated ninja event with an exclusive ghost role for the buyer. Medium and survival modes.
+
+antag-store-role-dragon-name = Dragon
+antag-store-role-dragon-description = Triggers the dragon event and reserves the ghost role for the buyer. Survival only.
+
 antag-store-role-abductor-name = Abductor
-antag-store-role-abductor-description = Purchases the solo abductor midround event.
+antag-store-role-abductor-description = Purchases the solo abductor midround event. Available in any mode.
+
 antag-store-role-initial-infected-name = Initial Infected
-antag-store-role-initial-infected-description = Roundstart deposit for the initial infected slot.
+antag-store-role-initial-infected-description = Roundstart deposit for the initial infected slot. Zombie, medium, and survival modes.
+
 antag-store-role-revenant-name = Revenant
-antag-store-role-revenant-description = Starts the revenant event with an exclusive ghost role.
+antag-store-role-revenant-description = Starts the revenant event with an exclusive ghost role. Available in all modes except Extended.
+
 antag-store-role-yao-name = Yao
-antag-store-role-yao-description = Triggers a lone-op style personal event. Only the buyer can claim the role afterward.
+antag-store-role-yao-description = Triggers a lone-op style personal event. Only the buyer can claim the role. Yao and survival modes.
+
 antag-store-role-headrev-name = Head Revolutionary
-antag-store-role-headrev-description = Roundstart deposit for Head Revolutionary.
+antag-store-role-headrev-description = Roundstart deposit for Head Revolutionary. Revolution mode only.
+
 antag-store-role-cosmic-cult-name = Cosmic Cultist
-antag-store-role-cosmic-cult-description = Roundstart deposit for Cosmic Cultist.
+antag-store-role-cosmic-cult-description = Roundstart deposit for Cosmic Cultist. Cosmic cult mode only.
+
 antag-store-role-devil-name = Devil
-antag-store-role-devil-description = Roundstart deposit for Devil.
+antag-store-role-devil-description = Roundstart deposit for Devil. Available in calm and survival modes.
+
 antag-store-role-blob-name = Blob
-antag-store-role-blob-description = Starts the blob event and locks the resulting ghost role to the buyer.
+antag-store-role-blob-description = Starts the blob event and locks the resulting ghost role to the buyer. Blob and survival.
+
 antag-store-role-wizard-name = Wizard
-antag-store-role-wizard-description = Buys wizard access through a dedicated midround event.
+antag-store-role-wizard-description = Buys wizard access through a dedicated midround event. Survival only.
+
 antag-store-role-slaughter-demon-name = Slaughter Demon
-antag-store-role-slaughter-demon-description = Dedicated slaughter demon event for the buyer.
+antag-store-role-slaughter-demon-description = Dedicated slaughter demon event for the buyer. Survival only.
+
 antag-store-role-slasher-name = Butcher
-antag-store-role-slasher-description = Starts the slasher event with an exclusive ghost role reserved for the buyer.
-antag-store-role-changeling-name = Changeling
-antag-store-role-changeling-description = Roundstart deposit for Changeling.
+antag-store-role-slasher-description = Starts the butcher event with an exclusive ghost role reserved for the buyer. Survival only.
+
+antag-store-role-changeling-name = Genestealer
+antag-store-role-changeling-description = Roundstart deposit for Genestealer. Survival and genestealer modes.
+
 antag-store-role-heretic-name = Heretic
-antag-store-role-heretic-description = Roundstart deposit for Heretic.
+antag-store-role-heretic-description = Roundstart deposit for Heretic. Survival and heretics modes.
+
 antag-store-role-shadowling-name = Shadowling
-antag-store-role-shadowling-description = Roundstart deposit for Shadowling.
+antag-store-role-shadowling-description = Roundstart deposit for Shadowling. Shadowlings and survival modes.
+
 antag-store-role-xenomorph-name = Xenomorph
-antag-store-role-xenomorph-description = Roundstart queue for the xenomorph infestation start.
+antag-store-role-xenomorph-description = Roundstart queue for the xenomorph infestation. Survival only.
+
+antag-store-role-bingle-name = Bingle
+antag-store-role-bingle-description = Ghost role for a Bingle. Survival only.

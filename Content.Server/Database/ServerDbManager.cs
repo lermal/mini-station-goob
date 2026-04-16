@@ -232,6 +232,8 @@ namespace Content.Server.Database
         Task<PlayerAntagTokenSelection?> GetPlayerAntagTokenSelection(Guid playerId, CancellationToken cancel = default);
         Task SetPlayerAntagTokenAmount(Guid playerId, string tokenId, int amount);
         Task SetPlayerAntagTokenSelection(Guid playerId, string tokenId, string antagId);
+        Task<PlayerGhostRoleTickets?> GetPlayerGhostRoleTickets(Guid playerId, CancellationToken cancel = default);
+        Task UpsertPlayerGhostRoleTickets(PlayerGhostRoleTickets tickets);
         Task ClearPlayerAntagTokenSelection(Guid playerId);
 
         #endregion
@@ -689,6 +691,18 @@ namespace Content.Server.Database
         {
             DbWriteOpsMetric.Inc();
             return RunDbCommand(() => _db.SetPlayerAntagTokenSelection(playerId, tokenId, antagId));
+        }
+
+        public Task<PlayerGhostRoleTickets?> GetPlayerGhostRoleTickets(Guid playerId, CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.GetPlayerGhostRoleTickets(playerId, cancel));
+        }
+
+        public Task UpsertPlayerGhostRoleTickets(PlayerGhostRoleTickets tickets)
+        {
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.UpsertPlayerGhostRoleTickets(tickets));
         }
 
         public Task ClearPlayerAntagTokenSelection(Guid playerId)

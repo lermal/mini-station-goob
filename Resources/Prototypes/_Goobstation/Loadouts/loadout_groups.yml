@@ -1037,6 +1037,7 @@
   - BlueshieldOfficerMaskLollypop
   - BlueshieldOfficerMaskGaiter
   - BlueshieldOfficerMaskSwat
+  # - BlueShieldMaskGasSWAT # CorvaxGoob-loadouts
 
 - type: loadoutGroup
   id: BlueshieldOfficerShoes

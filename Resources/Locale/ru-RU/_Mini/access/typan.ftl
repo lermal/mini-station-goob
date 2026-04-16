@@ -14,3 +14,4 @@ id-card-access-taypan-tos = Технадзор
 id-card-access-taypan-service = Сервисный
 id-card-access-taypan-vault = Хранилище
 id-card-access-taypan-external = Внешний
+id-card-access-taypan-tech-supervisor = Техобеспечение

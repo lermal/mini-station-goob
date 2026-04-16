@@ -145,7 +145,7 @@
       announcement: alert-level-delta-announcement
       selectable: false
       sound:
-        path: /Audio/_CorvaxGoob/Misc/delta.ogg # CorvaxGoob-Announcements #base:/Audio/Misc/delta.ogg
+        path: /Audio/Misc/delta.ogg
         params:
           volume: -3
       disableSelection: true

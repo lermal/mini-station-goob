@@ -81,6 +81,19 @@
   - type: InteractionOutline
   - type: Transform
     anchored: true
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      body:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.3,-0.5,0.3,0.5"
+        density: 100
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Power/apc.rsi
