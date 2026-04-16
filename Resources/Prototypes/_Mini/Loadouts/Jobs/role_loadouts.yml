@@ -110,3 +110,48 @@
   id: JobTypanBorg
   nameDataset: NamesBorg
   canCustomizeName: true
+
+- type: chameleonOutfit
+  id: TypanAtmosTechChameleonOutfit
+  job: TypanAtmosTech
+  startingGear: TypanAtmosTech
+
+- type: chameleonOutfit
+  id: TypanBotanistChameleonOutfit
+  job: TypanBotanist
+  startingGear: SyndicateBotanist
+
+- type: chameleonOutfit
+  id: TypanCargotechChameleonOutfit
+  job: TypanCargotech
+  startingGear: TypanCargotech
+
+- type: chameleonOutfit
+  id: TypanChefChameleonOutfit
+  job: TypanChef
+  startingGear: TypanChef
+
+- type: chameleonOutfit
+  id: TypanMedicChameleonOutfit
+  job: TypanMedic
+  startingGear: TypanMedic
+
+- type: chameleonOutfit
+  id: TypanResearchDirectorChameleonOutfit
+  job: TypanResearchDirector
+  startingGear: TypanResearchDirector
+
+- type: chameleonOutfit
+  id: TypanScienceChameleonOutfit
+  job: TypanScience
+  startingGear: TypanScience
+
+- type: chameleonOutfit
+  id: TypanCommanderChameleonOutfit
+  job: TypanCommander
+  startingGear: TypanCommander
+
+- type: chameleonOutfit
+  id: TypanPatrolChameleonOutfit
+  job: TypanPatrol
+  startingGear: TypanPatrol

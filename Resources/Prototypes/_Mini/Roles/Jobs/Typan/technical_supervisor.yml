@@ -35,10 +35,7 @@
     shoes: ClothingShoesBootsLaceup
     id: SyndiPDAEng
 
-# - type: chameleonOutfit
-#   id: TypanTechnicalOperationsSupervisorChameleonOutfit
-#   job: TypanTechnicalOperationsSupervisor
-#   startingGear: TypanTechnicalOperationsSupervisorGear
-#   equipment:
-#     id: PassengerPDA
-#     neck: ClothingNeckGoldmedal
+- type: chameleonOutfit
+  id: TypanTechnicalOperationsSupervisorChameleonOutfit
+  job: TypanTechnicalOperationsSupervisor
+  startingGear: TypanTechnicalOperationsSupervisorGear

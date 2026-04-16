@@ -14,6 +14,11 @@
   equipment:
     back: ClothingBackpackSatchel
 
+- type: chameleonOutfit
+  id: CentralCommandAdministratorChameleonOutfit
+  job: CentralCommandAdministrator
+  startingGear: CentralCommandAdministratorStartingGear
+
 - type: job
   id: CentralCommandOfficer
   name: job-name-centcom-officer-spawner
@@ -34,6 +39,11 @@
   equipment:
     jumpsuit: ClothingUniformJumpsuitCentcomOfficer
 
+- type: chameleonOutfit
+  id: CentralCommandOfficerChameleonOutfit
+  job: CentralCommandOfficer
+  startingGear: CentralCommandOfficerStartingGear
+
 - type: job
   id: CentralCommandOperator
   name: job-name-centcom-operator-spawner
@@ -49,3 +59,8 @@
   id: CentralCommandOperatorStartingGear
   equipment:
     back: ClothingBackpackSatchel
+
+- type: chameleonOutfit
+  id: CentralCommandOperatorChameleonOutfit
+  job: CentralCommandOperator
+  startingGear: CentralCommandOperatorStartingGear
