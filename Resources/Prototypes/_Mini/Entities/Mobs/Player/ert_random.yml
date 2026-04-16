@@ -30,7 +30,7 @@
         settings: short
       job: ERTLeaderAmber
     - type: Loadout
-      prototypes: [ ERTLeaderGearAmber ]
+      prototypes: [ ERTLeaderGear ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
@@ -63,7 +63,7 @@
         settings: short
       job: ERTLeaderRed
     - type: Loadout
-      prototypes: [ ERTLeaderGearRed ]
+      prototypes: [ ERTLeaderGearEVA ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
@@ -96,7 +96,7 @@
         settings: short
       job: ERTLeaderGamma
     - type: Loadout
-      prototypes: [ ERTLeaderGearGamma ]
+      prototypes: [ ERTLeaderGearEVA ]
     - type: RandomMetadata
       nameSegments:
       - NamesFirstERTLeader
@@ -174,7 +174,7 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTSecurityGearAmber ]
+      prototypes: [ ERTSecurityGear ]
 
 # ### Red
 # - type: entity
@@ -199,7 +199,7 @@
         settings: short
       job: ERTSecurityRed
     - type: Loadout
-      prototypes: [ ERTSecurityGearRed ]
+      prototypes: [ ERTSecurityGearEVA ]
 
 # ### Gamma
 # - type: entity
@@ -224,7 +224,7 @@
         settings: short
       job: ERTSecurityGamma
     - type: Loadout
-      prototypes: [ ERTSecurityGearGamma ]
+      prototypes: [ ERTSecurityGearEVA ]
 
 # ## Medical
 # ### Amber
@@ -263,7 +263,7 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTMedicalGearAmber ]
+      prototypes: [ ERTMedicalGear ]
 
 # ### Red
 # - type: entity
@@ -288,7 +288,7 @@
         settings: short
       job: ERTMedicalRed
     - type: Loadout
-      prototypes: [ ERTMedicalGearRed ]
+      prototypes: [ ERTMedicalGearEVA ]
 
 # ### Gamma
 # - type: entity
@@ -313,7 +313,7 @@
         settings: short
       job: ERTMedicalGamma
     - type: Loadout
-      prototypes: [ ERTMedicalGearGamma ]
+      prototypes: [ ERTMedicalGearEVA ]
 
 # ## Janitor
 # ### Amber
@@ -352,7 +352,7 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTJanitorGearAmber ]
+      prototypes: [ ERTJanitorGear ]
 
 # ### Red
 # - type: entity
@@ -377,7 +377,7 @@
         settings: short
       job: ERTJanitorRed
     - type: Loadout
-      prototypes: [ ERTJanitorGearRed ]
+      prototypes: [ ERTJanitorGearEVA ]
 
 # ### Gamma
 # - type: entity
@@ -402,7 +402,7 @@
         settings: short
       job: ERTJanitorGamma
     - type: Loadout
-      prototypes: [ ERTJanitorGearGamma ]
+      prototypes: [ ERTJanitorGearEVA ]
 
 # ## Engineer
 # ### Amber
@@ -441,7 +441,7 @@
       - NamesLastERT
       nameFormat: name-format-ert
     - type: Loadout
-      prototypes: [ ERTEngineerGearAmber ]
+      prototypes: [ ERTEngineerGear ]
 
 # ### Red
 # - type: entity
@@ -466,7 +466,7 @@
         settings: short
       job: ERTEngineerRed
     - type: Loadout
-      prototypes: [ ERTEngineerGearRed ]
+      prototypes: [ ERTEngineerGearEVA ]
 
 # ### Gamma
 # - type: entity
@@ -491,7 +491,7 @@
         settings: short
       job: ERTEngineerGamma
     - type: Loadout
-      prototypes: [ ERTEngineerGearGamma ]
+      prototypes: [ ERTEngineerGearEVA ]
 
 # ## CBURN Agent
 # - type: entity

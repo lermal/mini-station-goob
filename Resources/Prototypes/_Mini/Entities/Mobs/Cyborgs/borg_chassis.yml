@@ -110,7 +110,7 @@
         typan-mining: mining
         typan-janitor: janitor
         typan-medical: medical
-        typan-security: security
+        typan-security: generic
     - type: Appearance
 
 # Typan Generic

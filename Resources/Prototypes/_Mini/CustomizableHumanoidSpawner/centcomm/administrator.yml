@@ -23,7 +23,6 @@
   - CentralCommandAdministratorLoadout
   - Survival
   - GroupSpeciesBreathTool
-  - CentcommOfficerUnderwear
 
 - type: loadoutGroup
   id: CentralCommandAdministratorLoadout

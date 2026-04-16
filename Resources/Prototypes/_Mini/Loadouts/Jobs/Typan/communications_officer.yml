@@ -24,8 +24,5 @@
   id: TypanCommunicationsOfficerUnderwear
   name: loadout-group-typan-communications-officer-underwear
   hidden: true
-  minLimit: 2
-  loadouts:
-  - UnderwearBottomBoxersTypanCommunicationsOfficer
-  - UnderwearBottomPantiesTypanCommunicationsOfficer
-  - UnderwearTopBraTypanCommunicationsOfficer
+  minLimit: 0
+  loadouts: []

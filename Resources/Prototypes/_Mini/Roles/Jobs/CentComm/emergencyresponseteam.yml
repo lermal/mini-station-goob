@@ -8,7 +8,7 @@
   description: job-description-ertleader
   playTimeTracker: JobERTLeaderAmber
   setPreference: false
-  startingGear: ERTLeaderGearAmber
+  startingGear: ERTLeaderGear
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -63,7 +63,7 @@
   - All
   playTimeTracker: JobERTLeaderRed
   setPreference: false
-  startingGear: ERTLeaderGearRed
+  startingGear: ERTLeaderGearEVA
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -118,7 +118,7 @@
   description: job-description-ertleader
   playTimeTracker: JobERTLeaderGamma
   setPreference: false
-  startingGear: ERTLeaderGearGamma
+  startingGear: ERTLeaderGearEVA
   icon: "JobIconERTLeader"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -179,7 +179,7 @@
   - All
   playTimeTracker: JobERTSecurityAmber
   setPreference: false
-  startingGear: ERTSecurityGearAmber
+  startingGear: ERTSecurityGear
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -234,7 +234,7 @@
   - All
   playTimeTracker: JobERTSecurityRed
   setPreference: false
-  startingGear: ERTSecurityGearRed
+  startingGear: ERTSecurityGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -285,7 +285,7 @@
   - All
   playTimeTracker: JobERTSecurityGamma
   setPreference: false
-  startingGear: ERTSecurityGearGamma
+  startingGear: ERTSecurityGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -339,7 +339,7 @@
   description: job-description-ertmedic
   playTimeTracker: JobERTMedicalAmber
   setPreference: false
-  startingGear: ERTMedicalGearAmber
+  startingGear: ERTMedicalGear
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -393,7 +393,7 @@
   description: job-description-ertmedic
   playTimeTracker: JobERTMedicalRed
   setPreference: false
-  startingGear: ERTMedicalGearRed
+  startingGear: ERTMedicalGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -452,7 +452,7 @@
   - All
   playTimeTracker: JobERTMedicalGamma
   setPreference: false
-  startingGear: ERTMedicalGearGamma
+  startingGear: ERTMedicalGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -515,7 +515,7 @@
   - All
   playTimeTracker: JobERTEngineerAmber
   setPreference: false
-  startingGear: ERTEngineerGearAmber
+  startingGear: ERTEngineerGear
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -565,7 +565,7 @@
   description: job-description-ertengineer
   playTimeTracker: JobERTEngineerRed
   setPreference: false
-  startingGear: ERTEngineerGearRed
+  startingGear: ERTEngineerGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -619,7 +619,7 @@
   description: job-description-ertengineer
   playTimeTracker: JobERTEngineerGamma
   setPreference: false
-  startingGear: ERTEngineerGearGamma
+  startingGear: ERTEngineerGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -679,7 +679,7 @@
   description: job-description-ertjanitor
   playTimeTracker: JobERTJanitorAmber
   setPreference: false
-  startingGear: ERTJanitorGearAmber
+  startingGear: ERTJanitorGear
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -730,7 +730,7 @@
   description: job-description-ertjanitor
   playTimeTracker: JobERTJanitorRed
   setPreference: false
-  startingGear: ERTJanitorGearRed
+  startingGear: ERTJanitorGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false
@@ -782,7 +782,7 @@
   description: job-description-ertjanitor
   playTimeTracker: JobERTJanitorGamma
   setPreference: false
-  startingGear: ERTJanitorGearGamma
+  startingGear: ERTJanitorGearEVA
   icon: "JobIconERT"
   supervisors: job-supervisors-centcom
   canBeAntag: false

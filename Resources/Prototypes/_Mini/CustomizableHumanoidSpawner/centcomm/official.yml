@@ -65,7 +65,6 @@
   - CentralCommandOfficialLoadout
   - Survival
   - GroupSpeciesBreathTool
-  - CentcommOfficerUnderwear
 
 - type: loadoutGroup
   id: CentralCommandOfficialLoadout

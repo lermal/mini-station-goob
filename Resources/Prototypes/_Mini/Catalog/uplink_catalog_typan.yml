@@ -1527,9 +1527,6 @@
   name: uplink-typan-silver-name
   description: uplink-typan-silver-desc
   productEntity: IngotSilver
-  discountCategory: usualDiscounts
-  discountDownTo:
-    Telecrystal: 2
   cost:
     Telecrystal: 6
   categories:
@@ -1540,9 +1537,6 @@
   name: uplink-typan-diamond-name
   description: uplink-typan-diamond-desc
   productEntity: MaterialDiamond1
-  discountCategory: usualDiscounts
-  discountDownTo:
-    Telecrystal: 1
   cost:
     Telecrystal: 4
   categories:
