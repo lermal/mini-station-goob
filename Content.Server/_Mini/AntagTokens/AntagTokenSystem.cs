@@ -501,9 +501,13 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = selectedRoleId;
         }
 
+        var prevMonthlyYear = state.MonthlyYear;
+        var prevMonthlyMonth = state.MonthlyMonth;
         NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
         _states[player.UserId] = state;
         _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
+        if (prevMonthlyYear != state.MonthlyYear || prevMonthlyMonth != state.MonthlyMonth)
+            PersistState(player.UserId, state);
     }
 
     private async void OnPlayerDisconnect(ICommonSession player)
@@ -1023,6 +1027,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
                 if (bonusAmount > 0)
                 {
                     state.Balance += bonusAmount;
+                    state.LastDonorBonusClaimUtc = nowUtc;
 
                     if (_playerManager.TryGetSessionById(userId.Value, out var session))
                         ShowPopup(session, $"Monthly donor bonus: +{bonusAmount} tokens!");

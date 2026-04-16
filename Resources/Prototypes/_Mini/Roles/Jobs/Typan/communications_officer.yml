@@ -13,6 +13,7 @@
     - !type:DepartmentTimeRequirement
       department: Typan
       time: 72000 # 20 hours
+      requiredAge: 26
   access:
   - TypanArmory
   - TypanAtmospherics
@@ -26,7 +27,6 @@
   - TypanResearchDirector
   - TypanScience
   - TypanService
-  - TypanTechnicalOperationsSupervisor
   - TypanVault
   - TypanExternal
   - SyndicateAgent

@@ -141,7 +141,6 @@ construction-graph-tag-weapon-pistol-chimp-upgrade-kit = pistol CHIMP upgrade ki
 construction-graph-tag-torch = torch
 
 # atmos
-construction-graph-tag-gas-tank = gas tank
 construction-graph-tag-fire-extinguisher = fire extinguisher
 construction-graph-tag-fire-helmet = fire helmet
 

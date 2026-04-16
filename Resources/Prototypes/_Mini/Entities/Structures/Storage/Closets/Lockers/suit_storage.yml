@@ -81,7 +81,7 @@
     - id: OxygenTankFilled
     - id: ClothingOuterHardsuitSyndieElite
   - type: AccessReader
-    access: [["TypanTechnicalOperationsSupervisor"]]
+    access: [["TypanCommand"]]
 
 # Директор исследований
 - type: entity

@@ -268,7 +268,7 @@
 
 - type: technology
   id: TypanNightVisionTechnology
-  name: research-technology-typan-night-vision
+  name: Технологии ночного видения
   icon:
     sprite: _White/Clothing/Eyes/Goggles/snightvision.rsi
     state: icon

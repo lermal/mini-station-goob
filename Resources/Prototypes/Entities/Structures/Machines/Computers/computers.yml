@@ -832,6 +832,17 @@
   description: Terminal for programming Nanotrasen employee ID cards to access parts of the station.
   components:
   - type: IdCardConsole
+    showFullAccessButton: true
+    showExtendedAccessButton: true
+    extendedAccessExclusions:
+    - Captain
+    - ChiefEngineer
+    - ChiefMedicalOfficer
+    - HeadOfPersonnel
+    - HeadOfSecurity
+    - ResearchDirector
+    - Quartermaster
+    - Armory
     privilegedIdSlot:
       name: id-card-console-privileged-id
       ejectSound: /Audio/Machines/id_swipe.ogg
@@ -973,7 +984,7 @@
   - type: CommunicationsConsole
     title: comms-console-announcement-title-nukie
     color: "#ff0000"
-    canCallShuttle: false
+    canShuttle: false
     global: true #announce to everyone they're about to fuck shit up
     announceSentBy: false # The title already says who they are.
     sound: /Audio/Announcements/war.ogg
@@ -1007,7 +1018,7 @@
   - type: CommunicationsConsole
     title: comms-console-announcement-title-centcom
     color: "#1d8bad"
-    canCallShuttle: false
+    canShuttle: false
     global: true
   - type: Computer
     board: CentcommCommsComputerCircuitboard

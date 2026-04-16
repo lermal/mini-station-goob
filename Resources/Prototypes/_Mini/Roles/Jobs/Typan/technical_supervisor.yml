@@ -1,44 +1,44 @@
-- type: job
-  id: TypanTechnicalOperationsSupervisor
-  name: job-name-typan-technical-supervisor
-  description: job-description-typan-technical-supervisor
-  playTimeTracker: JobTypanTechnicalOperationsSupervisor
-  setPreference: false
-  overrideConsoleVisibility: true
-  startingGear: TypanTechnicalOperationsSupervisorGear
-  icon: "JobIconTypanTechnicalOperationsSupervisor"
-  supervisors: job-supervisors-syndicate
-  canBeAntag: false
-  requirements:
-  - !type:DepartmentTimeRequirement
-    department: Typan
-    time: 144000 # 40 hours
-  access:
-  - TypanAtmospherics
-  - TypanCargo
-  - TypanCommand
-  - TypanEngineering
-  - TypanMaint
-  - TypanMedical
-  - TypanResearch
-  - TypanService
-  - TypanTechnicalOperationsSupervisor
-  - TypanExternal
-  special:
-  - !type:AddImplantSpecial
-    implants: [ DeathRattleImplantTypan ]
+# - type: job
+#   id: TypanTechnicalOperationsSupervisor
+#   name: job-name-typan-technical-supervisor
+#   description: job-description-typan-technical-supervisor
+#   playTimeTracker: JobTypanTechnicalOperationsSupervisor
+#   setPreference: false
+#   overrideConsoleVisibility: true
+#   isTypan: true
+#   startingGear: TypanTechnicalOperationsSupervisorGear
+#   icon: "JobIconTypanTechnicalOperationsSupervisor"
+#   supervisors: job-supervisors-syndicate
+#   canBeAntag: false
+#   requirements:
+#   - !type:DepartmentTimeRequirement
+#     department: Typan
+#     time: 144000 # 40 hours
+#   access:
+#   - TypanAtmospherics
+#   - TypanCargo
+#   - TypanCommand
+#   - TypanEngineering
+#   - TypanMaint
+#   - TypanMedical
+#   - TypanScience
+#   - TypanService
+#   - TypanExternal
+#   special:
+#   - !type:AddImplantSpecial
+#     implants: [ DeathRattleImplantTypan ]
 
-- type: startingGear
-  id: TypanTechnicalOperationsSupervisorGear
-  equipment:
-    ears: ClothingHeadsetAltSyndicate
-    shoes: ClothingShoesBootsLaceup
-    id: SyndiPDAEng
+# - type: startingGear
+#   id: TypanTechnicalOperationsSupervisorGear
+#   equipment:
+#     ears: ClothingHeadsetAltTypan
+#     shoes: ClothingShoesBootsLaceup
+#     id: TypanTechnicalOperationsSupervisorPDA
 
-- type: chameleonOutfit
-  id: TypanTechnicalOperationsSupervisorChameleonOutfit
-  job: TypanTechnicalOperationsSupervisor
-  startingGear: TypanTechnicalOperationsSupervisorGear
-  equipment:
-    id: PassengerPDA
-    neck: ClothingNeckGoldmedal
+# - type: chameleonOutfit
+#   id: TypanTechnicalOperationsSupervisorChameleonOutfit
+#   job: TypanTechnicalOperationsSupervisor
+#   startingGear: TypanTechnicalOperationsSupervisorGear
+#   equipment:
+#     id: PassengerPDA
+#     neck: ClothingNeckGoldmedal

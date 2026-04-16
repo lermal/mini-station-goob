@@ -97,10 +97,10 @@
   name: bso-set-selector-pistol
   description: bso-set-selector-pistol-desc
   sprite:
-    sprite: Objects/Weapons/Guns/Battery/laser_retro.rsi
+    sprite: Adventure/Roles/blueshield/Weapons/DualphasBH.rsi
     state: base
   content:
-  - WeaponLaserGun
+  - WeaponX2DualphaseEnergyLaserGun
 
 - type: thiefBackpackSet
   id: MinigunSet
@@ -117,10 +117,10 @@
   name: bso-set-selector-laser-sword
   description: bso-set-selector-laser-sword-desc
   sprite:
-    sprite: Objects/Weapons/Melee/e_sword.rsi
+    sprite: ADT/Objects/Weapons/Guns/Saber_revolvers/energy.rsi
     state: icon
   content:
-  - EnergySwordBlueshield
+  - ADTWeaponSaberRevBlueshield
 
 - type: thiefBackpackSet
   id: AssistantRich
@@ -158,8 +158,8 @@
   name: assistant-set-selector-syndi
   description: assistant-set-selector-syndi-desc
   sprite:
-    sprite: _Goobstation/Objects/Fun/toys.rsi
-    state: plushie_louie
+    sprite: Objects/Fun/toys.rsi
+    state: synb
   content:
   - BalloonSyn
   - SyndicateBusinessCard
@@ -179,7 +179,6 @@
   content:
   - ClothingHeadHatPirateTricord
   - ClothingEyesGlassesCheapSunglasses
-  - MobParrot
   - ClothingUniformJumpsuitPirate
   - ClothingOuterCoatGentle
   - ClothingHandsGlovesFingerless
@@ -192,8 +191,8 @@
   name: assistant-set-selector-gambling
   description: assistant-set-selector-gambling-desc
   sprite:
-    sprite: Objects/Economy/cash.rsi
-    state: cash_100
+    sprite: _CorvaxNext/Objects/Misc/cards.rsi
+    state: sc_Jack_of_Spades_black
   content:
   - ClothingHeadHatBowlerHat
   - ClothingEyesGlasses
@@ -201,7 +200,6 @@
   - ClothingUniformJumpsuitSecBlue
   - ClothingOuterVest
   - ClothingShoesBootsLaceup
-  - Wristwatch
   - TreasureCoinGold
   - TreasureCoinGold
   - DiceBag

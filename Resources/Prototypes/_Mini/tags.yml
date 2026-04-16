@@ -1,26 +1,38 @@
 - type: Tag
-  id: TypanRipleyEquipment
+  id: MagazineMiniMachineGunBox
 
 - type: Tag
-  id: DeathRipleyEquipment
+  id: CartridgeMinigun
 
 - type: Tag
-  id: TypanRipleyLArm
+  id: ADT40mmGrenade
 
 - type: Tag
-  id: TypanRipleyRArm
+  id: ADTMagazineRifleBibisSoftBig
 
 - type: Tag
-  id: TypanRipleyLLeg
+  id: ADTMagazineRifleBibisSoft
 
 - type: Tag
-  id: TypanRipleyRLeg
+  id: ADTMagazineRifleBibis
 
 - type: Tag
-  id: TypanRipleyCentralControlModule
+  id: DockCentcommERT
 
 - type: Tag
-  id: TypanRipleyPeripheralsControlModule
+  id: MagazineRifleSaint
+
+- type: Tag
+  id: CartridgeRifleSaint
+
+- type: Tag
+  id: CartridgeMagnumAntimaterial
+
+- type: Tag
+  id: MagazineMagnumAntimaterial
+
+- type: Tag
+  id: CartridgeSilverSaint
 
 - type: Tag
   id: Typan
@@ -44,25 +56,4 @@
   id: TypanBorgTorso
 
 - type: Tag
-  id: MagazineMiniMachineGunBox
-
-- type: Tag
-  id: CartridgeMinigun
-
-- type: Tag
-  id: DockCentcommERT
-
-- type: Tag
-  id: CartridgeSilverSaint
-
-- type: Tag
-  id: MagazineMagnumAntimaterial
-
-- type: Tag
-  id: CartridgeMagnumAntimaterial
-
-- type: Tag
-  id: CartridgeRifleSaint
-
-- type: Tag
-  id: MagazineRifleSaint
+  id: TypanRole

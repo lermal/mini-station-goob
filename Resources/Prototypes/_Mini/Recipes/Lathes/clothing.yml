@@ -166,6 +166,11 @@
   id: ClothingOuterApronTypanChef
   result: ClothingOuterApronTypanChef
 
+- type: latheRecipe
+  parent: BaseCoatRecipe
+  id: ClothingOuterJacketTypanChef
+  result: ClothingOuterJacketTypanChef
+
 # Backpack
 - type: latheRecipe
   id: ClothingBackpackSatchelTypan
@@ -312,7 +317,7 @@
   materials:
     Cloth: 300
     Durathread: 200
-    Steel: 400
+    Titanium: 400
 
 - type: latheRecipe
   id: ClothingOuterVestWebElite
@@ -320,4 +325,4 @@
   materials:
     Cloth: 300
     Durathread: 400
-    Steel: 200
+    Titanium: 200

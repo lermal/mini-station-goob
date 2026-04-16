@@ -5,6 +5,7 @@
   description: Консоль для кодирования пропускных карт агентов Синдиката.
   components:
   - type: IdCardConsole
+    showFullAccessButton: true
     privilegedIdSlot:
       name: id-card-console-privileged-id
       ejectSound: /Audio/Machines/id_swipe.ogg
@@ -81,6 +82,8 @@
   description: Данное устройство реализует протокол Σ-трансмутации, применяя контролируемый обратный коллапс Шрёдингеровской информационной матрицы, запечатлённой в дисках исследований. При активации запускается нелинейная дематериализация по схеме. Проще говоря превращает диски исследований в телекристаллы.
   components:
   - type: Converter
+  - type: AccessReader
+    access: [["TypanScience"]]
   - type: Sprite
     sprite: _Mini/Structures/Machines/computers.rsi
     layers:
@@ -114,7 +117,7 @@
     key: enum.StoreUiKey.Key
   - type: Store
     balance:
-      Telecrystal: 1
+      Telecrystal: 0
   - type: Anchorable
     flags: None
 
@@ -255,11 +258,15 @@
   - type: AccessReader
     access: [["TypanCommand"]]
   - type: CommunicationsConsole
-    title: comms-console-title-typan-nikk
+    title: НИКК Тайпан
     sound:
       path: /Audio/_Mini/Announcements/announce_typan.ogg
       params:
         volume: -2
+    canCallShuttle: False
+    canRecallShuttle: False
+#    canCallERT: False
+#    canCallShuttle: False
     color: "#5c0006"
     global: false
   - type: DeviceNetwork
@@ -282,20 +289,3 @@
   - type: ContainerContainer
     containers:
       board: !type:Container
-
-- type: entity
-  parent: ComputerRoboticsControl
-  id: ComputerTypanRoboticsControl
-  suffix: Тайпан
-  components:
-  - type: Sprite
-    sprite: _Mini/Structures/Machines/computers.rsi
-    layers:
-    - map: ["computerLayerBody"]
-      state: computer_uplink
-    - map: ["computerLayerScreen"]
-      state: comm_rnd
-    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
-      state: generic_panel_open
-  - type: Computer
-    board: RoboticsConsoleCircuitboardTypan

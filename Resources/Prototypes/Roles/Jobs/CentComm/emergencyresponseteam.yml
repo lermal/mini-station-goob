@@ -9,13 +9,6 @@
   icon: "JobIconNanotrasen"
   supervisors: job-supervisors-centcom
   canBeAntag: false
-  requirements:
-  - !type:DepartmentTimeRequirement
-    department: Security
-    time: 36000
-  - !type:DepartmentTimeRequirement
-    department: Command
-    time: 18000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:
@@ -178,13 +171,6 @@
   icon: "JobIconNanotrasen"
   supervisors: job-supervisors-centcom
   canBeAntag: false
-  requirements:
-  - !type:DepartmentTimeRequirement
-    department: Engineering
-    time: 36000
-  - !type:DepartmentTimeRequirement
-    department: Security
-    time: 18000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:
@@ -354,13 +340,6 @@
   icon: "JobIconNanotrasen"
   supervisors: job-supervisors-centcom
   canBeAntag: false
-  requirements:
-  - !type:DepartmentTimeRequirement
-    department: Medical
-    time: 36000
-  - !type:DepartmentTimeRequirement
-    department: Security
-    time: 18000
   skills: # CorvaxGoob-Skills
   - All
   accessGroups:

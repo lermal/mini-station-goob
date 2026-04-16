@@ -3,6 +3,11 @@
   id: TypanPatrolJumpsuit
   equipment:
     jumpsuit: ClothingUniformJumpsuitTypanPatrol
+- type: loadout
+  id: TypanPatrolJumpskirt
+  equipment:
+    jumpsuit: ClothingUniformJumpskirtTypanPatrol
+
 # Loadout Groups
 - type: loadoutGroup
   id: TypanPatrolUniform
@@ -11,4 +16,5 @@
   minLimit: 1
   loadouts:
   - TypanPatrolJumpsuit
+  - TypanPatrolJumpskirt
 

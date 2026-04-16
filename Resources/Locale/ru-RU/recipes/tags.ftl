@@ -127,7 +127,6 @@ construction-graph-tag-black-crystal-shard = чёрный осколок кри�
 construction-graph-tag-weapon-pistol-chimp-upgrade-kit = чип улучшения револьвера МАРТЫХ
 construction-graph-tag-torch = факел
 # atmos
-construction-graph-tag-gas-tank = газовый баллон
 construction-graph-tag-fire-extinguisher = огнетушитель
 construction-graph-tag-fire-helmet = пожарный шлем
 # salvage

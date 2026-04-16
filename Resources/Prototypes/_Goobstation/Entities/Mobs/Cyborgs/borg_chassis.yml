@@ -195,7 +195,7 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: BorgSwitchableSubtype
-    borgSubtype: engineer_default
+    borgSubtype: engineer_basic
 
 # - type: entity
 #   id: BorgChassisEngineerAntique
@@ -250,7 +250,7 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: BorgSwitchableSubtype
-    borgSubtype: janitor_default
+    borgSubtype: janitor_basic
 
 # - type: entity
 #   id: BorgChassisJanitorMopbot
@@ -314,7 +314,7 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: BorgSwitchableSubtype
-    borgSubtype: default_medical
+    borgSubtype: medical_standart
 
 # - type: entity
 #   id: BorgChassisMedicalMedbot
@@ -387,7 +387,7 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: BorgSwitchableSubtype
-    borgSubtype: default_service
+    borgSubtype: service_standart
 
 # - type: entity
 #   id: BorgChassisServiceBrobot

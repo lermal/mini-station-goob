@@ -1003,7 +1003,7 @@
 
 - type: loadoutGroup
   id: BlueshieldOfficerBelt
-  name: loadout-group-bso-belt
+  name: ОСЩ, пояс
   loadouts:
   - BeltAssault
   - MilitaryWebbingBlueShield
@@ -1037,6 +1037,7 @@
   - BlueshieldOfficerMaskLollypop
   - BlueshieldOfficerMaskGaiter
   - BlueshieldOfficerMaskSwat
+  # - BlueShieldMaskGasSWAT # CorvaxGoob-loadouts
 
 - type: loadoutGroup
   id: BlueshieldOfficerShoes
@@ -1081,7 +1082,7 @@
 
 - type: loadoutGroup
   id: BlueshieldOfficerEyes
-  name: loadout-group-bso-eyes
+  name: ОСЩ, очки
   minLimit: 1
   maxLimit: 1
   loadouts:
@@ -1090,7 +1091,7 @@
 
 - type: loadoutGroup
   id: BlueshieldOfficerPDA
-  name: loadout-group-bso-pda
+  name: ОСЩ, КПК
   minLimit: 1
   maxLimit: 1
   loadouts:

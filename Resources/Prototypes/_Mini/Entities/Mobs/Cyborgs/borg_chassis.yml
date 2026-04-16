@@ -25,6 +25,7 @@
       subverted: false
     - type: IntrinsicRadioTransmitter
       channels:
+        - Binary # But that has really long range
         - Typan
     - type: ActiveRadio
       channels:
@@ -38,7 +39,7 @@
       sounds:
         Unsexed: UnisexSiliconSyndicate
     - type: Damageable
-      damageModifierSet: Silicon
+      damageModifierSet: CombatBorg
     - type: InteractionPopup
       interactSuccessString: petting-success-syndicate-cyborg
       interactFailureString: petting-failure-syndicate-cyborg
@@ -87,7 +88,7 @@
       name: cyborg
     - type: BorgSwitchableType
       inherentRadioChannels:
-        - Typan
+        - Syndicate
       allowedBorgTypes:
         - typan-generic
         - typan-engineering
@@ -110,7 +111,7 @@
         typan-mining: mining
         typan-janitor: janitor
         typan-medical: medical
-        typan-security: engineering
+        typan-security: security
     - type: Appearance
 
 # Typan Generic

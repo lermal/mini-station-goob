@@ -46,6 +46,6 @@
     netsync: false
   - type: TimerTriggerVisuals
     primingSound:
-      path: /Audio/Effects/smoke.ogg
+      path: /Audio/Weapons/holysmoke.ogg
   - type: TimerTrigger
     delay: 4.5

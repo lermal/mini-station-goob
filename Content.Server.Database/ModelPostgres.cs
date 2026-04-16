@@ -21,6 +21,7 @@ namespace Content.Server.Database
             options.ConfigureWarnings(x =>
             {
                 x.Ignore(CoreEventId.ManyServiceProvidersCreatedWarning);
+                x.Ignore(RelationalEventId.PendingModelChangesWarning);
 #if DEBUG
                 // for tests
                 x.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning);
@@ -56,6 +57,24 @@ namespace Content.Server.Database
                 .HasIndex(l => l.Message)
                 .HasMethod("GIN")
                 .IsTsVectorExpressionIndex("english");
+
+            var timeSpanListComparer = new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<System.Collections.Generic.List<TimeSpan>>(
+                (c1, c2) => c1!.SequenceEqual(c2!),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList());
+
+            var intListComparer = new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<System.Collections.Generic.List<int>>(
+                (c1, c2) => c1!.SequenceEqual(c2!),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList());
+
+            modelBuilder.Entity<PlayerGhostRoleTickets>()
+                .Property(p => p.TicketMilestones)
+                .Metadata.SetValueComparer(timeSpanListComparer);
+
+            modelBuilder.Entity<PlayerGhostRoleTickets>()
+                .Property(p => p.StreakMilestones)
+                .Metadata.SetValueComparer(intListComparer);
 
             foreach(var entity in modelBuilder.Model.GetEntityTypes())
             {

@@ -34,7 +34,7 @@
     gloves: ClothingHandsGlovesCombat
     outerClothing: ClothingOuterVestWeb
     neck: ClothingNeckCloakCentcomBlack
-    id: CentcomPDA
+    id: CentcomSpecialOperationsOfficerPDA
     ears: ClothingHeadsetSpecialOperationsOfficer
 
 - type: entity
@@ -46,6 +46,7 @@
     - type: StorageFill
       contents:
         - id: RubberStampCentcom
+        - id: RubberStampCentcomSpecialOperationOfficer
         - id: BoxFolderBlueFilled
 
 - type: entity
@@ -90,6 +91,7 @@
       key_slots:
       - EncryptionKeyCentCom
       - EncryptionKeyStationMaster
+      - EncryptionKeyDeathSquad
   - type: Sprite
     sprite: Clothing/Ears/Headsets/base.rsi
   - type: Clothing
