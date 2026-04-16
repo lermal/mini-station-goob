@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2026 Casha
-//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+# SPDX-FileCopyrightText: 2026 Casha
+# Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 
 antag-token-window-title = Antagonist Store
 antag-token-window-subtitle = Earn tickets from streaks and playtime, buy antagonist access, and place roundstart deposits from the lobby.

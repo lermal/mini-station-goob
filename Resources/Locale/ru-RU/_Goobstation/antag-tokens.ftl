@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2026 Casha
-//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+# SPDX-FileCopyrightText: 2026 Casha
+# Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 
 antag-token-window-title = Магазин антагонистов
 antag-token-window-subtitle = Копи монеты за стрики и онлайн, покупай роли и вставай в очередь на старт прямо из лобби.
