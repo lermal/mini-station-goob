@@ -24,6 +24,12 @@
             "name": "medical_doctor"
         },
         {
+        "name": "technician"
+        },
+        {
+        "name": "technicalsupervisor"
+        },
+        {
             "name": "research_director"
         },
         {
