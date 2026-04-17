@@ -124,7 +124,6 @@ public abstract class SharedChameleonClothingSystem : EntitySystem
             proto.TryGetComponent(out HeadsetComponent? otherHeadset, Factory))
         {
             headset.CopyColorFrom(otherHeadset);
-            Dirty(uid, headset);
         }
 
         // appearance data logic
