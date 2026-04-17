@@ -220,19 +220,37 @@ public sealed partial class StationJobsSystem
                 // Clear for reuse.
                 stationShares.Clear();
 
-                // How many players we've distributed so far. Used to grant any remaining slots if we have leftovers.
                 var distributed = 0;
 
                 foreach (var station in stations)
                 {
-                    stationShares[station] = (int)Math.Floor(((float)stationTotalSlots[station] / totalSlots) * candidates.Count);
+                    var share = (int)Math.Floor(((float)stationTotalSlots[station] / totalSlots) * candidates.Count);
+                    stationShares[station] = Math.Min(share, stationTotalSlots[station]);
                     distributed += stationShares[station];
                 }
 
-                if (distributed < candidates.Count)
+                var remainder = candidates.Count - distributed;
+                while (remainder > 0)
                 {
-                    var choice = _random.Pick(stations);
-                    stationShares[choice] += candidates.Count - distributed;
+                    var withRoom = new List<EntityUid>();
+                    foreach (var station in stations)
+                    {
+                        if (stationShares[station] < stationTotalSlots[station])
+                            withRoom.Add(station);
+                    }
+
+                    if (withRoom.Count == 0)
+                        break;
+
+                    _random.Shuffle(withRoom);
+                    foreach (var station in withRoom)
+                    {
+                        if (remainder == 0)
+                            break;
+
+                        stationShares[station]++;
+                        remainder--;
+                    }
                 }
 
                 // Actual meat, goes through each station and shakes the tree until everyone has a job.
