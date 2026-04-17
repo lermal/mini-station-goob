@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2026 Casha //Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+# SPDX-FileCopyrightText: 2026 Casha // Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 
 ghost-role-ticket-name = Билет на гост-роль
 ghost-role-ticket-description = Используется для покупки гост-ролей. Получайте билеты за активное время игры и стрики.

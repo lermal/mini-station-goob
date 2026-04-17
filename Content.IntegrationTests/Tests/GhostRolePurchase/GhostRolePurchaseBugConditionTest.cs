@@ -1,4 +1,5 @@
-// SPDX-FileCopyrightText: 2026 Casha //Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+// SPDX-FileCopyrightText: 2026 Casha
+// Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 
 using Content.Server._Mini.DailyRewards;
 using Content.Server._Mini.GhostRolePurchase;
@@ -54,12 +55,12 @@ public sealed class GhostRolePurchaseBugConditionTest
 
         var dailyRewardSystem = entityManager.System<DailyRewardSystem>();
         var systemType = dailyRewardSystem.GetType();
-        
+
         var grantTicketsForPlaytimeMethod = systemType.GetMethod(
             "GrantTicketsForPlaytime",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance
         );
-        
+
         Assert.That(
             grantTicketsForPlaytimeMethod,
             Is.Not.Null,
@@ -70,7 +71,7 @@ public sealed class GhostRolePurchaseBugConditionTest
             "GrantTicketsForStreak",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance
         );
-        
+
         Assert.That(
             grantTicketsForStreakMethod,
             Is.Not.Null,

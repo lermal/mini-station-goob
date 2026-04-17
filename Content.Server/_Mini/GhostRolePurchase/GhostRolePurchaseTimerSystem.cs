@@ -1,4 +1,5 @@
-// SPDX-FileCopyrightText: 2026 Casha //Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+// SPDX-FileCopyrightText: 2026 Casha
+// Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Events;
@@ -15,7 +16,7 @@ public sealed class GhostRolePurchaseTimerSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        
+
         SubscribeLocalEvent<RoundStartingEvent>(OnRoundStarting);
         SubscribeLocalEvent<GhostRolePurchasedEvent>(OnGhostRolePurchased);
     }
@@ -37,7 +38,7 @@ public sealed class GhostRolePurchaseTimerSystem : EntitySystem
                 timer.IsBlocked = false;
                 timer.TimerEndTime = null;
                 Dirty(uid, timer);
-                
+
                 RaiseNetworkEvent(new GhostRolePurchaseTimerUpdateEvent(TimeSpan.Zero));
             }
         }
