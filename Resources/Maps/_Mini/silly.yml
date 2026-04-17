@@ -43014,10 +43014,6 @@ entities:
       - stampedColor: '#850000FF'
         stampedName: stamp-component-stamped-name-syndicate
       content: 'Орёл или решка? '
-    - type: UserInterface
-      actors:
-        enum.PaperUiKey.Key: []
-    - type: ActiveUserInterface
   - uid: 4062
     components:
     - type: Transform
@@ -51824,7 +51820,6 @@ entities:
       setupAvailableNetworks:
       - SurveillanceCameraGeneral
       id: Общий [Стойка ГП]
-    - type: ActiveUserInterface
   - uid: 5180
     components:
     - type: Transform
