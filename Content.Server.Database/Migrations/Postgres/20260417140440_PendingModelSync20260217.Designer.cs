@@ -1147,6 +1147,9 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.HasKey("Id")
                         .HasName("PK_player_ghost_role_tickets");
 
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
+
                     b.ToTable("player_ghost_role_tickets", (string)null);
                 });
 

@@ -106,8 +106,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: Automatically update REUSE headers"
-          commit_user_name: ${{ vars.CHANGELOG_USER || 'Мини Ченджлоггер' }}
-          commit_user_email: ${{ vars.CHANGELOG_EMAIL || 'mini-changelogger@users.noreply.github.com' }}
-          commit_author: ${{ format('{0} <{1}>', vars.CHANGELOG_USER || 'Мини Ченджлоггер', vars.CHANGELOG_EMAIL || 'mini-changelogger@users.noreply.github.com') }}
+          commit_user_name: ${{ vars.CHANGELOG_USER || 'github-actions[bot]' }}
+          commit_user_email: ${{ vars.CHANGELOG_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          commit_author: ${{ format('{0} <{1}>', vars.CHANGELOG_USER || 'github-actions[bot]', vars.CHANGELOG_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com') }}
           skip_dirty_check: false
           skip_fetch: true

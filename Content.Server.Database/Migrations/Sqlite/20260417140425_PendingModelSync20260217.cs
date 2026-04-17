@@ -29,11 +29,21 @@ namespace Content.Server.Database.Migrations.Sqlite
                 {
                     table.PrimaryKey("PK_player_ghost_role_tickets", x => x.player_ghost_role_tickets_id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_player_ghost_role_tickets_player_id",
+                table: "player_ghost_role_tickets",
+                column: "player_id",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropIndex(
+                name: "IX_player_ghost_role_tickets_player_id",
+                table: "player_ghost_role_tickets");
+
             migrationBuilder.DropTable(
                 name: "player_ghost_role_tickets");
         }

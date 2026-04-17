@@ -114,6 +114,10 @@ namespace Content.Server.Database
                 .Property(p => p.StreakMilestones)
                 .HasConversion(intListConverter)
                 .Metadata.SetValueComparer(intListComparer);
+
+            modelBuilder.Entity<PlayerGhostRoleTickets>()
+                .HasIndex(p => p.PlayerId)
+                .IsUnique();
         }
 
         public override int CountAdminLogs()
