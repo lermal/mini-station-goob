@@ -9,6 +9,3 @@ contact_links:
   - name: Сообщить о нарушениях безопасности / Report a Security Vulnerability
     url: https://github.com/space-wizards/space-station-14/blob/master/SECURITY.md
     about: Пожалуйста, сообщите о нарушениях безопасности в частном порядке, чтобы мы могли исправить их до того, как они станут общедоступными. / Please report security vulnerabilities privately so we can fix them before they are publicly disclosed
-  - name: Предложение / New feature
-    url: https://discord.gg/mini-station
-    about: Отправьте предложения на нашем Discord-сервере (https://discord.gg/mini-station) / Submit feature requests on our Discord server (https://discord.gg/mini-station).

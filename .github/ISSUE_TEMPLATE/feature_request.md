@@ -6,22 +6,25 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 ---
-name: Feature request
-about: Suggest an idea for this project
+
+name: Предложение
+about: Предложить идею для этого проекта
 title: ''
-labels: enhancement
+labels: '💡 Предложение'
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Примечание:** форма предложения свободная — соблюдать все пункты не обязательно.
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Связано ли предложение с проблемой? Опишите.**
+Чётко и кратко опишите, в чём проблема. Например: «Меня всегда раздражает, когда [...]»
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Опишите желаемое решение**
+Чётко и кратко опишите, что вы хотите, чтобы происходило.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Какие альтернативы вы рассматривали**
+Чётко и кратко опишите другие варианты решения или функции, которые вы обдумывали.
+
+**Дополнительный контекст**
+Любой другой контекст или скриншоты по этому предложению — здесь.
