@@ -1037,6 +1037,52 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("player_antag_token_selection", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.PlayerGhostRoleTickets", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("player_ghost_role_tickets_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("LastGrantTime")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("last_grant_time");
+
+                    b.Property<Guid>("PlayerId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("player_id");
+
+                    b.Property<string>("StreakMilestones")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("streak_milestones");
+
+                    b.Property<string>("TicketMilestones")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("ticket_milestones");
+
+                    b.Property<int>("Tickets")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("tickets");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("PK_player_ghost_role_tickets");
+
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("player_ghost_role_tickets", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.Preference", b =>
                 {
                     b.Property<int>("Id")
@@ -1802,7 +1848,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("BanHwidId");
 
-                            b1.ToTable("ban_hwid", (string)null);
+                            b1.ToTable("ban_hwid");
 
                             b1.WithOwner()
                                 .HasForeignKey("BanHwidId")
@@ -1888,7 +1934,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("ConnectionLogId");
 
-                            b1.ToTable("connection_log", (string)null);
+                            b1.ToTable("connection_log");
 
                             b1.WithOwner()
                                 .HasForeignKey("ConnectionLogId")
@@ -1933,7 +1979,7 @@ namespace Content.Server.Database.Migrations.Sqlite
 
                             b1.HasKey("PlayerId");
 
-                            b1.ToTable("player", (string)null);
+                            b1.ToTable("player");
 
                             b1.WithOwner()
                                 .HasForeignKey("PlayerId")

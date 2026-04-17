@@ -5,7 +5,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 01/19/2026 07:04:02
-  entityCount: 754
+  entityCount: 750
 maps: []
 grids:
 - 1
@@ -867,26 +867,6 @@ entities:
     - type: GasTileOverlay
     - type: RadiationGridResistance
     - type: FTLDrive
-- proto: ActionToggleInternals
-  entities:
-  - uid: 4
-    components:
-    - type: Transform
-      parent: 3
-  - uid: 7
-    components:
-    - type: Transform
-      parent: 6
-- proto: ActionToggleJetpack
-  entities:
-  - uid: 5
-    components:
-    - type: Transform
-      parent: 3
-  - uid: 8
-    components:
-    - type: Transform
-      parent: 6
 - proto: AirAlarm
   entities:
   - uid: 13
@@ -3516,36 +3496,28 @@ entities:
     - type: Transform
       parent: 2
     - type: GasTank
-      toggleActionEntity: 4
     - type: Jetpack
-      toggleActionEntity: 5
     - type: Physics
       canCollide: False
     - type: ActionsContainer
     - type: ContainerContainer
       containers:
         actions: !type:Container
-          ents:
-          - 5
-          - 4
+          ents: []
     - type: InsideEntityStorage
   - uid: 6
     components:
     - type: Transform
       parent: 2
     - type: GasTank
-      toggleActionEntity: 7
     - type: Jetpack
-      toggleActionEntity: 8
     - type: Physics
       canCollide: False
     - type: ActionsContainer
     - type: ContainerContainer
       containers:
         actions: !type:Container
-          ents:
-          - 8
-          - 7
+          ents: []
     - type: InsideEntityStorage
   - uid: 9
     components:

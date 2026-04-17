@@ -193,6 +193,10 @@
   components:
   - type: Machine
     board: PhotocopierMachineCircuitboard
+  - type: ContainerContainer
+    containers:
+      machine_board: !type:Container
+      machine_parts: !type:Container
   - type: Sprite
     sprite: Mobs/Ghosts/revenant.rsi
     layers:

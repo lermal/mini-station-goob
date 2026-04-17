@@ -331,6 +331,14 @@
     PowerUse: 12
 
 - type: entity
+  parent: LedLightTube
+  name: red led light tube
+  id: LedLightTubeRed
+  components:
+  - type: LightBulb
+    color: "#fb4747"
+
+- type: entity
   parent: BaseLightTube
   name: exterior light tube
   description: A high power high energy bulb for the depths of space. May contain mercury.

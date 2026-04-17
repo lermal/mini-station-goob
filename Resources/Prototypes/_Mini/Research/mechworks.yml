@@ -87,6 +87,7 @@
   - ProtolatheHyperConvectionMachineCircuitboardTypan
   - CircuitImprinterHyperConvectionMachineCircuitboardTypan
   - SheetifierMachineCircuitboard
+  - ADTBotanicalSeedDNAManipulatorCircuitboard
   # Goobstation R&D Console rework start
   position: 50,2
   technologyPrerequisites:
@@ -133,29 +134,27 @@
   - TypanMechanicalCompression
   # Goobstation R&D Console rework end
 
-# - type: technology
-#   id: TypanRipley
-#   name: research-technology-bloodred-ripley
-#   icon:
-#     sprite: _Mini/Objects/Specific/Mech/mecha.rsi
-#     state: bloodredripley
-#   discipline: TypanMechworks
-#   tier: 1
-#   cost: 7500
-#   recipeUnlocks:
-#   - TypanRipleyHarness
-#   - TypanRipleyLArm
-#   - TypanRipleyRArm
-#   - TypanRipleyLLeg
-#   - TypanRipleyRLeg
-#   - TypanRipleyCentralElectronics
-#   - TypanRipleyPeripheralsElectronics
-#   - MechEquipmentTypanRipleyGrabber
-#   # Goobstation R&D Console rework start
-#   position: -1,3
-#   technologyPrerequisites:
-#   - TypanIndustrialEngineering
-#   # Goobstation R&D Console rework end
+- type: technology
+  id: TypanRipley
+  name: research-technology-bloodred-ripley
+  icon:
+    sprite: _Mini/Objects/Specific/Mech/mecha.rsi
+    state: bloodredripley
+  discipline: TypanMechworks
+  tier: 1
+  cost: 7500
+  recipeUnlocks:
+  - TypanRipleyHarness
+  - TypanRipleyLArm
+  - TypanRipleyRArm
+  - TypanRipleyLLeg
+  - TypanRipleyRLeg
+  - TypanRipleyCentralElectronics
+  - TypanRipleyPeripheralsElectronics
+  - MechEquipmentTypanRipleyGrabber
+  position: 48,3
+  technologyPrerequisites:
+  - TypanIndustrialEngineering
 
 - type: technology
   id: TypanHardsuitsBasic

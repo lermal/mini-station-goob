@@ -76,6 +76,10 @@ namespace Content.Server.Database
                 .Property(p => p.StreakMilestones)
                 .Metadata.SetValueComparer(intListComparer);
 
+            modelBuilder.Entity<PlayerGhostRoleTickets>()
+                .HasIndex(p => p.PlayerId)
+                .IsUnique();
+
             foreach(var entity in modelBuilder.Model.GetEntityTypes())
             {
                 foreach(var property in entity.GetProperties())

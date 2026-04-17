@@ -48,6 +48,7 @@
   - ClusterGrenade
   - EmpGrenade
   - WhiteholeGrenade
+  - HolyHandGrenade
 
 ## Ammo
 - type: latheRecipePack
@@ -56,6 +57,18 @@
   - MagazineBoxAntiMateriel
   - MagazinePistolCaselessRifle
   - MagazineLightRifleBox
+  - MagazineLightRifleIncendiary
+  - MagazineBoxLightRifleIncendiary
+  - MagazineLightRifleUranium
+  - MagazineBoxLightRifleUranium
+
+- type: latheRecipePack
+  id: TypanLightRifleAmmoResearch
+  recipes:
+  - MagazineLightRifleIncendiary
+  - MagazineBoxLightRifleIncendiary
+  - MagazineLightRifleUranium
+  - MagazineBoxLightRifleUranium
 
 ## Security
 - type: latheRecipePack
@@ -107,6 +120,7 @@
   - FlatpackerMachineCircuitboard
   - SheetifierMachineCircuitboard
   - PowerCageRechargerCircuitboard
+  - ADTBotanicalSeedDNAManipulatorCircuitboard
   - AnalysisComputerCircuitboardTypan
   - AnomalyVesselCircuitboardTypan
   - AnomalyVesselExperimentalCircuitboardTypan
@@ -354,6 +368,8 @@
   - SyndicatePowerDrill
   - SyndicateWelderExperimental
   - SyndicateJawsOfLife
+  - Fulton
+  - FultonBeacon
 
 ## Hardsuits
 - type: latheRecipePack
@@ -374,6 +390,10 @@
   - HandHeldMassScanner
   - ClothingMaskWeldingGas
   - SignallerAdvanced
+  - SignalTrigger
+  - VoiceTrigger
+  - TimerTrigger
+  - ExplosivePayload
   - ClothingEyesHudTypanDiagnostic
   - ClothingEyesHudTypanMedical
   - ClothingEyesHudTypanPatrol

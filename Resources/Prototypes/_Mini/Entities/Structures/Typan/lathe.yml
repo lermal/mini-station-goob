@@ -413,6 +413,7 @@
     - TypanEnergyWeapons
     - TypanMelee
     - TypanGrenades
+    - TypanLightRifleAmmoResearch
   - type: MaterialStorage
     whitelist:
       tags:

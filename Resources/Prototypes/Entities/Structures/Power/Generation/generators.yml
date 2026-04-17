@@ -274,6 +274,10 @@
     - Power
   - type: Machine
     board: GeneratorRTGMachineCircuitboard
+  - type: ContainerContainer
+    containers:
+      machine_board: !type:Container
+      machine_parts: !type:Container
   - type: Destructible
     thresholds:
       - trigger:
