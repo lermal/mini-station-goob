@@ -225,7 +225,10 @@ public sealed partial class StationJobsSystem
                 foreach (var station in stations)
                 {
                     var share = (int)Math.Floor(((float)stationTotalSlots[station] / totalSlots) * candidates.Count);
-                    stationShares[station] = Math.Min(share, stationTotalSlots[station]);
+                    var selecting = currentlySelectingJobs[station];
+                    var hasUncappedJob = selecting.Values.Any(x => x == null);
+                    var maxShare = hasUncappedJob ? candidates.Count : stationTotalSlots[station];
+                    stationShares[station] = Math.Min(share, maxShare);
                     distributed += stationShares[station];
                 }
 
@@ -235,8 +238,14 @@ public sealed partial class StationJobsSystem
                     var withRoom = new List<EntityUid>();
                     foreach (var station in stations)
                     {
-                        if (stationShares[station] < stationTotalSlots[station])
+                        var selecting = currentlySelectingJobs[station];
+                        var hasUncappedJob = selecting.Values.Any(x => x == null);
+                        if (hasUncappedJob
+                            ? stationShares[station] < candidates.Count
+                            : stationShares[station] < stationTotalSlots[station])
+                        {
                             withRoom.Add(station);
+                        }
                     }
 
                     if (withRoom.Count == 0)

@@ -287,7 +287,7 @@ public sealed partial class RadioSystem : EntitySystem
         var obfuscated = _language.ObfuscateSpeech(content, language);
         // Goobstation - Chat Pings
         // Added GetNetEntity(messageSource), to source
-        var obfuscatedWrapped = WrapRadioMessage(messageSource, channel, name, obfuscated, language, jobIcon, jobName);
+        var obfuscatedWrapped = WrapRadioMessage(messageSource, channel, name, obfuscated, language, jobIcon, jobName, headsetColor, job);
         var notUdsMsg = new ChatMessage(ChatChannel.Radio, obfuscated, obfuscatedWrapped, GetNetEntity(messageSource), null);
         var ev = new RadioReceiveEvent(messageSource, channel, msg, notUdsMsg, language, radioSource);
         // Einstein Engines - Language end
@@ -401,7 +401,9 @@ public sealed partial class RadioSystem : EntitySystem
         string message,
         LanguagePrototype language,
         ProtoId<JobIconPrototype>? jobIcon, // Goob edit
-        string? jobName = null) // Gaby Radio icons
+        string? jobName, // Gaby Radio icons
+        Color headsetColor,
+        string job)
     {
         // TODO: code duplication with ChatSystem.WrapMessage
         var speech = _chat.GetSpeechVerb(source, message);
@@ -446,6 +448,7 @@ public sealed partial class RadioSystem : EntitySystem
         // goob end
 
         return Loc.GetString(wrapId,
+            ("channel-color", channel.Color),
             ("color", channel.Color),
             ("languageColor", languageColor),
             ("fontType", language.SpeechOverride.FontId ?? speech.FontId),
@@ -455,6 +458,8 @@ public sealed partial class RadioSystem : EntitySystem
             ("channel", $"\\[{channel.LocalizedName}\\]"),
             ("name", nameString), // goob
             ("message", message),
+            ("headset-color", headsetColor),
+            ("job", job),
             ("language", languageDisplay));
     }
     // Einstein Engines - Language end

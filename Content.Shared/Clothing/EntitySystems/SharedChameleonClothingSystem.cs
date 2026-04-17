@@ -23,6 +23,7 @@ using Content.Shared.Contraband;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Item;
+using Content.Shared.Radio.Components;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
 using Robust.Shared.Prototypes;
@@ -117,6 +118,16 @@ public abstract class SharedChameleonClothingSystem : EntitySystem
             proto.TryGetComponent("Clothing", out ClothingComponent? otherClothing))
         {
             _clothingSystem.CopyVisuals(uid, otherClothing, clothing);
+        }
+
+        if (TryComp(uid, out HeadsetComponent? headset))
+        {
+            if (proto.TryGetComponent(out HeadsetComponent? otherHeadset, Factory))
+                headset.CopyColorFrom(otherHeadset);
+            else
+                headset.ResetColorToDefault();
+
+            Dirty(uid, headset);
         }
 
         // appearance data logic
