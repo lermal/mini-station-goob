@@ -584,20 +584,6 @@ entities:
     - type: FTLDrive
     - type: IFF
       flags: Hide
-- proto: ActionToggleLight
-  entities:
-  - uid: 2461
-    mapInit: true
-    paused: true
-    components:
-    - type: Transform
-      parent: 2460
-  - uid: 2464
-    mapInit: true
-    paused: true
-    components:
-    - type: Transform
-      parent: 2463
 - proto: AirlockAssemblyCargo
   entities:
   - uid: 625
@@ -4008,16 +3994,9 @@ entities:
           component: Armor
         title: null
     - type: HandheldLight
-      toggleActionEntity: 2461
     - type: Item
       heldPrefix: off
       inhandVisuals: {}
-    - type: ActionsContainer
-    - type: ContainerContainer
-      containers:
-        actions: !type:Container
-          ents:
-          - 2461
   - uid: 2463
     components:
     - type: MetaData
@@ -4026,16 +4005,9 @@ entities:
       pos: -9.705602,-19.586164
       parent: 1
     - type: HandheldLight
-      toggleActionEntity: 2464
     - type: Item
       heldPrefix: off
       inhandVisuals: {}
-    - type: ActionsContainer
-    - type: ContainerContainer
-      containers:
-        actions: !type:Container
-          ents:
-          - 2464
 - proto: ClothingOuterHardsuitMaxim
   entities:
   - uid: 2446

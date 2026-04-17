@@ -67,7 +67,7 @@ public sealed class StationJobsTest
           availableJobs:
             TMime: [0, -1]
             TAssistant: [-1, -1]
-            TCaptain: [5, 5]
+            TCaptain: [1, 1]
             TClown: [5, 6]
 
 - type: job

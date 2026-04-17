@@ -62,6 +62,14 @@
   - MagazineLightRifleUranium
   - MagazineBoxLightRifleUranium
 
+- type: latheRecipePack
+  id: TypanLightRifleAmmoResearch
+  recipes:
+  - MagazineLightRifleIncendiary
+  - MagazineBoxLightRifleIncendiary
+  - MagazineLightRifleUranium
+  - MagazineBoxLightRifleUranium
+
 ## Security
 - type: latheRecipePack
   id: TypanSecurityEquipmentStatic
