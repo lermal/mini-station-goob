@@ -536,8 +536,6 @@
   components:
   - type: Computer
     board: ADTSalvageShuttleConsoleCircuitboard
-  - type: Machine
-    board: ADTSalvageShuttleConsoleCircuitboard
 
 - type: entity
   parent: BaseComputer
@@ -545,7 +543,5 @@
   name: computer
   components:
   - type: Computer
-    board: ADTSecShuttleConsoleCircuitboard
-  - type: Machine
     board: ADTSecShuttleConsoleCircuitboard
 
