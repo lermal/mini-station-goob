@@ -633,10 +633,10 @@ namespace Content.Shared.Preferences
             var icNameCase = configManager.GetCVar(CCVars.ICNameCase);
 
             var name = SanitizeName(Name);
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
-                name = SanitizeName(GetName(Species, gender));
-                if (string.IsNullOrEmpty(name))
+                name = GetName(Species, gender);
+                if (string.IsNullOrWhiteSpace(name))
                     name = "0";
             }
 
@@ -649,10 +649,10 @@ namespace Content.Shared.Preferences
                 sanitized = sanitized.Trim();
 
                 if (restrictedNames)
-                    sanitized = RestrictedNameRegex.Replace(sanitized, string.Empty);
+                    sanitized = RestrictedNameRegex.Replace(sanitized, string.Empty).Trim();
 
                 if (icNameCase)
-                    sanitized = ICNameCaseRegex.Replace(sanitized, m => m.Groups["word"].Value.ToUpper());
+                    sanitized = ICNameCaseRegex.Replace(sanitized, m => m.Groups["word"].Value.ToUpper()).Trim();
 
                 return sanitized;
             }
