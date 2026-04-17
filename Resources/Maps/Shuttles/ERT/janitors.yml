@@ -1877,18 +1877,6 @@ entities:
     - type: Transform
       pos: -2.28285,14.771758
       parent: 1
-- proto: ClothingHeadHatCatEars
-  entities:
-  - uid: 287
-    components:
-    - type: Transform
-      pos: -3.4803357,8.528474
-      parent: 1
-  - uid: 288
-    components:
-    - type: Transform
-      pos: -3.3397107,8.575349
-      parent: 1
 - proto: ClothingShoesSlippers
   entities:
   - uid: 289
