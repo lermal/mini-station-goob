@@ -120,10 +120,14 @@ public abstract class SharedChameleonClothingSystem : EntitySystem
             _clothingSystem.CopyVisuals(uid, otherClothing, clothing);
         }
 
-        if (TryComp(uid, out HeadsetComponent? headset) &&
-            proto.TryGetComponent(out HeadsetComponent? otherHeadset, Factory))
+        if (TryComp(uid, out HeadsetComponent? headset))
         {
-            headset.CopyColorFrom(otherHeadset);
+            if (proto.TryGetComponent(out HeadsetComponent? otherHeadset, Factory))
+                headset.CopyColorFrom(otherHeadset);
+            else
+                headset.ResetColorToDefault();
+
+            Dirty(uid, headset);
         }
 
         // appearance data logic
