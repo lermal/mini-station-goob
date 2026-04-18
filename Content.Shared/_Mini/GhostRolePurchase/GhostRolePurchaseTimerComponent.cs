@@ -16,5 +16,5 @@ public sealed partial class GhostRolePurchaseTimerComponent : Component
     public bool IsBlocked = false;
 
     [DataField]
-    public TimeSpan BlockDuration = TimeSpan.FromMinutes(20);
+    public TimeSpan BlockDuration = TimeSpan.FromMinutes(15);
 }

@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Casha
 // Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 using System;
-using System.Threading.Tasks;
 using Content.Server.Administration;
 using Content.Server._Mini.AntagTokens;
 using Content.Shared._Mini.AntagTokens;
@@ -78,26 +77,15 @@ public sealed class AntagTokenAddCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        _ = Task.Run(async () =>
+        if (!system.AddBalance(session.UserId, amount, out var granted, out var note))
         {
-            try
-            {
-                var addResult = await system.AddBalance(session.UserId, amount);
-                if (!addResult.success)
-                {
-                    shell.WriteError("Failed to add balance.");
-                    return;
-                }
+            shell.WriteError("Failed to add balance.");
+            return;
+        }
 
-                shell.WriteLine($"Granted {addResult.grantedAmount} token(s) to {session.Name}.");
-                if (addResult.note != null)
-                    shell.WriteLine(addResult.note);
-            }
-            catch (Exception ex)
-            {
-                shell.WriteError($"Error: {ex.Message}");
-            }
-        });
+        shell.WriteLine($"Granted {granted} token(s) to {session.Name}.");
+        if (note != null)
+            shell.WriteLine(note);
     }
 }
 
@@ -129,24 +117,13 @@ public sealed class AntagTokenSetBalanceCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        _ = Task.Run(async () =>
+        if (!system.SetBalance(session.UserId, amount))
         {
-            try
-            {
-                var setResult = await system.SetBalance(session.UserId, amount);
-                if (!setResult)
-                {
-                    shell.WriteError("Failed to set balance.");
-                    return;
-                }
+            shell.WriteError("Failed to set balance.");
+            return;
+        }
 
-                shell.WriteLine($"Set balance for {session.Name} to {amount}.");
-            }
-            catch (Exception ex)
-            {
-                shell.WriteError($"Error: {ex.Message}");
-            }
-        });
+        shell.WriteLine($"Set balance for {session.Name} to {amount}.");
     }
 }
 
@@ -179,24 +156,13 @@ public sealed class AntagTokenBuyCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        _ = Task.Run(async () =>
+        if (!system.TryPurchaseForSession(session, roleId, out var error))
         {
-            try
-            {
-                var purchaseResult = await system.TryPurchaseForSession(session, roleId);
-                if (!purchaseResult.success)
-                {
-                    shell.WriteError(purchaseResult.error ?? "Purchase failed.");
-                    return;
-                }
+            shell.WriteError(error ?? "Purchase failed.");
+            return;
+        }
 
-                shell.WriteLine($"Purchased {roleId} for {session.Name}.");
-            }
-            catch (Exception ex)
-            {
-                shell.WriteError($"Error: {ex.Message}");
-            }
-        });
+        shell.WriteLine($"Purchased {roleId} for {session.Name}.");
     }
 }
 
@@ -222,24 +188,13 @@ public sealed class AntagTokenClearCommand : IConsoleCommand
             return;
 
         var system = _entities.System<AntagTokenSystem>();
-        _ = Task.Run(async () =>
+        if (!system.ClearDeposit(session.UserId, out var error))
         {
-            try
-            {
-                var clearResult = await system.ClearDeposit(session.UserId);
-                if (!clearResult.success)
-                {
-                    shell.WriteError(clearResult.error ?? "Failed to clear deposit.");
-                    return;
-                }
+            shell.WriteError(error ?? "Failed to clear deposit.");
+            return;
+        }
 
-                shell.WriteLine($"Cleared deposited role for {session.Name}.");
-            }
-            catch (Exception ex)
-            {
-                shell.WriteError($"Error: {ex.Message}");
-            }
-        });
+        shell.WriteLine($"Cleared deposited role for {session.Name}.");
     }
 }
 

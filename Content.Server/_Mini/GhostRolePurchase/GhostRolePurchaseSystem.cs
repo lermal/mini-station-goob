@@ -8,7 +8,6 @@ using Content.Shared._Mini.GhostRolePurchase;
 using Content.Shared.GameTicking;
 using Robust.Server.Player;
 using Robust.Shared.Player;
-using System.Threading.Tasks;
 
 namespace Content.Server._Mini.GhostRolePurchase;
 
@@ -19,8 +18,6 @@ public sealed class GhostRolePurchaseSystem : EntitySystem
     [Dependency] private readonly GameTicker _gameTicker = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
-
-    private ISawmill _sawmill = default!;
 
     private static readonly HashSet<string> AnyModePresets = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -137,17 +134,17 @@ public sealed class GhostRolePurchaseSystem : EntitySystem
             "Survival", "SurvivalPlusMid",
         },
 
-        ["Bingle"] = AnyModePresets,
+        ["Bingle"] = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Survival", "SurvivalPlusMid",
+        },
     };
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _sawmill = Logger.GetSawmill("ghost_role_purchase");
         SubscribeNetworkEvent<GhostRolePurchaseRequestEvent>(OnPurchaseRequest);
-        
-        _sawmill.Info("GhostRolePurchaseSystem initialized");
     }
 
     private void OnPurchaseRequest(GhostRolePurchaseRequestEvent ev, EntitySessionEventArgs args)
@@ -167,33 +164,22 @@ public sealed class GhostRolePurchaseSystem : EntitySystem
     {
         error = null;
 
-        _sawmill.Info($"=== PURCHASE ATTEMPT START ===");
-        _sawmill.Info($"Purchase attempt by {session.Name} for role {roleId}");
-
-        var timerActive = _timerSystem?.IsTimerActive() ?? false;
-        _sawmill.Info($"Timer active: {timerActive}");
-
-        if (timerActive)
+        if (_timerSystem.IsTimerActive())
         {
-            var remaining = _timerSystem!.GetRemainingTime();
+            var remaining = _timerSystem.GetRemainingTime();
             error = $"Ghost role purchases are blocked. Time remaining: {remaining:mm\\:ss}";
-            _sawmill.Info($"Purchase BLOCKED by timer. Remaining: {remaining.TotalSeconds:F1}s");
             return false;
         }
-
-        _sawmill.Info($"Timer check passed, continuing with purchase...");
 
         if (!IsRoleAvailableInGameMode(roleId))
         {
             error = "This role is not available in the current game mode.";
-            _sawmill.Info($"Role {roleId} not available in current game mode");
             return false;
         }
 
         if (!GhostRolePriceCatalog.TryGetPrice(roleId, out var price))
         {
             error = "Role price not found.";
-            _sawmill.Warning($"Price not found for role {roleId}");
             return false;
         }
 
@@ -218,25 +204,19 @@ public sealed class GhostRolePurchaseSystem : EntitySystem
         tickets.Tickets -= price;
         Dirty(uid, tickets);
 
-        _sawmill.Info($"Purchase approved, starting async token purchase...");
-
-        _ = Task.Run(async () =>
+        if (!_antagTokens.TryPurchaseForSession(session, roleId, out var purchaseError))
         {
-            var purchaseResult = await _antagTokens.TryPurchaseForSession(session, roleId);
-            if (!purchaseResult.success)
-            {
-                _sawmill.Warning($"Token purchase failed for {session.Name}, refunding tickets");
-                tickets.Tickets += price;
-                Dirty(uid, tickets);
-                return;
-            }
+            tickets.Tickets += price;
+            Dirty(uid, tickets);
+            error = purchaseError;
+            return false;
+        }
 
-            _sawmill.Info($"Token purchase successful, starting timer...");
-            _timerSystem?.StartTimer();
-            RaiseNetworkEvent(new GhostRoleTicketUpdateEvent(tickets.Tickets), session);
-            RaiseLocalEvent(new GhostRolePurchasedEvent(session.UserId, roleId));
-            _sawmill.Info($"=== PURCHASE COMPLETE ===");
-        });
+        _timerSystem.StartTimer();
+
+        RaiseNetworkEvent(new GhostRoleTicketUpdateEvent(tickets.Tickets), session);
+
+        RaiseLocalEvent(new GhostRolePurchasedEvent(session.UserId, roleId));
 
         return true;
     }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Managers;
 using Content.Server.GameTicking;
@@ -67,31 +66,22 @@ public sealed class GhostReturnToRoundSystem : EntitySystem
         var timePast = (_gameTiming.CurTime - deathTime).TotalMinutes;
         if (timePast >= timeUntilRespawn)
         {
-            _ = Task.Run(async () =>
+            if (!_antagTokens.TrySpendBalance(userId, RespawnCost, out _))
             {
-                var spendResult = await _antagTokens.TrySpendBalance(userId, RespawnCost);
-                if (!spendResult.success)
-                {
-                    var errorMessage = Loc.GetString("ghost-respawn-not-enough-currency", ("amount", RespawnCost));
-                    var errorWrapped = Loc.GetString("chat-manager-server-wrap-message", ("message", errorMessage));
-                    _chatManager.ChatMessageToOne(Shared.Chat.ChatChannel.Server, errorMessage, errorWrapped, default, false, connectedClient, Color.Red);
-                    return;
-                }
+                message = Loc.GetString("ghost-respawn-not-enough-currency", ("amount", RespawnCost));
+                wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", message));
+                return;
+            }
 
-                var ticker = Get<GameTicker>();
-                _playerManager.TryGetSessionById(userId, out var targetPlayer);
+            var ticker = Get<GameTicker>();
+            _playerManager.TryGetSessionById(userId, out var targetPlayer);
 
-                if (targetPlayer != null)
-                    ticker.Respawn(targetPlayer);
+            if (targetPlayer != null)
+                ticker.Respawn(targetPlayer);
 
-                _adminLogger.Add(LogType.Mind, LogImpact.Medium, $"{Loc.GetString("ghost-respawn-log-return-to-lobby", ("userName", connectedClient.UserName))}");
+            _adminLogger.Add(LogType.Mind, LogImpact.Medium, $"{Loc.GetString("ghost-respawn-log-return-to-lobby", ("userName", connectedClient.UserName))}");
 
-                var successMessage = Loc.GetString("ghost-respawn-window-rules-footer");
-                var successWrapped = Loc.GetString("chat-manager-server-wrap-message", ("message", successMessage));
-                _chatManager.ChatMessageToOne(Shared.Chat.ChatChannel.Server, successMessage, successWrapped, default, false, connectedClient, Color.White);
-            });
-            
-            message = "Processing respawn request...";
+            message = Loc.GetString("ghost-respawn-window-rules-footer");
             wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", message));
             return;
         }
