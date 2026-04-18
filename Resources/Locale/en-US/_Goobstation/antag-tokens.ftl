@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Casha
 # Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 
+antag-token-window-loading = Loading…
 antag-token-window-title = Antagonist Store
 antag-token-window-subtitle = Earn tickets from streaks and playtime, buy antagonist access, and place roundstart deposits from the lobby.
 antag-token-window-action-title = Active deposit
@@ -95,3 +96,43 @@ antag-store-role-xenomorph-description = Roundstart queue for the xenomorph infe
 
 antag-store-role-bingle-name = Bingle
 antag-store-role-bingle-description = Ghost role for a Bingle. Survival only.
+
+# Server (AntagTokenSystem)
+antag-tokens-online-reward = You received {$amount} ticket(s) for {$hours} hours on the server!
+antag-tokens-sponsor-bonus-popup = Sponsor bonus: +{$amount} tickets (tier {$tier})!
+antag-tokens-error-monthly-cap-note = Monthly ticket cap reached for your support tier.
+antag-tokens-error-currency-not-loaded = Your ticket profile has not loaded yet.
+antag-tokens-error-not-enough-tokens = Not enough tickets. Required: {$required}.
+antag-tokens-error-store-disabled = The antagonist store is disabled by an administrator.
+antag-tokens-error-one-antag-per-round = You can only receive one antagonist role per round.
+antag-tokens-error-role-not-in-store = This role is not listed in the store.
+antag-tokens-error-role-unavailable-generic = This role is currently unavailable.
+antag-tokens-error-not-enough-tokens-short = Not enough tickets.
+antag-tokens-error-ghost-only = Ghost roles can only be purchased while you are an observer.
+antag-tokens-error-ghost-auto-pending-other = You already have a pending ghost role purchase. Wait for it to spawn or for the round to end.
+antag-tokens-error-ghost-auto-missing-proto = This ghost role listing is missing a server prototype binding. Report this to the developers.
+antag-tokens-error-deposit-same-role = This role is already queued for the round.
+antag-tokens-error-deposit-other-active = Clear your current role queue first.
+antag-tokens-error-event-start-failed = Could not start the event for this role.
+antag-tokens-error-no-deposit = No role is queued right now.
+antag-tokens-error-deposit-consumed = Your queue was already used because you already have an antagonist role.
+antag-tokens-popup-deposit-cancelled-refund = Deposit cancelled. Tickets refunded.
+antag-tokens-popup-deposit-cancelled-reason-refund = {$reason} Tickets refunded.
+antag-tokens-popup-job-blocks-queued = Your current Command/Security job blocks this queued role. The queue is kept for a later round.
+antag-tokens-error-assign-failed-refund = Could not assign the reserved role. Tickets refunded.
+antag-tokens-popup-role-assigned = Reserved role "{$role}" assigned.
+antag-tokens-popup-event-ended-refund = The event for "{$role}" did not happen. Tickets refunded.
+antag-tokens-popup-purchase-failed = Purchase failed.
+antag-tokens-popup-purchase-ghost = Event started. Have a good game!
+antag-tokens-popup-purchase-deposit = Role queued for the next suitable round.
+antag-tokens-error-clear-deposit-failed = Could not clear the queue.
+antag-tokens-popup-deposit-cleared = Cleared deposit. Tickets refunded.
+antag-tokens-popup-ghost-reserved = This ghost role is reserved for another player.
+antag-tokens-error-session-invalid = You are not in a valid state for role assignment.
+antag-tokens-error-no-entity = Your character is not ready for role assignment yet.
+antag-tokens-error-already-antag = You already received an antagonist role another way.
+antag-tokens-error-round-limit = You have already reached the one-antagonist-per-round limit.
+antag-tokens-error-rule-missing-antag-selection = This role's event is misconfigured (missing antag selection).
+antag-tokens-error-no-matching-definition = No matching role definition was found in this event.
+antag-tokens-popup-monthly-donor-bonus = Monthly donor bonus: +{$amount} tickets!
+antag-tokens-error-purchase-unavailable = Purchase unavailable.
