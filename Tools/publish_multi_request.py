@@ -7,8 +7,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 import argparse
-import requests
 import os
+import re
+import requests
 import subprocess
 from typing import Iterable
 
@@ -82,10 +83,28 @@ def get_files_to_publish() -> Iterable[str]:
 
 
 def get_engine_version() -> str:
-    proc = subprocess.run(["git", "describe","--tags", "--abbrev=0"], stdout=subprocess.PIPE, cwd="RobustToolbox", check=True, encoding="UTF-8")
+    props = os.path.join("RobustToolbox", "MSBuild", "Robust.Engine.Version.props")
+    if os.path.isfile(props):
+        with open(props, encoding="UTF-8") as f:
+            text = f.read()
+        m = re.search(r"<Version>([^<]+)</Version>", text)
+        if m:
+            return m.group(1).strip()
+    proc = subprocess.run(
+        ["git", "describe", "--tags", "--abbrev=0"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        cwd="RobustToolbox",
+        encoding="UTF-8",
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            "Engine version: no Robust.Engine.Version.props and git describe failed (need tags or props file)."
+        )
     tag = proc.stdout.strip()
-    assert tag.startswith("v")
-    return tag[1:] # Cut off v prefix.
+    if not tag.startswith("v"):
+        raise RuntimeError(f"Unexpected engine tag (expected v-prefix): {tag!r}")
+    return tag[1:]
 
 
 if __name__ == '__main__':
