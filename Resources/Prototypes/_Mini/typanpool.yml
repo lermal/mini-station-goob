@@ -14,7 +14,7 @@
     - Typan
 
 - type: additionalMap
-  id: MiniSilly
+  id: CorvaxSilly
   maps:
     - Typan
 
@@ -222,5 +222,10 @@
 
 - type: additionalMap
   id: CorvaxCluster
+  maps:
+    - Typan
+
+- type: additionalMap
+  id: CorvaxPearl
   maps:
     - Typan
