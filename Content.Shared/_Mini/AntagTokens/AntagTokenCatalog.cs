@@ -64,6 +64,13 @@ public static class AntagTokenCatalog
     {
         return $"role-credit:{roleId}";
     }
+
+    public const string GhostAutoPendingUsedRoleCreditEntryId = "ghost-auto-pending-used-role-credit";
+
+    public static string GetGhostAutoPendingEntryId(string roleId)
+    {
+        return $"ghost-auto-pending:{roleId}";
+    }
 }
 
 public enum AntagPurchaseMode : byte
@@ -88,4 +95,5 @@ public sealed record AntagRoleDefinition(
     bool RequiresPreRoundLobby = false,
     int MinimumTimeFromRoundStart = 0,
     string? UnavailableReasonLocKey = null,
-    string? GhostRulesLocKey = null);
+    string? GhostRulesLocKey = null,
+    string? GhostAutoJoinEntityProto = null);

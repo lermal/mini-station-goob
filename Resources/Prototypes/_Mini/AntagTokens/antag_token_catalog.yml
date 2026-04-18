@@ -32,6 +32,7 @@
       cost: 3
       iconPath: /Textures/_Mini/Interface/Antags/ninja.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostSpaceNinjaToken
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenNinjaSpawn
       tagLocKey: antag-token-window-tag-ghost
@@ -44,12 +45,13 @@
       cost: 7
       iconPath: /Textures/_Mini/Interface/Antags/dragon.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostDragonToken
       ghostRulesLocKey: ghost-role-information-space-dragon-rules
       gameRuleId: TokenDragonSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 25
       requiresInRound: true
-      minimumTimeFromRoundStart: 100
+      minimumTimeFromRoundStart: 1200
 
     - id: abductor
       nameLocKey: antag-store-role-abductor-name
@@ -57,10 +59,12 @@
       cost: 3
       iconPath: /Textures/_Mini/Interface/Antags/abductor.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: LoneAbductorSpawnerToken
       ghostRulesLocKey: abductors-ghost-role-rules
       gameRuleId: TokenLoneAbductorSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: initial_infected
       nameLocKey: antag-store-role-initial-infected-name
@@ -80,10 +84,12 @@
       cost: 3
       iconPath: /Textures/_Mini/Interface/Antags/revenant.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: MobRevenantToken
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenRevenantSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: yao
       nameLocKey: antag-store-role-yao-name
@@ -91,11 +97,13 @@
       cost: 6
       iconPath: /Textures/_Mini/Interface/Antags/nukie.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointLoneNukeOperativeToken
       ghostRulesLocKey: ghost-role-information-loneop-rules
       gameRuleId: TokenLoneOpsSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 25
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: headrev
       nameLocKey: antag-store-role-headrev-name
@@ -138,11 +146,13 @@
       cost: 20
       iconPath: /Textures/_Mini/Interface/Antags/blob.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostBlobRatToken
       ghostRulesLocKey: blob-carrier-role-rules
       gameRuleId: TokenBlobMidround
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 40
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: wizard
       nameLocKey: antag-store-role-wizard-name
@@ -150,10 +160,12 @@
       cost: 15
       iconPath: /Textures/_Mini/Interface/Antags/wizard.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointWizardToken
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenWizard
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: slaughter_demon
       nameLocKey: antag-store-role-slaughter-demon-name
@@ -161,11 +173,13 @@
       cost: 6
       iconPath: /Textures/_Mini/Interface/Antags/slaughter_demon.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointSlaughterDemonToken
       ghostRulesLocKey: ghost-role-information-slaughter-demon-rules
       gameRuleId: TokenSlaughterDemon
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 30
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: slasher
       nameLocKey: antag-store-role-slasher-name
@@ -173,11 +187,13 @@
       cost: 6
       iconPath: /Textures/_Mini/Interface/Antags/slasher.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostSlasherToken
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenSlasherSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 25
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200
 
     - id: changeling
       nameLocKey: antag-store-role-changeling-name
@@ -233,8 +249,10 @@
       cost: 3
       iconPath: /Textures/_Mini/Interface/Antags/bingle.png
       mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostBinglePrimeToken
       ghostRulesLocKey: ghost-role-information-freeagent-rules
       gameRuleId: TokenBingleSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 15
       requiresInRound: true
+      minimumTimeFromRoundStart: 1200

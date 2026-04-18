@@ -68,6 +68,7 @@ using Content.Shared.Mobs;
 using Content.Shared.Players;
 using Content.Shared.Roles;
 using Content.Shared.Verbs;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
@@ -371,6 +372,42 @@ public sealed class GhostRoleSystem : EntitySystem
 
         _ghostRoles[role.Comp.Identifier = GetNextRoleIdentifier()] = role;
         UpdateAllEui();
+        RaiseLocalEvent(role.Owner, new GhostRoleRegisteredEvent());
+    }
+
+    public bool HasAvailableGhostRoleForEntityProto(string? entityProtoId)
+    {
+        return TryGetFirstAvailableGhostRoleForProto(entityProtoId, out _);
+    }
+
+    public bool TryGetFirstAvailableGhostRoleForProto(string? entityProtoId, [NotNullWhen(true)] out Entity<GhostRoleComponent>? role)
+    {
+        role = null;
+
+        if (string.IsNullOrEmpty(entityProtoId))
+            return false;
+
+        var metaQuery = GetEntityQuery<MetaDataComponent>();
+        foreach (var (_, roleEnt) in _ghostRoles)
+        {
+            var uid = roleEnt.Owner;
+            if (!metaQuery.TryGetComponent(uid, out var meta))
+                continue;
+
+            if (meta.EntityPaused)
+                continue;
+
+            if (meta.EntityPrototype?.ID != entityProtoId)
+                continue;
+
+            if (roleEnt.Comp.Taken)
+                continue;
+
+            role = roleEnt;
+            return true;
+        }
+
+        return false;
     }
 
     public void UnregisterGhostRole(Entity<GhostRoleComponent> role)

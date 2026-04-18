@@ -54,6 +54,9 @@ public sealed partial class AntagTokenListingEntry
     [DataField]
     public string? GhostRulesLocKey;
 
+    [DataField]
+    public string? GhostAutoJoinEntityProto;
+
     public AntagRoleDefinition ToDefinition()
     {
         return new AntagRoleDefinition(
@@ -71,7 +74,8 @@ public sealed partial class AntagTokenListingEntry
             RequiresPreRoundLobby,
             MinimumTimeFromRoundStart,
             UnavailableReasonLocKey,
-            GhostRulesLocKey);
+            GhostRulesLocKey,
+            GhostAutoJoinEntityProto);
     }
 }
 
