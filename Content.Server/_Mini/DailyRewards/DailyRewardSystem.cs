@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Casha
-//Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
+// Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -276,7 +276,7 @@ public sealed class DailyRewardSystem : EntitySystem
         }
     }
 
-    private async void ClaimReward(ICommonSession session)
+    private void ClaimReward(ICommonSession session)
     {
         if (!_states.TryGetValue(session.UserId, out var state))
             return;
@@ -303,16 +303,16 @@ public sealed class DailyRewardSystem : EntitySystem
         var reward = GetRewardPreview(component, nextDay);
         if (reward.TokenAmount > 0)
         {
-            var result = await _antagTokens.AddBalance(session.UserId, reward.TokenAmount);
+            _antagTokens.AddBalance(session.UserId, reward.TokenAmount, out var grantedAmount, out var note);
 
             if (session.AttachedEntity is { Valid: true } uid)
             {
-                var message = result.grantedAmount > 0
-                    ? $"Получено токенов: {result.grantedAmount}."
+                var message = grantedAmount > 0
+                    ? $"Получено токенов: {grantedAmount}."
                     : "Токены по этой награде не начислены.";
 
-                if (!string.IsNullOrWhiteSpace(result.note))
-                    message = $"{message} {result.note}";
+                if (!string.IsNullOrWhiteSpace(note))
+                    message = $"{message} {note}";
 
                 _popup.PopupEntity(message, uid, uid);
             }
@@ -320,12 +320,12 @@ public sealed class DailyRewardSystem : EntitySystem
 
         if (reward.RoleUnlockRoleId != null)
         {
-            var creditResult = await _antagTokens.AddRoleCredit(session.UserId, reward.RoleUnlockRoleId, 1);
+            _antagTokens.AddRoleCredit(session.UserId, reward.RoleUnlockRoleId, 1, out var totalCredits);
 
             if (session.AttachedEntity is { Valid: true } uid)
             {
                 _popup.PopupEntity(
-                    $"Получен бесплатный жетон на роль \"{reward.DisplayName}\". Доступно: {creditResult.newAmount}.",
+                    $"Получен бесплатный жетон на роль \"{reward.DisplayName}\". Доступно: {totalCredits}.",
                     uid,
                     uid);
             }
@@ -341,6 +341,7 @@ public sealed class DailyRewardSystem : EntitySystem
         state.Progress.LastClaimTime = now;
         state.Progress.PendingActiveTime = TimeSpan.Zero;
 
+        // Grant tickets for streak milestones
         GrantTicketsForStreak(session, nextDay);
 
         _ = _db.UpsertDailyRewardProgress(state.Progress);

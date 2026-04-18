@@ -1,50 +1,61 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+name: Баг-репорт
+about: Сообщить об ошибке на сервере.
+title: ""
+labels: "💢 Баг"
+assignees: ""
 ---
 
-## 📋 Description
-Explain what the bug is and what you expected to happen instead.  
-> Example: When using the fire extinguisher in zero-G, it doesn’t push the player backwards like it should.
+## 📋 Описание
 
----
+Опишите, в чём ошибка и что вы ожидали увидеть вместо этого.\
 
-## 🔁 Steps to Reproduce
-List the steps that consistently cause the issue.
-
-1. Spawn as X role  
-2. Do Y action  
-3. See Z happen  
+> Пример: в невесомости огнетушитель не отталкивает персонажа назад, как должен.
 
 ---
 
-## 💥 Expected Behavior
-Describe what you expected to happen.  
-> Example: The extinguisher should propel me backwards in zero-G.
+## 🔁 Шаги воспроизведения
+
+Перечислите действия, после которых проблема воспроизводится стабильно.
+
+1. Зайти за роль X
+2. Сделать действие Y
+3. Наблюдать результат Z
 
 ---
 
-## 🧠 Actual Behavior
-Describe what actually happens.  
-> Example: Nothing happens, and I just float in place.
+## 💥 Ожидаемое поведение
+
+Опишите, что должно происходить.
+
+> Пример: огнетушитель должен отталкивать меня назад в невесомости.
 
 ---
 
-## 📸 Screenshots / Videos
-Attach any screenshots, clips, or logs that help show the problem.
+## 🧠 Фактическое поведение
+
+Опишите, что происходит на самом деле.
+
+> Пример: ничего не происходит, персонаж остаётся на месте.
 
 ---
 
-## 🗺️ Additional Details
-Any other info that might help, like:
-- Map / Round ID (if known)  
-- Game mode  
+## 📸 Скриншоты / видео
+
+Прикрепите скриншоты, фрагменты записи или логи, если они помогают показать проблему и они у вас есть.
 
 ---
 
-## 🧩 Notes
-Anything else that might help contributors reproduce or understand the issue.
-Add any other context about the problem here.
+## 🗺️ Дополнительные сведения
+
+Любая информация, которая может помочь, например:
+
+- карта / ID раунда (если известны)
+- игровой режим
+
+---
+
+## 🧩 Заметки
+
+Всё остальное, что поможет воспроизвести или понять проблему.
+Добавьте сюда любой другой контекст.

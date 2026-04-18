@@ -8,41 +8,41 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-"Спрайты":
-- changed-files:
-  - any-glob-to-any-file: '**/*.rsi/*.png'
+"🖼️ Изменения: Спрайты":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.rsi/*.png"
 
-"Карты":
-- changed-files:
-  - any-glob-to-any-file:
-    - 'Resources/Maps/**/*.yml'
-    - 'Resources/Prototypes/Maps/**/*.yml'
+"🗺️ Изменения: Карты":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "Resources/Maps/**/*.yml"
+          - "Resources/Prototypes/Maps/**/*.yml"
 
-"UI":
-- changed-files:
-  - any-glob-to-any-file: '**/*.xaml*'
+"💻 Изменения: Интерфейс (UI)":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.xaml*"
 
-"Шейдеры":
-- changed-files:
-  - any-glob-to-any-file: '**/*.swsl'
+"📸 Изменения: Шейдеры":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.swsl"
 
-"Аудио":
-- changed-files:
-  - any-glob-to-any-file: '**/*.ogg'
+"🎶 Изменения: Звуки":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.ogg"
 
-"Перевод":
-- changed-files:
-  - any-glob-to-any-file: '**/*.ftl'
+"🏳️ Изменения: FTL (Перевод)":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.ftl"
 
-"Прототипы":
-- changed-files:
-    -any-glob-to-any-file: '**/*.yml'
+"🪧 Изменения: Прототипы":
+  - changed-files:
+      -any-glob-to-any-file: "**/*.yml"
 
-"C#":
-- changed-files:
-  - any-glob-to-any-file: '**/*.cs'
+"Есть C#":
+  - changed-files:
+      - any-glob-to-any-file: "**/*.cs"
 
 "Без C#":
-- changed-files:
-  # Equiv to any-glob-to-all as long as this has one matcher. If ALL changed files are not C# files, then apply label.
-  - all-globs-to-all-files: "!**/*.cs"
+  - changed-files:
+      # Equiv to any-glob-to-all as long as this has one matcher. If ALL changed files are not C# files, then apply label.
+      - all-globs-to-all-files: "!**/*.cs"
