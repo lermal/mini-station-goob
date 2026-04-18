@@ -21,102 +21,85 @@ concurrency:
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Тег релиза (например v1.0.0). Должен быть уникален.'
-        required: true
-        type: string
-
-permissions:
-  contents: write
+  schedule:
+    - cron: "0 1 * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Fail if we are attempting to run on the master branch
-      if: ${{GITHUB.REF_NAME == 'master' && github.repository == 'space-wizards/space-station-14'}}
-      run: exit 1
+      - name: Fail if we are attempting to run on the master branch
+        if: ${{GITHUB.REF_NAME == 'master' && github.repository == 'space-wizards/space-station-14'}}
+        run: exit 1
 
-    - uses: actions/checkout@v4.2.2
-      with:
-        submodules: 'recursive'
+      #    - name: Install dependencies
+      #      run: sudo apt-get install -y python3-paramiko python3-lxml
 
-    # Corvax-Secrets-Start
-    - name: Setup secrets
-      env:
-        SSH_KEY: ${{ secrets.SECRETS_PRIVATE_KEY }}
-      if: ${{ env.SSH_KEY != '' }}
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SECRETS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        echo "HOST *" > ~/.ssh/config
-        echo "  Hostname github.com" >> ~/.ssh/config
-        echo "  Port 22" >> ~/.ssh/config
-        echo "  StrictHostKeyChecking no" >> ~/.ssh/config
-        git clone git@github.com:corvax-nexus/secrets.git Secrets
-        cd Secrets
-        git checkout goob && cd ..
-        cp -R Secrets/Resources/Prototypes Resources/Prototypes/CorvaxSecrets
-        cp -R Secrets/Resources/ServerPrototypes Resources/Prototypes/CorvaxSecretsServer
-        cp -R Secrets/Resources/Locale Resources/Locale/ru-RU/corvax-secrets
-        cp -R Secrets/Resources/Textures Resources/Textures/CorvaxSecrets
-        cp -R Secrets/Resources/Audio Resources/Audio/CorvaxSecrets
-    # Corvax-Secrets-End
+      - uses: actions/checkout@v4.2.2
+        with:
+          submodules: "recursive"
 
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4.1.0
-      with:
-        dotnet-version: 9.0.x
-      env:
-        DOTNET_INSTALL_DIR: ${{ runner.temp }}/.dotnet
+      # Corvax-Secrets-Start
+      - name: Setup secrets
+        env:
+          SSH_KEY: ${{ secrets.SECRETS_PRIVATE_KEY }}
+        if: ${{ env.SSH_KEY != '' }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SECRETS_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "HOST *" > ~/.ssh/config
+          echo "  Hostname github.com" >> ~/.ssh/config
+          echo "  Port 22" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          git clone git@github.com:corvax-nexus/secrets.git Secrets
+          cd Secrets
+          git checkout goob && cd ..
+          cp -R Secrets/Resources/Prototypes Resources/Prototypes/CorvaxSecrets
+          cp -R Secrets/Resources/ServerPrototypes Resources/Prototypes/CorvaxSecretsServer
+          cp -R Secrets/Resources/Locale Resources/Locale/ru-RU/corvax-secrets
+          cp -R Secrets/Resources/Textures Resources/Textures/CorvaxSecrets
+          cp -R Secrets/Resources/Audio Resources/Audio/CorvaxSecrets
+      # Corvax-Secrets-End
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4.1.0
+        with:
+          dotnet-version: 9.0.x
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/.dotnet
 
-    - name: Set DOTNET_ROOT and PATH
-      run: |
-        echo "DOTNET_ROOT=${{ runner.temp }}/.dotnet" >> $GITHUB_ENV
-        echo "${{ runner.temp }}/.dotnet" >> $GITHUB_PATH
+      - name: Set DOTNET_ROOT and PATH
+        run: |
+          echo "DOTNET_ROOT=${{ runner.temp }}/.dotnet" >> $GITHUB_ENV
+          echo "${{ runner.temp }}/.dotnet" >> $GITHUB_PATH
 
-    - name: Check .NET installation
-      run: dotnet --info
+      - name: Check .NET installation
+        run: dotnet --info
 
-    - name: Get Engine Tag
-      run: |
-        cd RobustToolbox
-        git fetch --depth=1
+      - name: Get Engine Tag
+        run: |
+          cd RobustToolbox
+          git fetch --depth=1
 
-    - name: Install dependencies
-      run: dotnet restore
+      - name: Install dependencies
+        run: dotnet restore
 
-    - name: Build Packaging
-      run: dotnet build Content.Packaging --configuration Release --no-restore /m
+      - name: Build Packaging
+        run: dotnet build Content.Packaging --configuration Release --no-restore /m
 
-    - name: Package server
-      run: dotnet run --project Content.Packaging server --platform win-x64 --platform linux-x64 --platform osx-x64 --platform linux-arm64
+      - name: Package server
+        run: dotnet run --project Content.Packaging server --platform win-x64 --platform linux-x64 --platform osx-x64 --platform linux-arm64
 
-    - name: Package client
-      run: dotnet run --project Content.Packaging client --no-wipe-release
+      - name: Package client
+        run: dotnet run --project Content.Packaging client --no-wipe-release
 
-    - name: Prepare release notes
-      env:
-        VERSION: ${{ inputs.version }}
-        SHA: ${{ github.sha }}
-        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      run: |
-        sed -e "s/@VERSION@/${VERSION}/g" -e "s/@SHA@/${SHA}/g" -e "s#@RUN_URL@#${RUN_URL}#g" .github/publish-release-notes.md > release-notes.md
-
-    - name: Create GitHub Release
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: ${{ inputs.version }}
-      run: |
-        set -euo pipefail
-        mapfile -d '' -t assets < <(find release -type f -print0)
-        if [ "${#assets[@]}" -lt 1 ]; then
-          echo "release/ пуст или нет файлов"
-          exit 1
-        fi
-        gh release create "$VERSION" --title "$VERSION" --notes-file release-notes.md "${assets[@]}"
+      - name: Publish version
+        run: Tools/publish_multi_request.py
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+          GITHUB_REPOSITORY: ${{ vars.GITHUB_REPOSITORY }}
+          FORK_ID: ${{ vars.FORK_ID }}
+          ROBUST_CDN_URL: http://144.31.0.187:8080/
 
     #    - name: Publish changelog (Discord)
     #      continue-on-error: true
