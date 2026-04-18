@@ -125,16 +125,11 @@ public sealed class AntagTokenSystem : EntitySystem
 
                 if (granted > 0)
                 {
-                    // Отправка в чат (нужно добавить IChatManager в зависимости)
                     var hours = threshold.TotalHours;
                     var message = $"Вы получили {granted} монет за время на сервере!";
 
                     if (session.AttachedEntity is { Valid: true } uid)
                     {
-                        // Через чат систему
-                        _chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, false);
-
-                        // Или через попап
                         _popup.PopupEntity(message, uid, uid);
                     }
                 }
