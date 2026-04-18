@@ -117,7 +117,14 @@ jobs:
           exit 1
         fi
         gh release create "$VERSION" --title "$VERSION" --notes-file release-notes.md "${assets[@]}"
-
+        
+    - name: Publish to Robust.Cdn
+      env:
+        PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        FORK_ID: ${{ secrets.FORK_ID }}
+        GITHUB_SHA: ${{ github.sha }}
+      run: |
+        python Tools/publish_multi_request.py
     #    - name: Publish changelog (Discord)
     #      continue-on-error: true
     #      run: Tools/actions_changelogs_since_last_run.py
