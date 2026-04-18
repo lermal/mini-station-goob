@@ -66,10 +66,7 @@ public sealed class GhostReturnToRoundSystem : EntitySystem
         var timePast = (_gameTiming.CurTime - deathTime).TotalMinutes;
         if (timePast >= timeUntilRespawn)
         {
-#pragma warning disable RA0004
-            var spendResult = _antagTokens.TrySpendBalance(userId, RespawnCost).Result;
-#pragma warning restore RA0004
-            if (!spendResult.success)
+            if (!_antagTokens.TrySpendBalance(userId, RespawnCost, out _))
             {
                 message = Loc.GetString("ghost-respawn-not-enough-currency", ("amount", RespawnCost));
                 wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", message));
