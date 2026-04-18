@@ -765,6 +765,16 @@ namespace Content.Server.Database
                 .ToListAsync(cancel);
         }
 
+        public async Task<int?> GetPlayerAntagTokenAmount(Guid playerId, string tokenId, CancellationToken cancel = default)
+        {
+            await using var db = await GetDb(cancel);
+
+            var token = await db.DbContext.PlayerAntagTokens
+                .SingleOrDefaultAsync(p => p.PlayerId == playerId && p.TokenId == tokenId, cancel);
+
+            return token?.Amount;
+        }
+
         public async Task<PlayerAntagTokenSelection?> GetPlayerAntagTokenSelection(Guid playerId, CancellationToken cancel)
         {
             await using var db = await GetDb(cancel);

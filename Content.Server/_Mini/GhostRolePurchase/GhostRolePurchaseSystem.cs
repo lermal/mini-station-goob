@@ -204,11 +204,14 @@ public sealed class GhostRolePurchaseSystem : EntitySystem
         tickets.Tickets -= price;
         Dirty(uid, tickets);
 
-        if (!_antagTokens.TryPurchaseForSession(session, roleId, out var purchaseError))
+#pragma warning disable RA0004
+        var purchaseResult = _antagTokens.TryPurchaseForSession(session, roleId).Result;
+#pragma warning restore RA0004
+        if (!purchaseResult.success)
         {
             tickets.Tickets += price;
             Dirty(uid, tickets);
-            error = purchaseError;
+            error = purchaseResult.error;
             return false;
         }
 

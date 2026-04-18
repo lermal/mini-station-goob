@@ -276,7 +276,7 @@ public sealed class DailyRewardSystem : EntitySystem
         }
     }
 
-    private void ClaimReward(ICommonSession session)
+    private async void ClaimReward(ICommonSession session)
     {
         if (!_states.TryGetValue(session.UserId, out var state))
             return;
@@ -303,16 +303,16 @@ public sealed class DailyRewardSystem : EntitySystem
         var reward = GetRewardPreview(component, nextDay);
         if (reward.TokenAmount > 0)
         {
-            _antagTokens.AddBalance(session.UserId, reward.TokenAmount, out var grantedAmount, out var note);
+            var result = await _antagTokens.AddBalance(session.UserId, reward.TokenAmount);
 
             if (session.AttachedEntity is { Valid: true } uid)
             {
-                var message = grantedAmount > 0
-                    ? $"Получено токенов: {grantedAmount}."
+                var message = result.grantedAmount > 0
+                    ? $"Получено токенов: {result.grantedAmount}."
                     : "Токены по этой награде не начислены.";
 
-                if (!string.IsNullOrWhiteSpace(note))
-                    message = $"{message} {note}";
+                if (!string.IsNullOrWhiteSpace(result.note))
+                    message = $"{message} {result.note}";
 
                 _popup.PopupEntity(message, uid, uid);
             }
@@ -320,12 +320,12 @@ public sealed class DailyRewardSystem : EntitySystem
 
         if (reward.RoleUnlockRoleId != null)
         {
-            _antagTokens.AddRoleCredit(session.UserId, reward.RoleUnlockRoleId, 1, out var totalCredits);
+            var creditResult = await _antagTokens.AddRoleCredit(session.UserId, reward.RoleUnlockRoleId, 1);
 
             if (session.AttachedEntity is { Valid: true } uid)
             {
                 _popup.PopupEntity(
-                    $"Получен бесплатный жетон на роль \"{reward.DisplayName}\". Доступно: {totalCredits}.",
+                    $"Получен бесплатный жетон на роль \"{reward.DisplayName}\". Доступно: {creditResult.newAmount}.",
                     uid,
                     uid);
             }
@@ -341,7 +341,6 @@ public sealed class DailyRewardSystem : EntitySystem
         state.Progress.LastClaimTime = now;
         state.Progress.PendingActiveTime = TimeSpan.Zero;
 
-        // Grant tickets for streak milestones
         GrantTicketsForStreak(session, nextDay);
 
         _ = _db.UpsertDailyRewardProgress(state.Progress);

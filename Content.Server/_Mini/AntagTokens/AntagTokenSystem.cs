@@ -121,28 +121,25 @@ public sealed class AntagTokenSystem : EntitySystem
                     continue;
 
                 rewardState.GrantedThresholds.Add(threshold);
-                AddBalance(session.UserId, rewardAmount, out var granted, out _);
-
-                if (granted > 0)
+                _ = Task.Run(async () =>
                 {
-                    // Отправка в чат (нужно добавить IChatManager в зависимости)
-                    var hours = threshold.TotalHours;
-                    var message = $"Вы получили {granted} монет за время на сервере!";
-
-                    if (session.AttachedEntity is { Valid: true } uid)
+                    var result = await AddBalance(session.UserId, rewardAmount);
+                    if (result.grantedAmount > 0)
                     {
-                        // Через чат систему
-                        _chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, false);
+                        var message = $"Вы получили {result.grantedAmount} монет за время на сервере!";
 
-                        // Или через попап
-                        _popup.PopupEntity(message, uid, uid);
+                        if (session.AttachedEntity is { Valid: true } uid)
+                        {
+                            _chat.TrySendInGameICMessage(uid, message, InGameICChatType.Speak, false);
+                            _popup.PopupEntity(message, uid, uid);
+                        }
                     }
-                }
+                });
             }
         }
     }
 
-    private void TryGrantSponsorRenewal(ICommonSession session, PlayerTokenState state, DateTime nowUtc)
+    private async void TryGrantSponsorRenewal(ICommonSession session, PlayerTokenState state, DateTime nowUtc)
     {
         var sponsorLevel = GetEffectiveSponsorLevel(session.UserId);
         if (sponsorLevel <= 0)
@@ -158,32 +155,33 @@ public sealed class AntagTokenSystem : EntitySystem
             return;
         }
 
-        AddBalance(session.UserId, bonusAmount, out var granted, out _);
-        if (granted <= 0)
+        var result = await AddBalance(session.UserId, bonusAmount);
+        if (result.grantedAmount <= 0)
             return;
 
         state.LastDonorBonusClaimUtc = nowUtc;
-        PersistState(session.UserId, state);
-        ShowPopup(session, $"Донатерский бонус: +{granted} монет (уровень {sponsorLevel})!");
+        await PersistStateAsync(session.UserId, state);
+        ShowPopup(session, $"Донатерский бонус: +{result.grantedAmount} монет (уровень {sponsorLevel})!");
     }
 
-    public bool AddBalance(NetUserId userId, int amount, out int grantedAmount, out string? note)
+    public async Task<(bool success, int grantedAmount, string? note)> AddBalance(NetUserId userId, int amount)
     {
-        grantedAmount = 0;
-        note = null;
-
         if (amount <= 0)
-            return false;
+            return (false, 0, null);
 
         var state = EnsureStateExists(userId);
         if (state == null)
-            return false;
+            return (false, 0, null);
+
+        var dbBalance = await _db.GetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.BalanceEntryId);
+        if (dbBalance.HasValue)
+            state.Balance = dbBalance.Value;
 
         NormalizeMonthlyState(state, DateTime.UtcNow, userId);
 
         var cap = GetMonthlyCap(userId);
         var available = cap.HasValue ? Math.Max(0, cap.Value - state.MonthlyEarned) : amount;
-        grantedAmount = Math.Min(amount, available);
+        var grantedAmount = Math.Min(amount, available);
 
         if (grantedAmount > 0)
         {
@@ -192,38 +190,33 @@ public sealed class AntagTokenSystem : EntitySystem
                 state.MonthlyEarned += grantedAmount;
         }
 
-        if (grantedAmount < amount)
-            note = "Monthly token cap reached for your support tier.";
+        var note = grantedAmount < amount ? "Monthly token cap reached for your support tier." : null;
 
-        PersistState(userId, state);
+        await PersistStateAsync(userId, state);
         SendState(userId);
-        return grantedAmount > 0 || note != null;
+        return (grantedAmount > 0 || note != null, grantedAmount, note);
     }
 
-    public bool TrySpendBalance(NetUserId userId, int amount, out string? error)
+    public async Task<(bool success, string? error)> TrySpendBalance(NetUserId userId, int amount)
     {
-        error = null;
-
         if (amount <= 0)
-            return true;
+            return (true, null);
 
         var state = EnsureStateExists(userId);
         if (state == null)
-        {
-            error = "Currency profile has not loaded yet.";
-            return false;
-        }
+            return (false, "Currency profile has not loaded yet.");
+
+        var dbBalance = await _db.GetPlayerAntagTokenAmount(userId.UserId, AntagTokenCatalog.BalanceEntryId);
+        if (dbBalance.HasValue)
+            state.Balance = dbBalance.Value;
 
         if (state.Balance < amount)
-        {
-            error = $"Not enough tokens. Required: {amount}.";
-            return false;
-        }
+            return (false, $"Not enough tokens. Required: {amount}.");
 
         state.Balance -= amount;
-        PersistState(userId, state);
+        await PersistStateAsync(userId, state);
         SendState(userId);
-        return true;
+        return (true, null);
     }
 
     public int GetBalance(NetUserId userId)
@@ -231,7 +224,7 @@ public sealed class AntagTokenSystem : EntitySystem
         return EnsureStateExists(userId)?.Balance ?? 0;
     }
 
-    public bool SetBalance(NetUserId userId, int amount)
+    public async Task<bool> SetBalance(NetUserId userId, int amount)
     {
         if (amount < 0)
             return false;
@@ -241,7 +234,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
 
         state.Balance = amount;
-        PersistState(userId, state);
+        await PersistStateAsync(userId, state);
         SendState(userId);
         return true;
     }
@@ -262,23 +255,21 @@ public sealed class AntagTokenSystem : EntitySystem
         return true;
     }
 
-    public bool AddRoleCredit(NetUserId userId, string roleId, int amount, out int newAmount)
+    public async Task<(bool success, int newAmount)> AddRoleCredit(NetUserId userId, string roleId, int amount)
     {
-        newAmount = 0;
-
         if (amount <= 0 || !AntagTokenCatalog.TryGetRole(roleId, out _))
-            return false;
+            return (false, 0);
 
         var state = EnsureStateExists(userId);
         if (state == null)
-            return false;
+            return (false, 0);
 
         state.RoleCredits.TryGetValue(roleId, out var current);
-        newAmount = current + amount;
+        var newAmount = current + amount;
         state.RoleCredits[roleId] = newAmount;
-        PersistState(userId, state);
+        await PersistStateAsync(userId, state);
         SendState(userId);
-        return true;
+        return (true, newAmount);
     }
 
     public bool TryOpenForSession(ICommonSession session)
@@ -313,123 +304,82 @@ public sealed class AntagTokenSystem : EntitySystem
         return _storeEnabled;
     }
 
-    public bool TryPurchaseForSession(ICommonSession session, string roleId, out string? error)
+    public async Task<(bool success, string? error)> TryPurchaseForSession(ICommonSession session, string roleId)
     {
-        error = null;
-
         if (!_storeEnabled)
-        {
-            error = "Antagonist token menu is currently disabled by an administrator.";
-            return false;
-        }
+            return (false, "Antagonist token menu is currently disabled by an administrator.");
 
         if (HasReachedRoundAntagLimit(session.UserId))
-        {
-            error = "You can only receive one antagonist role per round.";
-            return false;
-        }
+            return (false, "You can only receive one antagonist role per round.");
 
         if (!AntagTokenCatalog.TryGetRole(roleId, out var role))
-        {
-            error = "This role is not available in the store.";
-            return false;
-        }
+            return (false, "This role is not available in the store.");
 
         var state = EnsureStateExists(session.UserId);
         if (state == null)
-        {
-            error = "Currency profile has not loaded yet.";
-            return false;
-        }
+            return (false, "Currency profile has not loaded yet.");
+
+        var dbBalance = await _db.GetPlayerAntagTokenAmount(session.UserId.UserId, AntagTokenCatalog.BalanceEntryId);
+        if (dbBalance.HasValue)
+            state.Balance = dbBalance.Value;
 
         if (!TryGetRoleAvailability(role, session.UserId, state.PendingDepositRoleId == role.Id, out var statusLocKey))
-        {
-            error = statusLocKey == null ? "Role is currently unavailable." : Loc.GetString(statusLocKey);
-            return false;
-        }
+            return (false, statusLocKey == null ? "Role is currently unavailable." : Loc.GetString(statusLocKey));
 
         var useRoleCredit = state.RoleCredits.GetValueOrDefault(role.Id) > 0;
         if (!useRoleCredit && state.Balance < role.Cost)
-        {
-            error = "Not enough tokens.";
-            return false;
-        }
+            return (false, "Not enough tokens.");
 
         if (role.Mode == AntagPurchaseMode.GhostRule &&
             !IsSessionEligibleForGhostRolePurchase(session))
-        {
-            error = "Ghost roles can only be purchased while you are an observer ghost.";
-            return false;
-        }
+            return (false, "Ghost roles can only be purchased while you are an observer ghost.");
 
         if (role.Mode == AntagPurchaseMode.LobbyDeposit)
         {
             if (state.PendingDepositRoleId == role.Id)
-            {
-                error = "This role is already selected and waiting for the round.";
-                return false;
-            }
+                return (false, "This role is already selected and waiting for the round.");
 
             if (state.PendingDepositRoleId != null)
-            {
-                error = "Remove your current role deposit first.";
-                return false;
-            }
+                return (false, "Remove your current role deposit first.");
 
             if (IsRoleSaturated(role.Id, session.UserId))
-            {
-                error = "The deposit limit for this role has already been reached.";
-                return false;
-            }
+                return (false, "The deposit limit for this role has already been reached.");
 
             SpendForRole(state, role, useRoleCredit);
             state.PendingDepositRoleId = role.Id;
             state.PendingDepositUsedRoleCredit = useRoleCredit;
-            PersistState(session.UserId, state);
+            await PersistStateAsync(session.UserId, state);
             SendState(session.UserId);
-            return true;
+            return (true, null);
         }
 
         if (role.GameRuleId == null || !_gameTicker.StartGameRule(role.GameRuleId, out var ruleEntity))
-        {
-            error = "Failed to start the event for this role.";
-            return false;
-        }
+            return (false, "Failed to start the event for this role.");
 
         SpendForRole(state, role, useRoleCredit);
-        PersistState(session.UserId, state);
+        await PersistStateAsync(session.UserId, state);
         _reservedGhostRules[ruleEntity] = new ReservedGhostRuleState(session.UserId, role.Id, useRoleCredit);
         MarkReservedGhostSpawners(ruleEntity, session.UserId);
         SendState(session.UserId);
-        return true;
+        return (true, null);
     }
 
-    public bool ClearDeposit(NetUserId userId, out string? error)
+    public async Task<(bool success, string? error)> ClearDeposit(NetUserId userId)
     {
-        error = null;
         var state = EnsureStateExists(userId);
         if (state == null)
-        {
-            error = "Currency profile has not loaded yet.";
-            return false;
-        }
+            return (false, "Currency profile has not loaded yet.");
 
         if (state.PendingDepositRoleId == null)
-        {
-            error = "There is no active deposit right now.";
-            return false;
-        }
+            return (false, "There is no active deposit right now.");
 
         if (HasActiveAntagMind(userId))
-        {
-            error = "The deposit has already been consumed because you already have an antagonist role.";
-            return false;
-        }
+            return (false, "The deposit has already been consumed because you already have an antagonist role.");
 
         RefundPendingDeposit(userId, state);
-        PersistState(userId, state);
+        await PersistStateAsync(userId, state);
         SendState(userId);
-        return true;
+        return (true, null);
     }
 
     public void SetSponsorLevelOverride(NetUserId userId, int? sponsorLevel)
@@ -514,7 +464,11 @@ public sealed class AntagTokenSystem : EntitySystem
     {
         if (_states.TryGetValue(player.UserId, out var state))
         {
-             await PersistStateAsync(player.UserId, state);
+            var dbBalance = await _db.GetPlayerAntagTokenAmount(player.UserId.UserId, AntagTokenCatalog.BalanceEntryId);
+            if (dbBalance.HasValue)
+                state.Balance = dbBalance.Value;
+            
+            await PersistStateAsync(player.UserId, state);
         }
 
         _states.Remove(player.UserId);
@@ -525,9 +479,9 @@ public sealed class AntagTokenSystem : EntitySystem
         _ = PersistStateAsync(userId, state).ContinueWith(t =>
         {
             if (t.IsFaulted)
-            Logger.ErrorS("AntagTokens", $"Failed to save state for {userId}: {t.Exception}");
+                Logger.ErrorS("AntagTokens", $"Failed to save state for {userId}: {t.Exception}");
         });
-}
+    }
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
         _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
@@ -580,7 +534,7 @@ public sealed class AntagTokenSystem : EntitySystem
             if (!TryGetRoleAvailability(role, session.UserId, purchased: true, out var statusLocKey))
             {
                 RefundPendingDeposit(session.UserId, state);
-                PersistState(session.UserId, state);
+                _ = PersistStateAsync(session.UserId, state);
                 SendState(session.UserId);
                 ShowPopup(session, statusLocKey == null ? "Role deposit cancelled. Funds returned." : $"{Loc.GetString(statusLocKey)} Funds returned.");
                 continue;
@@ -596,7 +550,7 @@ public sealed class AntagTokenSystem : EntitySystem
             if (!TryAssignReservedRoundstartRole(session, role, out var assignError))
             {
                 RefundPendingDeposit(session.UserId, state);
-                PersistState(session.UserId, state);
+                _ = PersistStateAsync(session.UserId, state);
                 SendState(session.UserId);
                 ShowPopup(session, assignError ?? "Failed to assign the reserved role. Funds returned.");
                 continue;
@@ -605,7 +559,7 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = null;
             state.PendingDepositUsedRoleCredit = false;
             MarkRoundAntagGranted(session.UserId);
-            PersistState(session.UserId, state);
+            _ = PersistStateAsync(session.UserId, state);
             SendState(session.UserId);
             ShowPopup(session, $"Reserved role \"{GetRoleName(role)}\" assigned.");
         }
@@ -636,7 +590,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return;
 
         ClearReservedGhostSpawners(ent);
-        PersistState(reservedState.UserId, state);
+        _ = PersistStateAsync(reservedState.UserId, state);
         SendState(reservedState.UserId);
 
         if (_playerManager.TryGetSessionById(reservedState.UserId, out var session))
@@ -654,11 +608,12 @@ public sealed class AntagTokenSystem : EntitySystem
         SendState(args.SenderSession.UserId);
     }
 
-    private void OnPurchaseRequest(AntagTokenPurchaseRequestEvent ev, EntitySessionEventArgs args)
+    private async void OnPurchaseRequest(AntagTokenPurchaseRequestEvent ev, EntitySessionEventArgs args)
     {
-        if (!TryPurchaseForSession(args.SenderSession, ev.RoleId, out var error))
+        var result = await TryPurchaseForSession(args.SenderSession, ev.RoleId);
+        if (!result.success)
         {
-            ShowPopup(args.SenderSession, error ?? "Purchase unavailable.");
+            ShowPopup(args.SenderSession, result.error ?? "Purchase unavailable.");
             SendState(args.SenderSession.UserId);
             return;
         }
@@ -674,11 +629,12 @@ public sealed class AntagTokenSystem : EntitySystem
         SendState(args.SenderSession.UserId);
     }
 
-    private void OnClearRequest(AntagTokenClearRequestEvent _, EntitySessionEventArgs args)
+    private async void OnClearRequest(AntagTokenClearRequestEvent _, EntitySessionEventArgs args)
     {
-        if (!ClearDeposit(args.SenderSession.UserId, out var error))
+        var result = await ClearDeposit(args.SenderSession.UserId);
+        if (!result.success)
         {
-            ShowPopup(args.SenderSession, error ?? "Failed to clear deposit.");
+            ShowPopup(args.SenderSession, result.error ?? "Failed to clear deposit.");
             return;
         }
 

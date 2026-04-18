@@ -229,6 +229,7 @@ namespace Content.Server.Database
         Task<DailyRewardProgress?> GetDailyRewardProgress(Guid playerId, CancellationToken cancel = default);
         Task UpsertDailyRewardProgress(DailyRewardProgress progress);
         Task<List<PlayerAntagToken>> GetPlayerAntagTokens(Guid playerId, CancellationToken cancel = default);
+        Task<int?> GetPlayerAntagTokenAmount(Guid playerId, string tokenId, CancellationToken cancel = default);
         Task<PlayerAntagTokenSelection?> GetPlayerAntagTokenSelection(Guid playerId, CancellationToken cancel = default);
         Task SetPlayerAntagTokenAmount(Guid playerId, string tokenId, int amount);
         Task SetPlayerAntagTokenSelection(Guid playerId, string tokenId, string antagId);
@@ -673,6 +674,12 @@ namespace Content.Server.Database
         {
             DbReadOpsMetric.Inc();
             return RunDbCommand(() => _db.GetPlayerAntagTokens(playerId, cancel));
+        }
+
+        public Task<int?> GetPlayerAntagTokenAmount(Guid playerId, string tokenId, CancellationToken cancel = default)
+        {
+            DbReadOpsMetric.Inc();
+            return RunDbCommand(() => _db.GetPlayerAntagTokenAmount(playerId, tokenId, cancel));
         }
 
         public Task<PlayerAntagTokenSelection?> GetPlayerAntagTokenSelection(Guid playerId, CancellationToken cancel = default)

@@ -77,15 +77,18 @@ public sealed class AntagTokenAddCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        if (!system.AddBalance(session.UserId, amount, out var granted, out var note))
+#pragma warning disable RA0004
+        var addResult = system.AddBalance(session.UserId, amount).Result;
+#pragma warning restore RA0004
+        if (!addResult.success)
         {
             shell.WriteError("Failed to add balance.");
             return;
         }
 
-        shell.WriteLine($"Granted {granted} token(s) to {session.Name}.");
-        if (note != null)
-            shell.WriteLine(note);
+        shell.WriteLine($"Granted {addResult.grantedAmount} token(s) to {session.Name}.");
+        if (addResult.note != null)
+            shell.WriteLine(addResult.note);
     }
 }
 
@@ -117,7 +120,10 @@ public sealed class AntagTokenSetBalanceCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        if (!system.SetBalance(session.UserId, amount))
+#pragma warning disable RA0004
+        var setResult = system.SetBalance(session.UserId, amount).Result;
+#pragma warning restore RA0004
+        if (!setResult)
         {
             shell.WriteError("Failed to set balance.");
             return;
@@ -156,9 +162,12 @@ public sealed class AntagTokenBuyCommand : IConsoleCommand
         }
 
         var system = _entities.System<AntagTokenSystem>();
-        if (!system.TryPurchaseForSession(session, roleId, out var error))
+#pragma warning disable RA0004
+        var purchaseResult = system.TryPurchaseForSession(session, roleId).Result;
+#pragma warning restore RA0004
+        if (!purchaseResult.success)
         {
-            shell.WriteError(error ?? "Purchase failed.");
+            shell.WriteError(purchaseResult.error ?? "Purchase failed.");
             return;
         }
 
@@ -188,9 +197,12 @@ public sealed class AntagTokenClearCommand : IConsoleCommand
             return;
 
         var system = _entities.System<AntagTokenSystem>();
-        if (!system.ClearDeposit(session.UserId, out var error))
+#pragma warning disable RA0004
+        var clearResult = system.ClearDeposit(session.UserId).Result;
+#pragma warning restore RA0004
+        if (!clearResult.success)
         {
-            shell.WriteError(error ?? "Failed to clear deposit.");
+            shell.WriteError(clearResult.error ?? "Failed to clear deposit.");
             return;
         }
 
