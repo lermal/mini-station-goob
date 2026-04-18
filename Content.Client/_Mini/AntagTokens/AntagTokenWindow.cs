@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Casha
 // Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Content.Client.Resources;
 using Content.Shared._Mini.AntagTokens;
@@ -9,6 +10,7 @@ using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
+using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Localization;
 using Robust.Shared.Maths;
@@ -26,12 +28,25 @@ public sealed class AntagTokenWindow : DefaultWindow
     private static readonly Color CardBorderColor = Color.FromHex("#3d444d").WithAlpha(0.5f);
     private static readonly Color PurchasedCardColor = Color.FromHex("#1e4d3a").WithAlpha(0.7f);
     private static readonly Color PurchasedBorderColor = Color.FromHex("#3fb950").WithAlpha(0.8f);
+    private static readonly Color BuyButtonUnavailableBg = Color.FromHex("#1e1521");
+    private static readonly Color BuyButtonTimerText = Color.FromHex("#972d1c");
+
+    private static readonly StyleBoxFlat BuyButtonUnavailableStyle = new()
+    {
+        BackgroundColor = BuyButtonUnavailableBg,
+        ContentMarginLeftOverride = 8,
+        ContentMarginRightOverride = 8,
+        ContentMarginTopOverride = 6,
+        ContentMarginBottomOverride = 6
+    };
 
     private const int GridColumns = 3;
     private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
 
     public event Action<string>? OnPurchasePressed;
     public event Action? OnClearPressed;
+
+    [Dependency] private readonly IEntitySystemManager _entitySystems = default!;
 
     private readonly IResourceCache _resourceCache;
     private readonly Texture _coinTexture;
@@ -40,7 +55,18 @@ public sealed class AntagTokenWindow : DefaultWindow
     private Label _capLabel = null!;
     private Label _depositLabel = null!;
     private Button _clearButton = null!;
+    private ScrollContainer _roleScroll = null!;
     private GridContainer _roleGrid = null!;
+    private Control? _loadingOverlay;
+    private readonly Dictionary<string, RoleBuyButton> _roleBuyButtons = new();
+    private readonly Dictionary<string, int> _lastServerCooldownRemaining = new();
+
+    private sealed class RoleBuyButton
+    {
+        public required Button Button;
+        public required Control NormalContent;
+        public required AntagTokenRoleEntry Entry;
+    }
 
     public AntagTokenWindow()
     {
@@ -92,13 +118,13 @@ public sealed class AntagTokenWindow : DefaultWindow
         };
         root.AddChild(gridPanel);
 
-        var scroll = new ScrollContainer
+        _roleScroll = new ScrollContainer
         {
             VerticalExpand = true,
             HorizontalExpand = true,
             HScrollEnabled = false
         };
-        gridPanel.AddChild(scroll);
+        gridPanel.AddChild(_roleScroll);
 
         _roleGrid = new GridContainer
         {
@@ -107,30 +133,119 @@ public sealed class AntagTokenWindow : DefaultWindow
             VSeparationOverride = 16,
             HorizontalAlignment = HAlignment.Stretch
         };
-        scroll.AddChild(_roleGrid);
+        _roleScroll.AddChild(_roleGrid);
 
         _clearButton.OnPressed += _ => OnClearPressed?.Invoke();
     }
 
+    public void SetLoading(bool loading)
+    {
+        if (!loading)
+            return;
+
+        if (_loadingOverlay != null)
+            return;
+
+        _roleBuyButtons.Clear();
+        _roleGrid.RemoveAllChildren();
+
+        _roleScroll.RemoveChild(_roleGrid);
+
+        var center = new CenterContainer
+        {
+            VerticalExpand = true,
+            HorizontalExpand = true
+        };
+        center.AddChild(new Label
+        {
+            Text = Loc.GetString("antag-token-window-loading"),
+            Modulate = Color.FromHex("#8b949e")
+        });
+        _roleScroll.AddChild(center);
+        _loadingOverlay = center;
+
+        _balanceLabel.Text = Loc.GetString("antag-token-window-loading");
+        _capLabel.Text = Loc.GetString("antag-token-window-loading");
+        _depositLabel.Text = Loc.GetString("antag-token-window-loading");
+        _clearButton.Disabled = true;
+    }
+
+    public void RefreshPurchaseCooldowns(IReadOnlyDictionary<string, int> cooldownsByRole)
+    {
+        foreach (var (roleId, ui) in _roleBuyButtons)
+        {
+            var cd = cooldownsByRole.GetValueOrDefault(roleId, 0);
+            if (cd > 0)
+            {
+                ui.Button.RemoveAllChildren();
+                ui.Button.AddChild(new Label
+                {
+                    Text = FormatCooldownHms(cd),
+                    Modulate = BuyButtonTimerText,
+                    StyleClasses = { "LabelHeading" },
+                    HorizontalAlignment = HAlignment.Center,
+                    VerticalAlignment = VAlignment.Center
+                });
+                ui.Button.Disabled = true;
+                ui.Button.StyleBoxOverride = BuyButtonUnavailableStyle;
+            }
+            else
+            {
+                ui.Button.RemoveAllChildren();
+                ui.Button.AddChild(ui.NormalContent);
+                ui.Button.Disabled = IsButtonDisabled(ui.Entry, cooldownsByRole);
+                ui.Button.StyleBoxOverride = ui.Button.Disabled ? BuyButtonUnavailableStyle : null;
+            }
+        }
+    }
+
     public void UpdateState(AntagTokenState state)
     {
+        RestoreGridFromLoading();
+
+        _lastServerCooldownRemaining.Clear();
+        foreach (var r in state.Roles)
+            _lastServerCooldownRemaining[r.RoleId] = r.PurchaseCooldownSecondsRemaining;
+
         _balanceLabel.Text = Loc.GetString("antag-token-window-balance", ("amount", state.Balance));
         _capLabel.Text = state.MonthlyCap.HasValue
             ? Loc.GetString("antag-token-window-cap", ("earned", state.MonthlyEarned), ("cap", state.MonthlyCap.Value))
             : Loc.GetString("antag-token-window-cap-free", ("earned", state.MonthlyEarned));
 
         _depositLabel.Text = state.ActiveDepositRoleId != null &&
-                             AntagTokenCatalog.TryGetRole(state.ActiveDepositRoleId, out var role)
+                             _entitySystems.GetEntitySystem<AntagTokenListingSystem>().TryGetListing(state.ActiveDepositRoleId, out var role)
             ? Loc.GetString("antag-token-window-deposit", ("role", Loc.GetString(role.NameLocKey)))
             : Loc.GetString("antag-token-window-no-deposit");
 
         _clearButton.Disabled = state.ActiveDepositRoleId == null;
 
+        _roleBuyButtons.Clear();
         _roleGrid.RemoveAllChildren();
         foreach (var roleEntry in state.Roles)
         {
             _roleGrid.AddChild(CreateRoleCard(roleEntry));
         }
+    }
+
+    private void RestoreGridFromLoading()
+    {
+        if (_loadingOverlay == null)
+            return;
+
+        _roleScroll.RemoveChild(_loadingOverlay);
+        _loadingOverlay.Dispose();
+        _loadingOverlay = null;
+
+        if (_roleGrid.Parent != _roleScroll)
+            _roleScroll.AddChild(_roleGrid);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            RestoreGridFromLoading();
+
+        base.Dispose(disposing);
     }
 
     private Control BuildHero()
@@ -255,7 +370,7 @@ public sealed class AntagTokenWindow : DefaultWindow
 
     private Control CreateRoleCard(AntagTokenRoleEntry entry)
     {
-        AntagTokenCatalog.TryGetRole(entry.RoleId, out var roleDef);
+        _entitySystems.GetEntitySystem<AntagTokenListingSystem>().TryGetListing(entry.RoleId, out var roleDef);
 
         var panel = new PanelContainer
         {
@@ -356,7 +471,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         {
             MinSize = new Vector2(268, 40),
             MaxSize = new Vector2(268, 40),
-            Disabled = IsButtonDisabled(entry),
+            Disabled = IsButtonDisabled(entry, null),
             ToolTip = GetButtonTooltip(entry)
         };
 
@@ -412,14 +527,37 @@ public sealed class AntagTokenWindow : DefaultWindow
         }
 
         buyButton.AddChild(buttonContent);
+        buyButton.StyleBoxOverride = buyButton.Disabled ? BuyButtonUnavailableStyle : null;
         root.AddChild(buyButton);
+
+        _roleBuyButtons[entry.RoleId] = new RoleBuyButton
+        {
+            Button = buyButton,
+            NormalContent = buttonContent,
+            Entry = entry
+        };
 
         return panel;
     }
 
-    private static bool IsButtonDisabled(AntagTokenRoleEntry entry)
+    private static string FormatCooldownHms(int totalSeconds)
     {
-        if (entry.Purchased || !entry.Available || !entry.CanAfford)
+        var t = TimeSpan.FromSeconds(totalSeconds);
+        return $"{(int) t.TotalHours:00}:{t.Minutes:00}:{t.Seconds:00}";
+    }
+
+    private bool IsButtonDisabled(AntagTokenRoleEntry entry, IReadOnlyDictionary<string, int>? localCooldowns)
+    {
+        var localCd = localCooldowns?.GetValueOrDefault(entry.RoleId) ?? entry.PurchaseCooldownSecondsRemaining;
+        if (localCd > 0)
+            return true;
+
+        var effectiveAvailable = entry.Available
+            || (_lastServerCooldownRemaining.GetValueOrDefault(entry.RoleId) > 0
+                && localCd == 0
+                && entry.StatusLocKey == null);
+
+        if (entry.Purchased || !effectiveAvailable || !entry.CanAfford)
             return true;
 
         if (entry.StatusLocKey == "antag-store-status-has-other-deposit")

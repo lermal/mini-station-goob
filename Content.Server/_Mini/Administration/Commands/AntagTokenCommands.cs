@@ -149,7 +149,7 @@ public sealed class AntagTokenBuyCommand : IConsoleCommand
             return;
 
         var roleId = args[consumedArgs];
-        if (!AntagTokenCatalog.TryGetRole(roleId, out _))
+        if (!_entities.System<AntagTokenListingSystem>().TryGetListing(roleId, out _))
         {
             shell.WriteError("Unknown role id.");
             return;

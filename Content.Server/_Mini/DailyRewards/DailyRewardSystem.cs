@@ -32,6 +32,7 @@ public sealed class DailyRewardSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly AntagTokenSystem _antagTokens = default!;
+    [Dependency] private readonly AntagTokenListingSystem _antagListings = default!;
 
     private readonly Dictionary<NetUserId, SessionRewardState> _states = new();
     private readonly DailyRewardComponent _defaultComponent = new();
@@ -425,7 +426,7 @@ public sealed class DailyRewardSystem : EntitySystem
         component.BonusRoleUnlockRewards.TryGetValue(day, out var roleUnlockRoleId);
 
         if (roleUnlockRoleId != null &&
-            AntagTokenCatalog.TryGetRole(roleUnlockRoleId, out var role))
+            _antagListings.TryGetListing(roleUnlockRoleId, out var role))
         {
             return new RewardDefinition(Loc.GetString(role.NameLocKey), tokenAmount, role.IconPath, roleUnlockRoleId);
         }
