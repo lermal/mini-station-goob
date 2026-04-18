@@ -31,6 +31,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Content.Shared.Chat;
 using Content.Server.Chat.Systems;
+using Content.Server._Mini.GhostRolePurchase;
 
 namespace Content.Server._Mini.AntagTokens;
 
@@ -46,6 +47,7 @@ public sealed class AntagTokenSystem : EntitySystem
     [Dependency] private readonly JobSystem _jobs = default!;
     [Dependency] private readonly MindSystem _mind = default!;
     [Dependency] private readonly RoleSystem _role = default!;
+    [Dependency] private readonly GhostRolePurchaseTimerSystem _ghostRoleTimer = default!;
 
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<EntityUid, ReservedGhostRuleState> _reservedGhostRules = new();
@@ -315,6 +317,17 @@ public sealed class AntagTokenSystem : EntitySystem
         if (!AntagTokenCatalog.TryGetRole(roleId, out var role))
             return (false, "This role is not available in the store.");
 
+        if (role.Mode == AntagPurchaseMode.GhostRule)
+        {
+            if (_ghostRoleTimer.IsTimerActive())
+            {
+                var remaining = _ghostRoleTimer.GetRemainingTime();
+                var minutes = (int)remaining.TotalMinutes;
+                var seconds = remaining.Seconds;
+                return (false, $"Ghost role purchases are blocked. Time remaining: {minutes:D2}:{seconds:D2}");
+            }
+        }
+
         var state = EnsureStateExists(session.UserId);
         if (state == null)
             return (false, "Currency profile has not loaded yet.");
@@ -361,6 +374,12 @@ public sealed class AntagTokenSystem : EntitySystem
         _reservedGhostRules[ruleEntity] = new ReservedGhostRuleState(session.UserId, role.Id, useRoleCredit);
         MarkReservedGhostSpawners(ruleEntity, session.UserId);
         SendState(session.UserId);
+        
+        if (role.Mode == AntagPurchaseMode.GhostRule)
+        {
+            _ghostRoleTimer.StartTimer();
+        }
+        
         return (true, null);
     }
 

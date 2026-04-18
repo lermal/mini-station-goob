@@ -1,20 +1,49 @@
 // SPDX-FileCopyrightText: 2026 Casha
 //Мини-станция/Freaky-station - All rights reserved. Do not copy. Do not host.
 using Content.Shared._Mini.AntagTokens;
+using Content.Shared._Mini.GhostRolePurchase;
 using Robust.Shared.Localization;
+using Robust.Shared.Timing;
 
 namespace Content.Client._Mini.AntagTokens;
 
 public sealed class AntagTokenUiSystem : EntitySystem
 {
+    [Dependency] private readonly IGameTiming _timing = default!;
+    
     private AntagTokenWindow? _window;
     private bool _awaitingOpen;
+    private TimeSpan _timerRemaining = TimeSpan.Zero;
+    private TimeSpan _lastUpdate = TimeSpan.Zero;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeNetworkEvent<AntagTokenStateEvent>(OnState);
+        SubscribeNetworkEvent<GhostRolePurchaseTimerUpdateEvent>(OnTimerUpdate);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        if (_window == null || _window.Disposed)
+            return;
+
+        if (_timerRemaining > TimeSpan.Zero)
+        {
+            var now = _timing.CurTime;
+            if (now - _lastUpdate >= TimeSpan.FromSeconds(1))
+            {
+                _lastUpdate = now;
+                _timerRemaining -= TimeSpan.FromSeconds(1);
+                if (_timerRemaining < TimeSpan.Zero)
+                    _timerRemaining = TimeSpan.Zero;
+                
+                _window.UpdateTimer(_timerRemaining);
+            }
+        }
     }
 
     public void RequestOpen()
@@ -34,6 +63,13 @@ public sealed class AntagTokenUiSystem : EntitySystem
         }
 
         _window?.UpdateState(ev.State);
+    }
+
+    private void OnTimerUpdate(GhostRolePurchaseTimerUpdateEvent ev)
+    {
+        _timerRemaining = ev.TimerEndTime;
+        _lastUpdate = _timing.CurTime;
+        _window?.UpdateTimer(_timerRemaining);
     }
 
     private void EnsureWindow()

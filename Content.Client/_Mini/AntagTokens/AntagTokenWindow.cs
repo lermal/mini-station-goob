@@ -41,6 +41,9 @@ public sealed class AntagTokenWindow : DefaultWindow
     private Label _depositLabel = null!;
     private Button _clearButton = null!;
     private GridContainer _roleGrid = null!;
+    
+    private TimeSpan _currentTimerRemaining = TimeSpan.Zero;
+    private AntagTokenState? _lastState;
 
     public AntagTokenWindow()
     {
@@ -114,6 +117,8 @@ public sealed class AntagTokenWindow : DefaultWindow
 
     public void UpdateState(AntagTokenState state)
     {
+        _lastState = state;
+        
         _balanceLabel.Text = Loc.GetString("antag-token-window-balance", ("amount", state.Balance));
         _capLabel.Text = state.MonthlyCap.HasValue
             ? Loc.GetString("antag-token-window-cap", ("earned", state.MonthlyEarned), ("cap", state.MonthlyCap.Value))
@@ -126,8 +131,27 @@ public sealed class AntagTokenWindow : DefaultWindow
 
         _clearButton.Disabled = state.ActiveDepositRoleId == null;
 
+        RefreshRoleCards();
+    }
+
+    public void UpdateTimer(TimeSpan remaining)
+    {
+        _currentTimerRemaining = remaining;
+        
+        // Перерисовываем карточки с новым таймером
+        if (_lastState != null)
+        {
+            RefreshRoleCards();
+        }
+    }
+
+    private void RefreshRoleCards()
+    {
+        if (_lastState == null)
+            return;
+
         _roleGrid.RemoveAllChildren();
-        foreach (var roleEntry in state.Roles)
+        foreach (var roleEntry in _lastState.Roles)
         {
             _roleGrid.AddChild(CreateRoleCard(roleEntry));
         }
@@ -256,6 +280,8 @@ public sealed class AntagTokenWindow : DefaultWindow
     private Control CreateRoleCard(AntagTokenRoleEntry entry)
     {
         AntagTokenCatalog.TryGetRole(entry.RoleId, out var roleDef);
+        var isGhostRole = roleDef?.Mode == AntagPurchaseMode.GhostRule;
+        var isTimerActive = _currentTimerRemaining > TimeSpan.Zero;
 
         var panel = new PanelContainer
         {
@@ -356,8 +382,8 @@ public sealed class AntagTokenWindow : DefaultWindow
         {
             MinSize = new Vector2(268, 40),
             MaxSize = new Vector2(268, 40),
-            Disabled = IsButtonDisabled(entry),
-            ToolTip = GetButtonTooltip(entry)
+            Disabled = IsButtonDisabled(entry, isGhostRole, isTimerActive),
+            ToolTip = GetButtonTooltip(entry, isGhostRole, isTimerActive)
         };
 
         var roleId = entry.RoleId;
@@ -377,6 +403,19 @@ public sealed class AntagTokenWindow : DefaultWindow
             {
                 Text = "✓",
                 Modulate = Color.White,
+                StyleClasses = { "LabelHeading" },
+                VerticalAlignment = VAlignment.Center
+            });
+        }
+        else if (isGhostRole && isTimerActive)
+        {
+            // Показываем таймер вместо монеток для ghost ролей
+            var minutes = (int)_currentTimerRemaining.TotalMinutes;
+            var seconds = _currentTimerRemaining.Seconds;
+            buttonContent.AddChild(new Label
+            {
+                Text = $"{minutes:D2}:{seconds:D2}",
+                Modulate = Color.FromHex("#e5534b"),
                 StyleClasses = { "LabelHeading" },
                 VerticalAlignment = VAlignment.Center
             });
@@ -417,7 +456,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         return panel;
     }
 
-    private static bool IsButtonDisabled(AntagTokenRoleEntry entry)
+    private bool IsButtonDisabled(AntagTokenRoleEntry entry, bool isGhostRole, bool isTimerActive)
     {
         if (entry.Purchased || !entry.Available || !entry.CanAfford)
             return true;
@@ -425,11 +464,21 @@ public sealed class AntagTokenWindow : DefaultWindow
         if (entry.StatusLocKey == "antag-store-status-has-other-deposit")
             return true;
 
+        if (isGhostRole && isTimerActive)
+            return true;
+
         return entry.Mode == AntagPurchaseMode.LobbyDeposit && entry.Saturated;
     }
 
-    private static string GetButtonTooltip(AntagTokenRoleEntry entry)
+    private string GetButtonTooltip(AntagTokenRoleEntry entry, bool isGhostRole, bool isTimerActive)
     {
+        if (isGhostRole && isTimerActive)
+        {
+            var minutes = (int)_currentTimerRemaining.TotalMinutes;
+            var seconds = _currentTimerRemaining.Seconds;
+            return $"Ghost role purchases are blocked. Time remaining: {minutes:D2}:{seconds:D2}";
+        }
+
         if (entry.StatusLocKey != null)
             return Loc.GetString(entry.StatusLocKey);
 
