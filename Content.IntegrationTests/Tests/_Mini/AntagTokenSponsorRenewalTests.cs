@@ -45,7 +45,7 @@ public sealed class AntagTokenSponsorRenewalTests
             antag.TestSetLastDonorBonusClaimUtc(session.UserId, DateTime.UtcNow.AddDays(-40));
             var before = antag.GetBalance(session.UserId);
             antag.TryGrantSponsorRenewalAfterStateLoaded(session);
-            Assert.That(antag.GetBalance(session.UserId), Is.EqualTo(before + 10));
+            Assert.That(antag.GetBalance(session.UserId), Is.EqualTo(before + 20));
         });
 
         await pair.CleanReturnAsync();
