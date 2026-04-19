@@ -279,12 +279,31 @@ public sealed class AntagTokenWindow : DefaultWindow
         };
         content.AddChild(left);
 
-        left.AddChild(new Label
+        var titleRow = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 6,
+            HorizontalExpand = true
+        };
+        titleRow.AddChild(new Label
         {
             Text = Loc.GetString("antag-token-window-title"),
             StyleClasses = { "LabelHeading" },
-            Modulate = Color.White
+            Modulate = Color.White,
+            HorizontalExpand = true,
+            VerticalAlignment = VAlignment.Center
         });
+        _clearButton = new Button
+        {
+            Text = Loc.GetString("antag-token-window-clear"),
+            MinSize = new Vector2(120, 38),
+            Modulate = Color.White,
+            HorizontalAlignment = HAlignment.Right,
+            VerticalAlignment = VAlignment.Center,
+            Margin = new Thickness(1, 0, 1, 0)
+        };
+        titleRow.AddChild(_clearButton);
+        left.AddChild(titleRow);
 
         left.AddChild(new Label
         {
@@ -384,21 +403,6 @@ public sealed class AntagTokenWindow : DefaultWindow
         };
         depositBox.AddChild(_depositLabel);
         infoRow.AddChild(depositBox);
-
-        var right = new BoxContainer
-        {
-            Orientation = LayoutOrientation.Vertical,
-            VerticalAlignment = VAlignment.Center
-        };
-        content.AddChild(right);
-
-        _clearButton = new Button
-        {
-            Text = Loc.GetString("antag-token-window-clear"),
-            MinSize = new Vector2(120, 38),
-            Modulate = Color.White
-        };
-        right.AddChild(_clearButton);
 
         return panel;
     }

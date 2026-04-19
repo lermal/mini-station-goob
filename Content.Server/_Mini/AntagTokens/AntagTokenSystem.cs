@@ -30,6 +30,7 @@ using Content.Server.Chat.Systems;
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
+using Robust.Shared.Asynchronous;
 using Robust.Shared.Log;
 
 namespace Content.Server._Mini.AntagTokens;
@@ -48,12 +49,16 @@ public sealed class AntagTokenSystem : EntitySystem
     [Dependency] private readonly RoleSystem _role = default!;
     [Dependency] private readonly AntagTokenListingSystem _listings = default!;
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
+    [Dependency] private readonly ITaskManager _taskManager = default!;
 
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
     private readonly Dictionary<NetUserId, OnlineRewardState> _onlineRewards = new();
     private readonly HashSet<NetUserId> _roundGrantedAntags = new();
+    private float _databaseSyncAccumulator;
+    private bool _databaseSyncPassRunning;
     private bool _storeEnabled = true;
+    private const float DatabaseSyncInterval = 15f;
     private static readonly HashSet<string> BlockedRoundstartRolePresets = new(StringComparer.OrdinalIgnoreCase)
     {
         "Extended",
@@ -133,6 +138,13 @@ public sealed class AntagTokenSystem : EntitySystem
                     }
                 }
             }
+        }
+
+        _databaseSyncAccumulator -= frameTime;
+        if (_databaseSyncAccumulator <= 0f)
+        {
+            _databaseSyncAccumulator = DatabaseSyncInterval;
+            _ = RunPeriodicDatabaseSyncAsync();
         }
     }
 
@@ -491,6 +503,21 @@ public sealed class AntagTokenSystem : EntitySystem
         var tokenEntries = await _db.GetPlayerAntagTokens(player.UserId.UserId, cancel);
         var selection = await _db.GetPlayerAntagTokenSelection(player.UserId.UserId, cancel);
 
+        var state = BuildPlayerTokenStateFromRows(tokenEntries, selection);
+
+        var prevMonthlyYear = state.MonthlyYear;
+        var prevMonthlyMonth = state.MonthlyMonth;
+        NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
+        _states[player.UserId] = state;
+        _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
+        if (prevMonthlyYear != state.MonthlyYear || prevMonthlyMonth != state.MonthlyMonth)
+            PersistState(player.UserId, state);
+    }
+
+    private PlayerTokenState BuildPlayerTokenStateFromRows(
+        List<PlayerAntagToken> tokenEntries,
+        PlayerAntagTokenSelection? selection)
+    {
         var state = new PlayerTokenState();
         foreach (var token in tokenEntries)
         {
@@ -541,13 +568,154 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = selectedRoleId;
         }
 
-        var prevMonthlyYear = state.MonthlyYear;
-        var prevMonthlyMonth = state.MonthlyMonth;
-        NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
-        _states[player.UserId] = state;
-        _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
-        if (prevMonthlyYear != state.MonthlyYear || prevMonthlyMonth != state.MonthlyMonth)
-            PersistState(player.UserId, state);
+        return state;
+    }
+
+    private static bool TokenStatesEqual(PlayerTokenState a, PlayerTokenState b)
+    {
+        if (a.Balance != b.Balance)
+            return false;
+        if (a.MonthlyEarned != b.MonthlyEarned)
+            return false;
+        if (a.MonthlyYear != b.MonthlyYear)
+            return false;
+        if (a.MonthlyMonth != b.MonthlyMonth)
+            return false;
+        if (a.LastDonorBonusClaimUtc != b.LastDonorBonusClaimUtc)
+            return false;
+        if (a.PendingDepositRoleId != b.PendingDepositRoleId)
+            return false;
+        if (a.PendingDepositUsedRoleCredit != b.PendingDepositUsedRoleCredit)
+            return false;
+        if (a.PendingGhostAutoRoleId != b.PendingGhostAutoRoleId)
+            return false;
+        if (a.PendingGhostAutoUsedRoleCredit != b.PendingGhostAutoUsedRoleCredit)
+            return false;
+        if (a.RoleCredits.Count != b.RoleCredits.Count)
+            return false;
+
+        foreach (var (key, amount) in a.RoleCredits)
+        {
+            if (!b.RoleCredits.TryGetValue(key, out var other) || other != amount)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void ApplyDbSnapshotToOnlineUser(
+        NetUserId userId,
+        List<PlayerAntagToken> tokenEntries,
+        PlayerAntagTokenSelection? selection)
+    {
+        if (!_states.ContainsKey(userId))
+            return;
+
+        if (!_playerManager.TryGetSessionById(userId, out _))
+            return;
+
+        var newState = BuildPlayerTokenStateFromRows(tokenEntries, selection);
+        var prevMonthlyYear = newState.MonthlyYear;
+        var prevMonthlyMonth = newState.MonthlyMonth;
+        NormalizeMonthlyState(newState, DateTime.UtcNow, userId);
+
+        if (_states.TryGetValue(userId, out var oldState) && TokenStatesEqual(oldState, newState))
+            return;
+
+        _states[userId] = newState;
+        if (prevMonthlyYear != newState.MonthlyYear || prevMonthlyMonth != newState.MonthlyMonth)
+            PersistState(userId, newState);
+        SendState(userId);
+    }
+
+    private Task WaitMainThreadApplyAsync(
+        NetUserId userId,
+        List<PlayerAntagToken> tokenEntries,
+        PlayerAntagTokenSelection? selection)
+    {
+        var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _taskManager.RunOnMainThread(() =>
+        {
+            try
+            {
+                ApplyDbSnapshotToOnlineUser(userId, tokenEntries, selection);
+                tcs.SetResult();
+            }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
+        });
+
+        return tcs.Task;
+    }
+
+    private async Task RunPeriodicDatabaseSyncAsync()
+    {
+        if (_databaseSyncPassRunning)
+            return;
+
+        _databaseSyncPassRunning = true;
+        try
+        {
+            foreach (var session in _playerManager.Sessions.ToArray())
+            {
+                if (!_states.ContainsKey(session.UserId))
+                    continue;
+
+                if (!_userDb.IsLoadComplete(session))
+                    continue;
+
+                List<PlayerAntagToken> tokenEntries;
+                PlayerAntagTokenSelection? selection;
+
+                try
+                {
+                    tokenEntries = await _db.GetPlayerAntagTokens(session.UserId.UserId, default);
+                    selection = await _db.GetPlayerAntagTokenSelection(session.UserId.UserId, default);
+                }
+                catch (Exception e)
+                {
+                    Logger.ErrorS("AntagTokens", $"Periodic antag token DB sync read failed for {session.UserId}: {e}");
+                    continue;
+                }
+
+                await WaitMainThreadApplyAsync(session.UserId, tokenEntries, selection);
+            }
+        }
+        finally
+        {
+            _databaseSyncPassRunning = false;
+        }
+    }
+
+    public void RequestAntagTokenDatabaseSync(ICommonSession session)
+    {
+        if (!_states.ContainsKey(session.UserId))
+            return;
+
+        _ = RequestAntagTokenDatabaseSyncAsync(session);
+    }
+
+    private async Task RequestAntagTokenDatabaseSyncAsync(ICommonSession session)
+    {
+        var userId = session.UserId;
+
+        List<PlayerAntagToken> tokenEntries;
+        PlayerAntagTokenSelection? selection;
+
+        try
+        {
+            tokenEntries = await _db.GetPlayerAntagTokens(userId.UserId, default);
+            selection = await _db.GetPlayerAntagTokenSelection(userId.UserId, default);
+        }
+        catch (Exception e)
+        {
+            Logger.ErrorS("AntagTokens", $"Manual antag token DB sync read failed for {userId}: {e}");
+            return;
+        }
+
+        await WaitMainThreadApplyAsync(userId, tokenEntries, selection);
     }
 
     private async void OnPlayerDisconnect(ICommonSession player)

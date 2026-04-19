@@ -12,6 +12,33 @@ using Robust.Shared.GameObjects;
 namespace Content.Server._Mini.Administration.Commands;
 
 [AdminCommand(AdminFlags.Admin)]
+public sealed class AntagTokenDatabaseSyncCommand : IConsoleCommand
+{
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
+    [Dependency] private readonly IEntityManager _entities = default!;
+
+    public string Command => "antagtokendbsync";
+    public string Description => "Reloads antagonist token state from the database for an online player (external Discord/DB changes).";
+    public string Help => "Usage: antagtokendbsync [username]";
+
+    public void Execute(IConsoleShell shell, string argStr, string[] args)
+    {
+        if (args.Length > 1)
+        {
+            shell.WriteLine(Help);
+            return;
+        }
+
+        if (!DailyRewardCommandHelpers.TryResolveSession(shell, args, _playerManager, out var session))
+            return;
+
+        var system = _entities.System<AntagTokenSystem>();
+        system.RequestAntagTokenDatabaseSync(session);
+        shell.WriteLine($"Requested database sync for {session.Name}.");
+    }
+}
+
+[AdminCommand(AdminFlags.Admin)]
 public sealed class AntagTokenStatusCommand : IConsoleCommand
 {
     [Dependency] private readonly IPlayerManager _playerManager = default!;
