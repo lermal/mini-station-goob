@@ -21,11 +21,11 @@ namespace Content.Client._Mini.AntagTokens;
 
 public sealed class AntagTokenWindow : DefaultWindow
 {
-    private static readonly Color WindowBackgroundColor = Color.FromHex("#0b0f14");
-    private static readonly Color HeroPanelColor = Color.FromHex("#131822").WithAlpha(0.9f);
-    private static readonly Color AccentColor = Color.FromHex("#539bf5");
-    private static readonly Color CardBackgroundColor = Color.FromHex("#1c2128").WithAlpha(0.6f);
-    private static readonly Color CardBorderColor = Color.FromHex("#3d444d").WithAlpha(0.5f);
+    private static readonly Color WindowBackgroundColor = Color.FromHex("#0e0c14");
+    private static readonly Color HeroPanelColor = Color.FromHex("#1a1622").WithAlpha(0.9f);
+    private static readonly Color AccentColor = Color.FromHex("#8c7da8");
+    private static readonly Color CardBackgroundColor = Color.FromHex("#1e1a26").WithAlpha(0.8f);
+    private static readonly Color CardBorderColor = Color.Transparent;
     private static readonly Color PurchasedCardColor = Color.FromHex("#1e4d3a").WithAlpha(0.7f);
     private static readonly Color PurchasedBorderColor = Color.FromHex("#3fb950").WithAlpha(0.8f);
     private static readonly Color BuyButtonUnavailableBg = Color.FromHex("#1e1521");
@@ -51,8 +51,8 @@ public sealed class AntagTokenWindow : DefaultWindow
     private readonly IResourceCache _resourceCache;
     private readonly Texture _coinTexture;
 
-    private Label _balanceLabel = null!;
-    private Label _capLabel = null!;
+    private Label _balanceValueLabel = null!;
+    private Label _capValueLabel = null!;
     private Label _depositLabel = null!;
     private Button _clearButton = null!;
     private ScrollContainer _roleScroll = null!;
@@ -164,8 +164,8 @@ public sealed class AntagTokenWindow : DefaultWindow
         _roleScroll.AddChild(center);
         _loadingOverlay = center;
 
-        _balanceLabel.Text = Loc.GetString("antag-token-window-loading");
-        _capLabel.Text = Loc.GetString("antag-token-window-loading");
+        _balanceValueLabel.Text = Loc.GetString("antag-token-window-loading");
+        _capValueLabel.Text = Loc.GetString("antag-token-window-loading");
         _depositLabel.Text = Loc.GetString("antag-token-window-loading");
         _clearButton.Disabled = true;
     }
@@ -207,10 +207,10 @@ public sealed class AntagTokenWindow : DefaultWindow
         foreach (var r in state.Roles)
             _lastServerCooldownRemaining[r.RoleId] = r.PurchaseCooldownSecondsRemaining;
 
-        _balanceLabel.Text = Loc.GetString("antag-token-window-balance", ("amount", state.Balance));
-        _capLabel.Text = state.MonthlyCap.HasValue
-            ? Loc.GetString("antag-token-window-cap", ("earned", state.MonthlyEarned), ("cap", state.MonthlyCap.Value))
-            : Loc.GetString("antag-token-window-cap-free", ("earned", state.MonthlyEarned));
+        _balanceValueLabel.Text = state.Balance.ToString();
+        _capValueLabel.Text = state.MonthlyCap.HasValue
+            ? $"{state.MonthlyEarned} / {state.MonthlyCap.Value}"
+            : $"{state.MonthlyEarned}";
 
         _depositLabel.Text = state.ActiveDepositRoleId != null &&
                              _entitySystems.GetEntitySystem<AntagTokenListingSystem>().TryGetListing(state.ActiveDepositRoleId, out var role)
@@ -309,12 +309,29 @@ public sealed class AntagTokenWindow : DefaultWindow
             Text = "Баланс:",
             Modulate = Color.FromHex("#8b949e")
         });
-        _balanceLabel = new Label
+
+        var balanceValueContainer = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 4
+        };
+
+        _balanceValueLabel = new Label
         {
             Modulate = AccentColor
         };
-        balanceBox.AddChild(_balanceLabel);
+        balanceValueContainer.AddChild(_balanceValueLabel);
+        balanceBox.AddChild(balanceValueContainer);
         infoRow.AddChild(balanceBox);
+
+        balanceValueContainer.AddChild(new TextureRect
+        {
+            Texture = _coinTexture,
+            MinSize = new Vector2(16, 16),
+            MaxSize = new Vector2(16, 16),
+            TextureScale = new Vector2(0.3f, 0.3f),
+            VerticalAlignment = VAlignment.Center
+        });
 
         var capBox = new BoxContainer
         {
@@ -326,13 +343,31 @@ public sealed class AntagTokenWindow : DefaultWindow
             Text = "Лимит:",
             Modulate = Color.FromHex("#8b949e")
         });
-        _capLabel = new Label
+
+        var capValueContainer = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 4
+        };
+
+        _capValueLabel = new Label
         {
             Modulate = Color.FromHex("#adbac7")
         };
-        capBox.AddChild(_capLabel);
+        capValueContainer.AddChild(_capValueLabel);
+        capBox.AddChild(capValueContainer);
         infoRow.AddChild(capBox);
 
+        capValueContainer.AddChild(new TextureRect
+        {
+            Texture = _coinTexture,
+            MinSize = new Vector2(16, 16),
+            MaxSize = new Vector2(16, 16),
+            TextureScale = new Vector2(0.3f, 0.3f),
+            VerticalAlignment = VAlignment.Center
+        });
+
+        // В очереди (без монетки)
         var depositBox = new BoxContainer
         {
             Orientation = LayoutOrientation.Horizontal,

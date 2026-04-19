@@ -97,6 +97,9 @@ antag-store-role-xenomorph-description = Roundstart queue for the xenomorph infe
 antag-store-role-bingle-name = Bingle
 antag-store-role-bingle-description = Ghost role for a Bingle. Survival only.
 
+antag-store-role-clone-name = Paradox clone
+antag-store-role-clone-description = Ghost role for a Paradox clone.
+
 # Server (AntagTokenSystem)
 antag-tokens-online-reward = You received {$amount} ticket(s) for {$hours} hours on the server!
 antag-tokens-sponsor-bonus-popup = Sponsor bonus: +{$amount} tickets (tier {$tier})!

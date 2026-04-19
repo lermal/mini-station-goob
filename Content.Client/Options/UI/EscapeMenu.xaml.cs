@@ -51,10 +51,6 @@ namespace Content.Client.Options.UI
         {
             _consoleHost.ExecuteCommand("dailyrewardmenu");
         }
-        private void OpenAntagTokens()
-        {
-            _consoleHost.ExecuteCommand("antagtokenmenu");
-        }
         public EscapeMenu()
         {
             RobustXamlLoader.Load(this);
@@ -69,7 +65,6 @@ namespace Content.Client.Options.UI
             Discord.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://discord.gg/mini-station"));
             Telegram.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://t.me/mini_station"));
             DailyRewardsButton.OnPressed += _ => OpenDailyRewards();
-            AntagTokensButton.OnPressed += _ => OpenAntagTokens();
         }
     }
 }

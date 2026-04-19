@@ -22,16 +22,22 @@ public sealed class DailyRewardWindow : DefaultWindow
     private const string ClockIconPath = "/Textures/_Mini/Interface/Clock.png";
     private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
 
-    private static readonly Color WindowBackgroundColor = Color.FromHex("#0a0e17");
-    private static readonly Color HeroPanelColor = Color.FromHex("#1a233a").WithAlpha(0.4f);
-    private static readonly Color AccentColor = Color.FromHex("#898076");
-    private static readonly Color ClaimReadyColor = Color.FromHex("#2a9d8f");
-    private static readonly Color ClaimedCardColor = Color.FromHex("#1b2a3a").WithAlpha(0.35f);
-    private static readonly Color CurrentCardColor = Color.FromHex("#2a3d5c").WithAlpha(0.45f);
-    private static readonly Color FutureCardColor = Color.FromHex("#151e2c").WithAlpha(0.25f);
-    private static readonly Color ClaimedBorderColor = Color.FromHex("#2a9d8f").WithAlpha(0.15f);
-    private static readonly Color CurrentBorderColor = Color.FromHex("#e9c46a").WithAlpha(0.2f);
-    private static readonly Color FutureBorderColor = Color.FromHex("#6c7a9e").WithAlpha(0.1f);
+    private static readonly Color WindowBackgroundColor = Color.FromHex("#0f1115");
+    private static readonly Color HeroPanelColor = Color.FromHex("#1c1a24").WithAlpha(0.9f);
+    private static readonly Color AccentColor = Color.FromHex("#9a8fb5");
+    private static readonly Color ClaimReadyColor = Color.FromHex("#6b9e7a");
+    private static readonly Color TimePanelColor = Color.FromHex("#4a7a5c").WithAlpha(0.3f);
+    private static readonly Color PurchasedBorderColor = Color.FromHex("#4a7a5c").WithAlpha(0.15f);
+    private static readonly Color CardBackgroundColor = Color.FromHex("#201e28").WithAlpha(0.8f);
+    private static readonly Color CardBorderColor = Color.Transparent;
+    private static readonly Color PurchasedCardColor = Color.FromHex("#2d2a38").WithAlpha(0.85f);
+    private static readonly Color CurrentCardColor = Color.FromHex("#2c2a3a").WithAlpha(0.95f);
+    private static readonly Color CurrentBorderColor = Color.Transparent;
+
+    private static readonly Color FutureCardColor = CardBackgroundColor;
+    private static readonly Color FutureBorderColor = CardBorderColor;
+    private static readonly Color ClaimedCardColor = PurchasedCardColor;
+    private static readonly Color ClaimedBorderColor = PurchasedBorderColor;
 
     public event Action? OnClaimPressed;
 
@@ -166,7 +172,7 @@ public sealed class DailyRewardWindow : DefaultWindow
 
         var progressRatio = state.RequiredActiveTime <= TimeSpan.Zero
             ? 1f
-            : Math.Clamp((float) (state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
+            : Math.Clamp((float)(state.CurrentActiveTime.TotalSeconds / state.RequiredActiveTime.TotalSeconds), 0f, 1f);
 
         _activeProgressBar.MinValue = 0;
         _activeProgressBar.MaxValue = 100;
@@ -175,12 +181,12 @@ public sealed class DailyRewardWindow : DefaultWindow
         _activeProgressLabel.Text = progressRatio >= 1f
             ? Loc.GetString("daily-reward-window-active-ready")
             : Loc.GetString("daily-reward-window-active-progress",
-                ("current", Format(state.CurrentActiveTime)),
-                ("required", Format(state.RequiredActiveTime)));
+                ("current", FormatActiveProgress(state.CurrentActiveTime)),
+                ("required", FormatActiveProgress(state.RequiredActiveTime)));
 
         _cooldownLabel.Text = GetAvailabilityText(state);
         _expiryLabel.Text = state.HasLastClaim
-            ? Loc.GetString("daily-reward-window-expiry", ("time", Format(state.TimeUntilExpiration)))
+            ? Loc.GetString("daily-reward-window-expiry", ("time", FormatCooldown(state.TimeUntilExpiration)))
             : Loc.GetString("daily-reward-window-expiry-idle");
 
         _claimButton.Disabled = !state.CanClaim;
@@ -216,15 +222,47 @@ public sealed class DailyRewardWindow : DefaultWindow
             {
                 Text = state.CanClaim
                     ? Loc.GetString("daily-reward-card-timer-ready")
-                    : Loc.GetString("daily-reward-card-timer-wait", ("time", Format(state.TimeUntilNextClaim))),
-                Modulate = Color.FromHex("#dce8ff"),
+                    : Loc.GetString("daily-reward-card-timer-wait", ("time", FormatCooldown(state.TimeUntilNextClaim))),
+                StyleClasses = { "LabelHeading" },
+                Modulate = ClaimReadyColor,                     // текст зелёный
                 HorizontalAlignment = HAlignment.Center
             };
-            column.AddChild(CreateCenteredIconLabelRow(_clockTexture, timerLabel));
-        }
-        else
-        {
-            column.AddChild(new Control { MinSize = new Vector2(0, 20) });
+
+            var timerRow = new BoxContainer
+            {
+                Orientation = LayoutOrientation.Horizontal,
+                SeparationOverride = 6,
+                HorizontalAlignment = HAlignment.Center,
+                VerticalAlignment = VAlignment.Center
+            };
+            timerRow.AddChild(new TextureRect
+            {
+                Texture = _clockTexture,
+                MinSize = new Vector2(16, 16),
+                TextureScale = new Vector2(0.5f, 0.5f),
+                Stretch = TextureRect.StretchMode.KeepCentered,
+                VerticalAlignment = VAlignment.Center
+            });
+            timerRow.AddChild(timerLabel);
+
+            var timerPanel = new PanelContainer
+            {
+                Margin = new Thickness(0, 4, 0, 0),
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = TimePanelColor.WithAlpha(0.9f),
+                    BorderColor = PurchasedCardColor,
+                    BorderThickness = new Thickness(0),
+                    ContentMarginLeftOverride =24,
+                    ContentMarginTopOverride = 4,
+                    ContentMarginRightOverride =23,
+                    ContentMarginBottomOverride = 4
+                },
+                HorizontalAlignment = HAlignment.Center
+            };
+            timerPanel.AddChild(timerRow);
+
+            column.AddChild(timerPanel);
         }
 
         return column;
@@ -429,30 +467,56 @@ public sealed class DailyRewardWindow : DefaultWindow
         if (reward.HasReward)
         {
             var texture = TryGetRewardTexture(reward.IconPath) ?? _coinTexture;
-            box.AddChild(new TextureRect
-            {
-                Texture = texture,
-                MinSize = new Vector2(56, 56),
-                TextureScale = new Vector2(0.6f, 0.6f),
-                Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                HorizontalAlignment = HAlignment.Center
-            });
+            bool isCoinReward = reward.IconPath == CoinIconPath;
 
-            box.AddChild(new Label
+            if (isCoinReward)
             {
-                Text = Loc.GetString("daily-reward-card-token", ("name", reward.RewardName ?? "-")),
-                Modulate = AccentColor,
-                HorizontalAlignment = HAlignment.Center
-            });
-        }
-        else
-        {
-            box.AddChild(new Label
+                var row = new BoxContainer
+                {
+                    Orientation = LayoutOrientation.Horizontal,
+                    SeparationOverride = 4,
+                    HorizontalAlignment = HAlignment.Center,
+                    VerticalAlignment = VAlignment.Center
+                };
+
+                var amountText = reward.RewardName?.TrimStart('+') ?? "1";
+                row.AddChild(new Label
+                {
+                    Text = amountText,
+                    Modulate = AccentColor,
+                    HorizontalAlignment = HAlignment.Center,
+                    VerticalAlignment = VAlignment.Center
+                });
+
+                row.AddChild(new TextureRect
+                {
+                    Texture = texture,
+                    MinSize = new Vector2(24, 24),
+                    TextureScale = new Vector2(0.4f, 0.4f),
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    VerticalAlignment = VAlignment.Center
+                });
+
+                box.AddChild(row);
+            }
+            else
             {
-                Text = Loc.GetString("daily-reward-card-step"),
-                Modulate = Color.White,
-                HorizontalAlignment = HAlignment.Center
-            });
+                box.AddChild(new TextureRect
+                {
+                    Texture = texture,
+                    MinSize = new Vector2(56, 56),
+                    TextureScale = new Vector2(0.6f, 0.6f),
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    HorizontalAlignment = HAlignment.Center
+                });
+
+                box.AddChild(new Label
+                {
+                    Text = Loc.GetString("daily-reward-card-token", ("name", reward.RewardName ?? "-")),
+                    Modulate = AccentColor,
+                    HorizontalAlignment = HAlignment.Center
+                });
+            }
         }
 
         return panel;
@@ -546,19 +610,25 @@ public sealed class DailyRewardWindow : DefaultWindow
         return DailyRewardCardState.Future;
     }
 
-    private static string Format(TimeSpan span)
+    private static string FormatActiveProgress(TimeSpan span)
     {
         if (span <= TimeSpan.Zero)
-            return "00:00:00";
+            return "00:00";
+        return $"{span.Minutes:00}:{span.Seconds:00}";
+    }
 
-        var totalHours = (int) span.TotalHours;
-        return $"{totalHours:00}:{span.Minutes:00}:{span.Seconds:00}";
+    private static string FormatCooldown(TimeSpan span)
+    {
+        if (span <= TimeSpan.Zero)
+            return "00:00";
+        var totalHours = (int)span.TotalHours;
+        return $"{totalHours:00}:{span.Minutes:00}";
     }
 
     private static string GetAvailabilityText(DailyRewardUpdateMessage state)
     {
         if (state.TimeUntilNextClaim > TimeSpan.Zero)
-            return Loc.GetString("daily-reward-window-cooldown-wait", ("time", Format(state.TimeUntilNextClaim)));
+            return Loc.GetString("daily-reward-window-cooldown-wait", ("time", FormatCooldown(state.TimeUntilNextClaim)));
         if (state.CurrentActiveTime < state.RequiredActiveTime)
             return Loc.GetString("daily-reward-window-active-needed");
         return Loc.GetString("daily-reward-window-cooldown-ready");

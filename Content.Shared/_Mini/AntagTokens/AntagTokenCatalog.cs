@@ -38,6 +38,7 @@ public static class AntagTokenCatalog
     public const string ShadowlingRole = "shadowling";
     public const string XenomorphRole = "xenomorph";
     public const string BingleRole = "bingle";
+    public const string ParadoxCloneRole = "paradox_clone";
 
     public static readonly (TimeSpan Threshold, int RewardAmount)[] OnlineRewardMilestones =
     [
@@ -48,11 +49,11 @@ public static class AntagTokenCatalog
 
     private static readonly Dictionary<int, int> SponsorMonthlyCaps = new()
     {
-        [1] = 10,
-        [2] = 15,
-        [3] = 20,
-        [4] = 45,
-        [5] = 60,
+        [1] = 20,
+        [2] = 30,
+        [3] = 40,
+        [4] = 60,
+        [5] = 100,
     };
 
     public static int? GetSponsorMonthlyCap(int sponsorLevel)

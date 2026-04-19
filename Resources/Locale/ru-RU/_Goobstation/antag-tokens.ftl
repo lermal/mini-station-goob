@@ -3,12 +3,12 @@
 
 antag-token-window-loading = Загрузка…
 antag-token-window-title = Магазин антагонистов
-antag-token-window-subtitle = Копи монеты за стрики и онлайн, покупай роли и вставай в очередь на старт прямо из лобби.
+antag-token-window-subtitle = Копи монеты за время на сервере, покупай антагонистов прямо из лобби.
 antag-token-window-action-title = Текущая очередь
 antag-token-window-clear = Выйти из очереди
-antag-token-window-balance = Монет на счету: {$amount}
-antag-token-window-cap = За месяц получено: {$earned} / {$cap}
-antag-token-window-cap-free = За месяц получено: {$earned}
+antag-token-window-balance = {$amount}
+antag-token-window-cap = {$earned} / {$cap}
+antag-token-window-cap-free = {$earned}
 antag-token-window-deposit = {$role}
 antag-token-window-no-deposit = Вы нигде не стоите.
 antag-token-window-role-title = {$name} — {$cost} билетов
@@ -58,7 +58,7 @@ antag-store-role-initial-infected-description = Очередь на нулево
 antag-store-role-revenant-name = Ревенант
 antag-store-role-revenant-description = Вызов события ревенанта. Роль-призрак достанется только вам. Доступен во всех режимах кроме расширенного.
 
-antag-store-role-yao-name = Яо
+antag-store-role-yao-name = Оперативник
 antag-store-role-yao-description = Вызов события яо. Формат одинокого оперативника. Роль только ваша. Доступен в яо и выживании.
 
 antag-store-role-headrev-name = Глава революции
@@ -95,6 +95,8 @@ antag-store-role-xenomorph-name = Ксеноморф
 antag-store-role-xenomorph-description = Очередь на раундстартовое заражение ксеноморфами. Только выживание.
 antag-store-role-bingle-name = Бингл
 antag-store-role-bingle-description = Гост-роль бингла. Только выживание.
+antag-store-role-clone-name = Парадоксальный клон
+antag-store-role-clone-description = Гост роль парадоксального клона.
 
 # Server (AntagTokenSystem)
 antag-tokens-online-reward = Вы получили {$amount} билет(ов) за {$hours} ч. на сервере!

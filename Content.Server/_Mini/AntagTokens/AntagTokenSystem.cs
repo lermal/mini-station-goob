@@ -67,11 +67,11 @@ public sealed class AntagTokenSystem : EntitySystem
     {
         return sponsorLevel switch
         {
-            1 => 10,
-            2 => 20,
-            3 => 30,
-            4 => 45,
-            5 => 60,
+            1 => 20,
+            2 => 30,
+            3 => 40,
+            4 => 60,
+            5 => 100,
             _ => 0
         };
     }

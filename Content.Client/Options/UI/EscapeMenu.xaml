@@ -35,7 +35,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         <Button Name="Boosty" Text="Бусти"/>
         <Button Name="Discord" Text="Дискорд"/>
         <Button Name="DailyRewardsButton" Text="Награды"/>
-        <Button Name="AntagTokensButton" Text="Антагонисты"/>
         <Button Name="Telegram" Text="Телеграм"/>
         <Button Name="AuthorizationDiscordButton" StyleClasses="ButtonColorYellow" Access="Public" Text="Авторизация"/>
         <PanelContainer StyleClasses="LowDivider" Margin="0 2.5 0 2.5" />
