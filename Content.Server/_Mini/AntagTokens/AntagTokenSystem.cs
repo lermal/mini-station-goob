@@ -1003,7 +1003,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (!_jobs.TryGetAllDepartments(jobId.Value, out var departments))
             return false;
 
-        return departments.Any(d => d.ID is "Command" or "Security");
+        return departments.Any(d => d.ID is "Command" or "Security" or "Silicon");
     }
 
     private bool TryGetRoleAvailability(AntagRoleDefinition role, NetUserId userId, bool purchased, out string? statusLocKey)
