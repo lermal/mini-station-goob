@@ -28,6 +28,7 @@ using Robust.Shared.Timing;
 using Content.Shared.Chat;
 using Content.Server.Chat.Systems;
 using Content.Server.Ghost.Roles;
+using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
 using Robust.Shared.Asynchronous;
@@ -54,14 +55,15 @@ public sealed class AntagTokenSystem : EntitySystem
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
     private readonly Dictionary<NetUserId, OnlineRewardState> _onlineRewards = new();
-    private readonly HashSet<NetUserId> _roundGrantedAntags = new();
+    private readonly HashSet<NetUserId> _roundGrantedLobbyAntag = new();
+    private readonly HashSet<NetUserId> _roundGrantedGhostRule = new();
     private float _databaseSyncAccumulator;
     private float _lobbyDepositCapacityEnforceAccumulator;
     private bool _databaseSyncPassRunning;
     private bool _storeEnabled = true;
     private const float DatabaseSyncInterval = 15f;
-    private const int LobbyAntagSlotsPlayersPerAntag = 10;
-    private bool _enforcingLobbyDepositCapacity;
+    private const int SharedTokenSlotsPlayersPerSlot = 10;
+    private bool _enforcingSharedTokenSlotCapacity;
     private static readonly HashSet<string> BlockedRoundstartRolePresets = new(StringComparer.OrdinalIgnoreCase)
     {
         "Extended",
@@ -96,6 +98,7 @@ public sealed class AntagTokenSystem : EntitySystem
         SubscribeLocalEvent<RulePlayerJobsAssignedEvent>(OnRoundstartJobsAssigned, after: new[] { typeof(AntagSelectionSystem) });
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
         SubscribeLocalEvent<GhostRoleComponent, GhostRoleRegisteredEvent>(OnGhostRoleRegistered);
+        SubscribeLocalEvent<GhostRoleComponent, TakeGhostRoleEvent>(OnGhostRoleTakenForToken, after: new[] { typeof(GhostRoleSystem) });
 
         _userDb.AddOnLoadPlayer(LoadPlayerData);
         _userDb.AddOnFinishLoad(OnPlayerDatabaseLoadFinished);
@@ -154,7 +157,7 @@ public sealed class AntagTokenSystem : EntitySystem
         if (_lobbyDepositCapacityEnforceAccumulator <= 0f)
         {
             _lobbyDepositCapacityEnforceAccumulator = 2f;
-            EnforceLobbyDepositCapacity();
+            EnforceSharedTokenSlotCapacity();
         }
     }
 
@@ -352,21 +355,29 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
         }
 
-        if (state.PendingGhostAutoRoleId != null && HasActiveAntagMind(session.UserId))
+        if (state.PendingGhostAutoRoleId != null && StillOccupiesAntagTrack(session.UserId))
         {
             ClearPendingGhostAuto(state);
             PersistState(session.UserId, state);
             SendState(session.UserId);
         }
 
-        if (HasReachedRoundAntagLimit(session.UserId))
+        if (role.Mode == AntagPurchaseMode.LobbyDeposit && StillOccupiesAntagTrack(session.UserId))
         {
             error = Loc.GetString("antag-tokens-error-one-antag-per-round");
             return false;
         }
 
+        if (role.Mode == AntagPurchaseMode.GhostRule && StillOccupiesGhostRuleGrant(session.UserId))
+        {
+            error = Loc.GetString("antag-tokens-error-round-limit");
+            return false;
+        }
+
         var cache = BuildSendStateCache(session.UserId);
-        if (!TryGetRoleAvailability(role, session.UserId, state.PendingDepositRoleId == role.Id, out var statusLocKey, in cache))
+        var holdsThisCap = (role.Mode == AntagPurchaseMode.LobbyDeposit && state.PendingDepositRoleId == role.Id)
+            || (role.Mode == AntagPurchaseMode.GhostRule && state.PendingGhostAutoRoleId == role.Id);
+        if (!TryGetRoleAvailability(role, session.UserId, holdsThisCap, out var statusLocKey, in cache))
         {
             error = statusLocKey == null ? Loc.GetString("antag-tokens-error-role-unavailable-generic") : Loc.GetString(statusLocKey);
             return false;
@@ -434,6 +445,7 @@ public sealed class AntagTokenSystem : EntitySystem
         {
             SpendForRole(state, role, useRoleCredit);
             state.PendingGhostAutoRoleId = role.Id;
+            state.PendingGhostAutoQueuedAtUtc = DateTime.UtcNow;
             state.PendingGhostAutoUsedRoleCredit = useRoleCredit;
         }
 
@@ -475,7 +487,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
         }
 
-        if (HasActiveAntagMind(userId))
+        if (StillOccupiesAntagTrack(userId))
         {
             error = Loc.GetString("antag-tokens-error-deposit-consumed");
             return false;
@@ -560,6 +572,7 @@ public sealed class AntagTokenSystem : EntitySystem
                         token.Amount > 0)
                     {
                         state.PendingGhostAutoRoleId = token.TokenId["ghost-auto-pending:".Length..];
+                        state.PendingGhostAutoQueuedAtUtc = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
                     }
                     else if (token.TokenId.StartsWith("role-credit:", StringComparison.Ordinal) &&
                         token.Amount > 0)
@@ -602,6 +615,8 @@ public sealed class AntagTokenSystem : EntitySystem
         if (a.PendingDepositUsedRoleCredit != b.PendingDepositUsedRoleCredit)
             return false;
         if (a.PendingGhostAutoRoleId != b.PendingGhostAutoRoleId)
+            return false;
+        if (a.PendingGhostAutoQueuedAtUtc != b.PendingGhostAutoQueuedAtUtc)
             return false;
         if (a.PendingGhostAutoUsedRoleCredit != b.PendingGhostAutoUsedRoleCredit)
             return false;
@@ -778,7 +793,8 @@ public sealed class AntagTokenSystem : EntitySystem
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
-        _roundGrantedAntags.Clear();
+        _roundGrantedLobbyAntag.Clear();
+        _roundGrantedGhostRule.Clear();
         foreach (var (userId, state) in _states)
         {
             if (state.PendingGhostAutoRoleId == null)
@@ -834,7 +850,7 @@ public sealed class AntagTokenSystem : EntitySystem
             state.PendingDepositRoleId = null;
             state.PendingDepositQueuedAtUtc = null;
             state.PendingDepositUsedRoleCredit = false;
-            MarkRoundAntagGranted(session.UserId);
+            MarkLobbyTokenAntagGranted(session.UserId);
             PersistState(session.UserId, state);
             SendState(session.UserId);
             ShowPopup(session, Loc.GetString("antag-tokens-popup-role-assigned", ("role", Loc.GetString(role.NameLocKey))));
@@ -925,21 +941,68 @@ public sealed class AntagTokenSystem : EntitySystem
         return TryComp<GhostComponent>(attached, out var ghost) && ghost.CanTakeGhostRoles;
     }
 
-    private bool HasActiveAntagMind(NetUserId userId)
+    private bool StillOccupiesAntagTrack(NetUserId userId)
     {
-        return _playerManager.TryGetSessionById(userId, out var session) &&
-               _mind.TryGetMind(session, out var mindId, out _) &&
-               _role.MindIsAntagonist(mindId);
+        if (!_roundGrantedLobbyAntag.Contains(userId))
+            return false;
+
+        if (!_playerManager.TryGetSessionById(userId, out var session))
+            return false;
+
+        if (!_mind.TryGetMind(session, out var mindId, out var mindComp))
+            return false;
+
+        if (!_role.MindIsAntagonist(mindId))
+            return false;
+
+        return !_mind.IsCharacterDeadIc(mindComp);
     }
 
-    private bool HasReachedRoundAntagLimit(NetUserId userId)
+    private bool StillOccupiesGhostRuleGrant(NetUserId userId)
     {
-        return _roundGrantedAntags.Contains(userId) || HasActiveAntagMind(userId);
+        if (!_roundGrantedGhostRule.Contains(userId))
+            return false;
+
+        if (!_playerManager.TryGetSessionById(userId, out var session))
+            return false;
+
+        if (!_mind.TryGetMind(session, out _, out var mindComp))
+            return false;
+
+        return !_mind.IsCharacterDeadIc(mindComp);
     }
 
-    private void MarkRoundAntagGranted(NetUserId userId)
+    private bool CountsTowardAntagTrackSlot(NetUserId userId)
     {
-        _roundGrantedAntags.Add(userId);
+        if (_states.TryGetValue(userId, out var state))
+        {
+            if (state.PendingDepositRoleId != null &&
+                _listings.TryGetListing(state.PendingDepositRoleId, out var depListing) &&
+                depListing.Mode == AntagPurchaseMode.LobbyDeposit)
+            {
+                return true;
+            }
+        }
+
+        return StillOccupiesAntagTrack(userId);
+    }
+
+    private bool CountsTowardGhostTrackSlot(NetUserId userId)
+    {
+        if (_states.TryGetValue(userId, out var state) && state.PendingGhostAutoRoleId != null)
+            return true;
+
+        return StillOccupiesGhostRuleGrant(userId);
+    }
+
+    private void MarkLobbyTokenAntagGranted(NetUserId userId)
+    {
+        _roundGrantedLobbyAntag.Add(userId);
+    }
+
+    private void MarkGhostRuleTokenGranted(NetUserId userId)
+    {
+        _roundGrantedGhostRule.Add(userId);
     }
 
     private bool TryAssignReservedRoundstartRole(ICommonSession session, AntagRoleDefinition role, out string? error)
@@ -964,7 +1027,7 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
         }
 
-        if (HasReachedRoundAntagLimit(session.UserId))
+        if (StillOccupiesAntagTrack(session.UserId))
         {
             error = Loc.GetString("antag-tokens-error-round-limit");
             return false;
@@ -1067,7 +1130,13 @@ public sealed class AntagTokenSystem : EntitySystem
             return false;
         }
 
-        if (role.Mode == AntagPurchaseMode.LobbyDeposit && !purchased && IsLobbyDepositGloballySaturated(in cache))
+        if (role.Mode == AntagPurchaseMode.LobbyDeposit && !purchased && IsAntagTrackGloballySaturated(in cache))
+        {
+            statusLocKey = "antag-store-status-saturated";
+            return false;
+        }
+
+        if (role.Mode == AntagPurchaseMode.GhostRule && !purchased && IsGhostTrackGloballySaturated(in cache))
         {
             statusLocKey = "antag-store-status-saturated";
             return false;
@@ -1078,20 +1147,27 @@ public sealed class AntagTokenSystem : EntitySystem
 
     private AntagSendStateCache BuildSendStateCache(NetUserId userId)
     {
-        EnforceLobbyDepositCapacity();
+        EnforceSharedTokenSlotCapacity();
 
         var playerCount = _playerManager.PlayerCount;
         var inRound = _gameTicker.RunLevel == GameRunLevel.InRound;
         var inPreRound = _gameTicker.RunLevel == GameRunLevel.PreRoundLobby;
         var elapsed = inRound ? (int) _gameTicker.RoundDuration().TotalSeconds : 0;
         var roundstartBlocked = IsRoundstartRoleBlockedByPreset();
-        var maxDeposits = Math.Max(1, playerCount / LobbyAntagSlotsPlayersPerAntag);
+        var maxSlots = Math.Max(1, playerCount / SharedTokenSlotsPlayersPerSlot);
         var depositCounts = new Dictionary<string, int>();
-        var externalLobbyDepositTotal = 0;
+        var externalAntagSlotTotal = 0;
+        var externalGhostSlotTotal = 0;
         foreach (var kv in _states)
         {
             if (kv.Key == userId)
                 continue;
+
+            if (CountsTowardAntagTrackSlot(kv.Key))
+                externalAntagSlotTotal++;
+
+            if (CountsTowardGhostTrackSlot(kv.Key))
+                externalGhostSlotTotal++;
 
             var rid = kv.Value.PendingDepositRoleId;
             if (rid == null)
@@ -1101,58 +1177,118 @@ public sealed class AntagTokenSystem : EntitySystem
                 continue;
 
             depositCounts[rid] = depositCounts.GetValueOrDefault(rid) + 1;
-            externalLobbyDepositTotal++;
         }
 
-        return new AntagSendStateCache(playerCount, roundstartBlocked, elapsed, inRound, inPreRound, maxDeposits, externalLobbyDepositTotal, depositCounts);
+        return new AntagSendStateCache(playerCount, roundstartBlocked, elapsed, inRound, inPreRound, maxSlots, externalAntagSlotTotal, externalGhostSlotTotal, depositCounts);
     }
 
-    private void EnforceLobbyDepositCapacity()
+    private void EnforceSharedTokenSlotCapacity()
     {
-        if (_enforcingLobbyDepositCapacity)
+        if (_enforcingSharedTokenSlotCapacity)
             return;
 
-        _enforcingLobbyDepositCapacity = true;
+        _enforcingSharedTokenSlotCapacity = true;
         try
         {
-            var max = Math.Max(1, _playerManager.PlayerCount / LobbyAntagSlotsPlayersPerAntag);
-            var holders = new List<(NetUserId UserId, DateTime QueuedAt)>();
-            foreach (var (userId, state) in _states)
-            {
-                if (state.PendingDepositRoleId == null)
-                    continue;
-
-                if (!_listings.TryGetListing(state.PendingDepositRoleId, out var role) || role.Mode != AntagPurchaseMode.LobbyDeposit)
-                    continue;
-
-                var queued = state.PendingDepositQueuedAtUtc ?? DateTime.MinValue;
-                holders.Add((userId, queued));
-            }
-
-            if (holders.Count <= max)
-                return;
-
-            holders.Sort(static (a, b) => a.QueuedAt.CompareTo(b.QueuedAt));
-
-            for (var i = max; i < holders.Count; i++)
-            {
-                var uid = holders[i].UserId;
-                if (!_states.TryGetValue(uid, out var state))
-                    continue;
-
-                RefundPendingDeposit(uid, state);
-                PersistState(uid, state);
-                SendState(uid);
-
-                if (_playerManager.TryGetSessionById(uid, out var session))
-                {
-                    ShowPopup(session, Loc.GetString("antag-tokens-popup-deposit-refunded-queue-cap"));
-                }
-            }
+            var max = Math.Max(1, _playerManager.PlayerCount / SharedTokenSlotsPlayersPerSlot);
+            EnforceAntagTrackPending(max);
+            EnforceGhostTrackPending(max);
         }
         finally
         {
-            _enforcingLobbyDepositCapacity = false;
+            _enforcingSharedTokenSlotCapacity = false;
+        }
+    }
+
+    private void EnforceAntagTrackPending(int max)
+    {
+        var living = 0;
+        foreach (var uid in _roundGrantedLobbyAntag)
+        {
+            if (StillOccupiesAntagTrack(uid))
+                living++;
+        }
+
+        var pending = new List<(NetUserId UserId, DateTime QueuedAt)>();
+        foreach (var (userId, state) in _states)
+        {
+            if (state.PendingDepositRoleId == null)
+                continue;
+
+            if (!_listings.TryGetListing(state.PendingDepositRoleId, out var depRole) ||
+                depRole.Mode != AntagPurchaseMode.LobbyDeposit)
+            {
+                continue;
+            }
+
+            pending.Add((userId, state.PendingDepositQueuedAtUtc ?? DateTime.MinValue));
+        }
+
+        pending.Sort(static (a, b) => a.QueuedAt.CompareTo(b.QueuedAt));
+        var slotForPending = max - living;
+        if (slotForPending < 0)
+            slotForPending = 0;
+
+        if (pending.Count <= slotForPending)
+            return;
+
+        for (var i = slotForPending; i < pending.Count; i++)
+        {
+            var uid = pending[i].UserId;
+            if (!_states.TryGetValue(uid, out var state) || state.PendingDepositRoleId == null)
+                continue;
+
+            RefundPendingDeposit(uid, state);
+            PersistState(uid, state);
+            SendState(uid);
+
+            if (_playerManager.TryGetSessionById(uid, out var session))
+            {
+                ShowPopup(session, Loc.GetString("antag-tokens-popup-deposit-refunded-queue-cap"));
+            }
+        }
+    }
+
+    private void EnforceGhostTrackPending(int max)
+    {
+        var living = 0;
+        foreach (var uid in _roundGrantedGhostRule)
+        {
+            if (StillOccupiesGhostRuleGrant(uid))
+                living++;
+        }
+
+        var pending = new List<(NetUserId UserId, DateTime QueuedAt)>();
+        foreach (var (userId, state) in _states)
+        {
+            if (state.PendingGhostAutoRoleId == null)
+                continue;
+
+            pending.Add((userId, state.PendingGhostAutoQueuedAtUtc ?? DateTime.MinValue));
+        }
+
+        pending.Sort(static (a, b) => a.QueuedAt.CompareTo(b.QueuedAt));
+        var slotForPending = max - living;
+        if (slotForPending < 0)
+            slotForPending = 0;
+
+        if (pending.Count <= slotForPending)
+            return;
+
+        for (var i = slotForPending; i < pending.Count; i++)
+        {
+            var uid = pending[i].UserId;
+            if (!_states.TryGetValue(uid, out var state) || state.PendingGhostAutoRoleId == null)
+                continue;
+
+            RefundPendingGhostAuto(uid, state);
+            PersistState(uid, state);
+            SendState(uid);
+
+            if (_playerManager.TryGetSessionById(uid, out var session))
+            {
+                ShowPopup(session, Loc.GetString("antag-tokens-popup-deposit-refunded-queue-cap"));
+            }
         }
     }
 
@@ -1164,9 +1300,14 @@ public sealed class AntagTokenSystem : EntitySystem
         return Math.Max(0, role.MinimumTimeFromRoundStart - cache.RoundElapsedSeconds);
     }
 
-    private static bool IsLobbyDepositGloballySaturated(in AntagSendStateCache cache)
+    private static bool IsAntagTrackGloballySaturated(in AntagSendStateCache cache)
     {
-        return cache.ExternalLobbyDepositTotal >= cache.MaxLobbyDeposits;
+        return cache.ExternalAntagSlotTotal >= cache.MaxSharedTokenSlots;
+    }
+
+    private static bool IsGhostTrackGloballySaturated(in AntagSendStateCache cache)
+    {
+        return cache.ExternalGhostSlotTotal >= cache.MaxSharedTokenSlots;
     }
 
     private readonly struct AntagSendStateCache
@@ -1176,8 +1317,9 @@ public sealed class AntagTokenSystem : EntitySystem
         public readonly int RoundElapsedSeconds;
         public readonly bool InRound;
         public readonly bool InPreRoundLobby;
-        public readonly int MaxLobbyDeposits;
-        public readonly int ExternalLobbyDepositTotal;
+        public readonly int MaxSharedTokenSlots;
+        public readonly int ExternalAntagSlotTotal;
+        public readonly int ExternalGhostSlotTotal;
         public readonly Dictionary<string, int> ExternalDepositCountByRole;
 
         public AntagSendStateCache(
@@ -1186,8 +1328,9 @@ public sealed class AntagTokenSystem : EntitySystem
             int roundElapsedSeconds,
             bool inRound,
             bool inPreRoundLobby,
-            int maxLobbyDeposits,
-            int externalLobbyDepositTotal,
+            int maxSharedTokenSlots,
+            int externalAntagSlotTotal,
+            int externalGhostSlotTotal,
             Dictionary<string, int> externalDepositCountByRole)
         {
             PlayerCount = playerCount;
@@ -1195,8 +1338,9 @@ public sealed class AntagTokenSystem : EntitySystem
             RoundElapsedSeconds = roundElapsedSeconds;
             InRound = inRound;
             InPreRoundLobby = inPreRoundLobby;
-            MaxLobbyDeposits = maxLobbyDeposits;
-            ExternalLobbyDepositTotal = externalLobbyDepositTotal;
+            MaxSharedTokenSlots = maxSharedTokenSlots;
+            ExternalAntagSlotTotal = externalAntagSlotTotal;
+            ExternalGhostSlotTotal = externalGhostSlotTotal;
             ExternalDepositCountByRole = externalDepositCountByRole;
         }
     }
@@ -1215,16 +1359,23 @@ public sealed class AntagTokenSystem : EntitySystem
         var roles = new List<AntagTokenRoleEntry>(_listings.ListingCount);
         foreach (var role in _listings.ListingsOrdered)
         {
-            var purchased = state.PendingDepositRoleId == role.Id;
+            var purchased = (role.Mode == AntagPurchaseMode.LobbyDeposit && state.PendingDepositRoleId == role.Id)
+                || (role.Mode == AntagPurchaseMode.GhostRule && state.PendingGhostAutoRoleId == role.Id);
+            var holdsCapForAvailability = purchased;
             var freeUnlocks = state.RoleCredits.GetValueOrDefault(role.Id);
             var canAfford = freeUnlocks > 0 || state.Balance >= role.Cost;
-            var available = TryGetRoleAvailability(role, userId, purchased, out var statusLocKey, in cache);
-            var saturated = role.Mode == AntagPurchaseMode.LobbyDeposit && !purchased && IsLobbyDepositGloballySaturated(in cache);
+            var available = TryGetRoleAvailability(role, userId, holdsCapForAvailability, out var statusLocKey, in cache);
+            var saturated = role.Mode == AntagPurchaseMode.LobbyDeposit && !holdsCapForAvailability &&
+                IsAntagTrackGloballySaturated(in cache)
+                || role.Mode == AntagPurchaseMode.GhostRule && !holdsCapForAvailability &&
+                IsGhostTrackGloballySaturated(in cache);
             var cooldownRemaining = GetCooldownRemaining(role, in cache);
 
             if (purchased)
                 statusLocKey = "antag-store-status-deposited";
             else if (state.PendingDepositRoleId != null && role.Mode == AntagPurchaseMode.LobbyDeposit)
+                statusLocKey ??= "antag-store-status-has-other-deposit";
+            else if (state.PendingGhostAutoRoleId != null && role.Mode == AntagPurchaseMode.GhostRule && state.PendingGhostAutoRoleId != role.Id)
                 statusLocKey ??= "antag-store-status-has-other-deposit";
             else if (!canAfford)
                 statusLocKey ??= "antag-store-status-not-enough";
@@ -1434,8 +1585,37 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         public DateTime? PendingDepositQueuedAtUtc { get; set; }
         public bool PendingDepositUsedRoleCredit { get; set; }
         public string? PendingGhostAutoRoleId { get; set; }
+        public DateTime? PendingGhostAutoQueuedAtUtc { get; set; }
         public bool PendingGhostAutoUsedRoleCredit { get; set; }
         public Dictionary<string, int> RoleCredits { get; } = new();
+    }
+
+    private void OnGhostRoleTakenForToken(EntityUid uid, GhostRoleComponent _, ref TakeGhostRoleEvent args)
+    {
+        if (!args.TookRole)
+            return;
+
+        var session = args.Player;
+        if (!_states.TryGetValue(session.UserId, out var state))
+            return;
+
+        if (state.PendingGhostAutoRoleId == null)
+            return;
+
+        if (!_listings.TryGetListing(state.PendingGhostAutoRoleId, out var listing) ||
+            listing.Mode != AntagPurchaseMode.GhostRule ||
+            string.IsNullOrEmpty(listing.GhostAutoJoinEntityProto))
+        {
+            return;
+        }
+
+        if (MetaData(uid).EntityPrototype?.ID != listing.GhostAutoJoinEntityProto)
+            return;
+
+        ClearPendingGhostAuto(state);
+        MarkGhostRuleTokenGranted(session.UserId);
+        PersistState(session.UserId, state);
+        SendState(session.UserId);
     }
 
     private void OnGhostRoleRegistered(Entity<GhostRoleComponent> ent, ref GhostRoleRegisteredEvent args)
@@ -1479,7 +1659,12 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
             candidates.Add(session);
         }
 
-        candidates.Sort(static (a, b) => string.CompareOrdinal(a.UserId.ToString(), b.UserId.ToString()));
+        candidates.Sort((a, b) =>
+        {
+            var ta = _states.TryGetValue(a.UserId, out var sa) ? sa.PendingGhostAutoQueuedAtUtc : null;
+            var tb = _states.TryGetValue(b.UserId, out var sb) ? sb.PendingGhostAutoQueuedAtUtc : null;
+            return (ta ?? DateTime.MinValue).CompareTo(tb ?? DateTime.MinValue);
+        });
 
         foreach (var session in candidates)
         {
@@ -1510,7 +1695,6 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         if (ghostRole.RaffleConfig != null)
         {
             _ghostRoles.Request(session, ghostRole.Identifier);
-            ClearPendingGhostAuto(state);
             PersistState(session.UserId, state);
             SendState(session.UserId);
             return;
@@ -1518,8 +1702,6 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
 
         if (_ghostRoles.Takeover(session, ghostRole.Identifier))
         {
-            ClearPendingGhostAuto(state);
-            MarkRoundAntagGranted(session.UserId);
             PersistState(session.UserId, state);
             SendState(session.UserId);
             Logger.InfoS("AntagTokens", $"Ghost auto-join takeover ok: user={session.Name}");
@@ -1535,6 +1717,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
     private static void ClearPendingGhostAuto(PlayerTokenState state)
     {
         state.PendingGhostAutoRoleId = null;
+        state.PendingGhostAutoQueuedAtUtc = null;
         state.PendingGhostAutoUsedRoleCredit = false;
     }
 
