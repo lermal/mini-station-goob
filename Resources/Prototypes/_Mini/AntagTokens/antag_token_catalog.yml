@@ -37,7 +37,7 @@
       gameRuleId: TokenNinjaSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 2400
 
     - id: dragon
       nameLocKey: antag-store-role-dragon-name
@@ -89,7 +89,7 @@
       gameRuleId: TokenRevenantSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 3600
 
     - id: yao
       nameLocKey: antag-store-role-yao-name
@@ -103,7 +103,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 5400
 
     - id: headrev
       nameLocKey: antag-store-role-headrev-name
@@ -152,7 +152,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 30
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 5400
 
     - id: wizard
       nameLocKey: antag-store-role-wizard-name
@@ -165,7 +165,7 @@
       gameRuleId: TokenWizard
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumTimeFromRoundStart: 1800
+      minimumTimeFromRoundStart: 5400
 
     - id: slaughter_demon
       nameLocKey: antag-store-role-slaughter-demon-name
@@ -179,7 +179,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 3600
 
     - id: slasher
       nameLocKey: antag-store-role-slasher-name
@@ -193,7 +193,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 3600
 
     - id: changeling
       nameLocKey: antag-store-role-changeling-name
@@ -210,7 +210,7 @@
     - id: heretic
       nameLocKey: antag-store-role-heretic-name
       descriptionLocKey: antag-store-role-heretic-description
-      cost: 6
+      cost: 8
       iconPath: /Textures/_Mini/Interface/Antags/heretic.png
       mode: LobbyDeposit
       antagId: Heretic
@@ -255,7 +255,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 2400
 
     - id: paradox_clone
       nameLocKey: antag-store-role-clone-name
