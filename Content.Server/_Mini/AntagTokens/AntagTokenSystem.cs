@@ -22,6 +22,7 @@ using Content.Shared.Ghost;
 using Content.Shared.Roles;
 using Robust.Server.Player;
 using Robust.Shared.Enums;
+using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
@@ -1050,6 +1051,13 @@ public sealed class AntagTokenSystem : EntitySystem
 
         var chosenDefinition = definition ?? throw new InvalidOperationException("Matching antag definition was null after successful lookup.");
         _antagSelection.MakeAntag((ruleEntity, selection), session, chosenDefinition);
+
+        if (IsXenomorphTokenRole(role) &&
+            !EnsureSessionHasXenomorphBody(session, out error))
+        {
+            return false;
+        }
+
         return true;
     }
 
@@ -1068,6 +1076,67 @@ public sealed class AntagTokenSystem : EntitySystem
         }
 
         definition = null;
+        return false;
+    }
+
+    private static bool IsXenomorphTokenRole(AntagRoleDefinition role)
+    {
+        return role.Id == "xenomorph" ||
+               role.AntagId == "XenomorphsInfestationRoundstart";
+    }
+
+    private bool EnsureSessionHasXenomorphBody(ICommonSession session, out string? error)
+    {
+        error = null;
+
+        if (session.AttachedEntity is { Valid: true } attached &&
+            HasComp<Content.Shared._White.Xenomorphs.Xenomorph.XenomorphComponent>(attached))
+        {
+            return true;
+        }
+
+        if (!_mind.TryGetMind(session, out var mindId, out _))
+        {
+            error = Loc.GetString("antag-tokens-error-no-entity");
+            return false;
+        }
+
+        EntityCoordinates coords;
+        EntityUid? oldBody = null;
+        if (session.AttachedEntity is { Valid: true } body)
+        {
+            oldBody = body;
+            coords = Transform(body).Coordinates;
+        }
+        else if (!TryGetXenomorphSpawnCoordinates(out coords))
+        {
+            error = Loc.GetString("antag-tokens-error-assign-failed-refund");
+            return false;
+        }
+
+        var larva = Spawn("MobXenomorphLarva", coords);
+        _transform.AttachToGridOrMap(larva);
+        _mind.TransferTo(mindId, larva, ghostCheckOverride: true);
+
+        if (oldBody is { } uid && uid != larva)
+            QueueDel(uid);
+
+        return true;
+    }
+
+    private bool TryGetXenomorphSpawnCoordinates(out EntityCoordinates coordinates)
+    {
+        var query = EntityQueryEnumerator<MetaDataComponent, TransformComponent>();
+        while (query.MoveNext(out _, out var meta, out var xform))
+        {
+            if (meta.EntityPrototype?.ID != "SpawnPointGhostXenomorph")
+                continue;
+
+            coordinates = xform.Coordinates;
+            return true;
+        }
+
+        coordinates = default;
         return false;
     }
 
