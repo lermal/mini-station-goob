@@ -33,6 +33,7 @@ using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Log;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server._Mini.AntagTokens;
 
@@ -51,6 +52,7 @@ public sealed class AntagTokenSystem : EntitySystem
     [Dependency] private readonly AntagTokenListingSystem _listings = default!;
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
     [Dependency] private readonly ITaskManager _taskManager = default!;
+    [Dependency] private readonly IPrototypeManager _prototype = default!;
 
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
@@ -1353,6 +1355,9 @@ public sealed class AntagTokenSystem : EntitySystem
             return;
         }
 
+        if (ReconcileGhostAutoPending(userId, session, state))
+            PersistState(userId, state);
+
         NormalizeMonthlyState(state, DateTime.UtcNow, userId);
 
         var cache = BuildSendStateCache(userId);
@@ -1402,6 +1407,40 @@ public sealed class AntagTokenSystem : EntitySystem
             roles);
 
         RaiseNetworkEvent(new AntagTokenStateEvent(payload), session);
+    }
+
+    private bool ReconcileGhostAutoPending(NetUserId userId, ICommonSession session, PlayerTokenState state)
+    {
+        if (state.PendingGhostAutoRoleId == null)
+            return false;
+
+        if (!_listings.TryGetListing(state.PendingGhostAutoRoleId, out var pendingRole))
+        {
+            ClearPendingGhostAuto(state);
+            return true;
+        }
+
+        // Ghost token queue is only valid during an active round.
+        // If the round has ended (or server restarted into lobby), stale pending must be refunded.
+        if (_gameTicker.RunLevel != GameRunLevel.InRound)
+        {
+            RefundPendingGhostAuto(userId, state);
+            return true;
+        }
+
+        if (session.AttachedEntity is not { Valid: true } attached ||
+            string.IsNullOrWhiteSpace(pendingRole.GhostAutoJoinEntityProto))
+        {
+            return false;
+        }
+
+        if (!IsGhostAutoJoinPrototypeMatch(MetaData(attached).EntityPrototype?.ID, pendingRole.GhostAutoJoinEntityProto))
+            return false;
+
+        // Recovery path for missed TakeGhostRoleEvent: consume pending if the player already controls the target role entity.
+        ClearPendingGhostAuto(state);
+        MarkGhostRuleTokenGranted(userId);
+        return true;
     }
 
 private async Task PersistStateAsync(NetUserId userId, PlayerTokenState state)
@@ -1609,7 +1648,7 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
             return;
         }
 
-        if (MetaData(uid).EntityPrototype?.ID != listing.GhostAutoJoinEntityProto)
+        if (!IsGhostAutoJoinPrototypeMatch(MetaData(uid).EntityPrototype?.ID, listing.GhostAutoJoinEntityProto))
             return;
 
         ClearPendingGhostAuto(state);
@@ -1692,23 +1731,15 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         Logger.InfoS("AntagTokens",
             $"Ghost auto-join attempt: user={session.Name} protoRole={state.PendingGhostAutoRoleId} ghostId={ghostRole.Identifier} raffle={(ghostRole.RaffleConfig != null)}");
 
-        if (ghostRole.RaffleConfig != null)
-        {
-            _ghostRoles.Request(session, ghostRole.Identifier);
-            PersistState(session.UserId, state);
-            SendState(session.UserId);
-            return;
-        }
-
         if (_ghostRoles.Takeover(session, ghostRole.Identifier))
         {
             PersistState(session.UserId, state);
             SendState(session.UserId);
-            Logger.InfoS("AntagTokens", $"Ghost auto-join takeover ok: user={session.Name}");
+            Logger.InfoS("AntagTokens", $"Ghost auto-join instant takeover ok: user={session.Name}");
             return;
         }
 
-        Logger.WarningS("AntagTokens", $"Ghost auto-join takeover failed: user={session.Name}");
+        Logger.WarningS("AntagTokens", $"Ghost auto-join instant takeover failed: user={session.Name}");
         RefundPendingGhostAuto(session.UserId, state);
         PersistState(session.UserId, state);
         SendState(session.UserId);
@@ -1719,6 +1750,35 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
         state.PendingGhostAutoRoleId = null;
         state.PendingGhostAutoQueuedAtUtc = null;
         state.PendingGhostAutoUsedRoleCredit = false;
+    }
+
+    private bool IsGhostAutoJoinPrototypeMatch(string? actualProtoId, string? expectedProtoId)
+    {
+        if (string.IsNullOrWhiteSpace(actualProtoId) || string.IsNullOrWhiteSpace(expectedProtoId))
+            return false;
+
+        if (actualProtoId == expectedProtoId)
+            return true;
+
+        if (_prototype.HasIndex<EntityPrototype>(actualProtoId))
+        {
+            foreach (var parent in _prototype.EnumerateParents<EntityPrototype>(actualProtoId))
+            {
+                if (parent.ID == expectedProtoId)
+                    return true;
+            }
+        }
+
+        if (_prototype.HasIndex<EntityPrototype>(expectedProtoId))
+        {
+            foreach (var parent in _prototype.EnumerateParents<EntityPrototype>(expectedProtoId))
+            {
+                if (parent.ID == actualProtoId)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private bool TryResolveGhostAutoPendingBeforePurchase(NetUserId userId, PlayerTokenState state)
