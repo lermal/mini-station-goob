@@ -23,3 +23,7 @@ daily-reward-card-token = Reward: {$name}
 daily-reward-card-step = Reward for this day
 daily-reward-card-timer-ready = Ready to claim
 daily-reward-card-timer-wait = In {$time}
+daily-reward-online-title = Time rewards
+daily-reward-online-hour-stage = {$hours} h
+daily-reward-online-claimed = Claimed
+daily-reward-online-reward = +{$amount}

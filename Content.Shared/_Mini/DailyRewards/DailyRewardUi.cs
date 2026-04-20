@@ -23,7 +23,9 @@ public sealed class DailyRewardUpdateMessage(
     TimeSpan timeUntilNextClaim,
     TimeSpan currentActiveTime,
     TimeSpan requiredActiveTime,
-    List<DailyRewardEntry> rewards) : BoundUserInterfaceState
+    List<DailyRewardEntry> rewards,
+    TimeSpan onlineElapsed,
+    List<TimeSpan> onlineGrantedThresholds) : BoundUserInterfaceState
 {
     public int CurrentStreak { get; } = currentStreak;
     public int NextRewardDay { get; } = nextRewardDay;
@@ -35,6 +37,8 @@ public sealed class DailyRewardUpdateMessage(
     public TimeSpan CurrentActiveTime { get; } = currentActiveTime;
     public TimeSpan RequiredActiveTime { get; } = requiredActiveTime;
     public List<DailyRewardEntry> Rewards { get; } = rewards;
+    public TimeSpan OnlineElapsed { get; } = onlineElapsed;
+    public List<TimeSpan> OnlineGrantedThresholds { get; } = onlineGrantedThresholds;
 }
 
 [Serializable, NetSerializable]

@@ -231,17 +231,17 @@
       minimumPlayers: 30
       requiresPreRoundLobby: true
 
-    # - id: xenomorph
-    #   nameLocKey: antag-store-role-xenomorph-name
-    #   descriptionLocKey: antag-store-role-xenomorph-description
-    #   cost: 8
-    #   iconPath: /Textures/_Mini/Interface/Antags/xenomorph.png
-    #   mode: LobbyDeposit
-    #   antagId: XenomorphsInfestationRoundstart
-    #   gameRuleId: XenomorphsInfestationRoundstart
-    #   tagLocKey: antag-token-window-tag-queue
-    #   minimumPlayers: 30
-    #   requiresPreRoundLobby: true
+    - id: xenomorph
+      nameLocKey: antag-store-role-xenomorph-name
+      descriptionLocKey: antag-store-role-xenomorph-description
+      cost: 8
+      iconPath: /Textures/_Mini/Interface/Antags/xenomorph.png
+      mode: LobbyDeposit
+      antagId: XenomorphsInfestationRoundstart
+      gameRuleId: XenomorphsInfestationRoundstart
+      tagLocKey: antag-token-window-tag-queue
+      minimumPlayers: 30
+      requiresPreRoundLobby: true
 
     - id: bingle
       nameLocKey: antag-store-role-bingle-name
@@ -265,7 +265,7 @@
       mode: GhostRule
       ghostAutoJoinEntityProto: SpawnPointGhostParadoxClone
       ghostRulesLocKey: ghost-role-information-freeagent-rules
-      gameRuleId:  ParadoxCloneSpawn
+      gameRuleId: ParadoxCloneSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true

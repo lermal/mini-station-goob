@@ -527,6 +527,24 @@ public sealed class AntagTokenSystem : EntitySystem
             .FirstOrDefault(s => s.Uid == userId.UserId.ToString()).Level;
     }
 
+    public bool TryGetOnlineRewardUiState(
+        NetUserId userId,
+        DateTime nowUtc,
+        out TimeSpan elapsed,
+        out List<TimeSpan> grantedThresholds)
+    {
+        elapsed = TimeSpan.Zero;
+        grantedThresholds = new List<TimeSpan>();
+        if (!_onlineRewards.TryGetValue(userId, out var rewardState))
+            return false;
+
+        var raw = nowUtc - rewardState.ConnectedAtUtc;
+        elapsed = raw < TimeSpan.Zero ? TimeSpan.Zero : raw;
+        foreach (var t in rewardState.GrantedThresholds)
+            grantedThresholds.Add(t);
+        return true;
+    }
+
     private async Task LoadPlayerData(ICommonSession player, CancellationToken cancel)
     {
         var tokenEntries = await _db.GetPlayerAntagTokens(player.UserId.UserId, cancel);

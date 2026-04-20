@@ -407,6 +407,14 @@ public sealed class DailyRewardSystem : EntitySystem
                 day == nextDay));
         }
 
+        TimeSpan onlineElapsed = TimeSpan.Zero;
+        var onlineGranted = new List<TimeSpan>();
+        if (_antagTokens.TryGetOnlineRewardUiState(session.UserId, now, out var onlineEl, out var onlineGt))
+        {
+            onlineElapsed = onlineEl;
+            onlineGranted = onlineGt;
+        }
+
         RaiseNetworkEvent(new DailyRewardStateEvent(new DailyRewardUpdateMessage(
             visibleStreak,
             nextDay,
@@ -417,7 +425,9 @@ public sealed class DailyRewardSystem : EntitySystem
             timeUntilNextClaim,
             pending,
             component.MinimumActiveTime,
-            rewards)), session);
+            rewards,
+            onlineElapsed,
+            onlineGranted)), session);
     }
 
     private RewardDefinition GetRewardPreview(DailyRewardComponent component, int day)

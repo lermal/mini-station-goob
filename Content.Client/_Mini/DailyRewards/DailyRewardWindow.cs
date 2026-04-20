@@ -1,8 +1,10 @@
 // SPDX-FileCopyrightText: 2026 Casha
 // Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Content.Client.Resources;
+using Content.Shared._Mini.AntagTokens;
 using Content.Shared._Mini.DailyRewards;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
@@ -14,6 +16,7 @@ using Robust.Shared.Localization;
 using Robust.Shared.Maths;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
+using static Robust.Client.UserInterface.Controls.LayoutContainer;
 
 namespace Content.Client._Mini.DailyRewards;
 
@@ -21,6 +24,7 @@ public sealed class DailyRewardWindow : DefaultWindow
 {
     private const string ClockIconPath = "/Textures/_Mini/Interface/Clock.png";
     private const string CoinIconPath = "/Textures/_Mini/Interface/Coin.png";
+    private static readonly string AntagCoinIconPath = AntagTokenCatalog.CurrencyIconPath;
 
     private static readonly Color WindowBackgroundColor = Color.FromHex("#0f1115");
     private static readonly Color HeroPanelColor = Color.FromHex("#1c1a24").WithAlpha(0.9f);
@@ -51,6 +55,10 @@ public sealed class DailyRewardWindow : DefaultWindow
     private readonly BoxContainer _rewardTrack;
     private readonly Texture _clockTexture;
     private readonly Texture _coinTexture;
+    private readonly Texture _antagCoinTexture;
+    private readonly ProgressBar[] _onlineSegmentBars;
+    private readonly Label[] _onlineBarTimeLabels;
+    private readonly Label[] _onlineRewardLabels;
     private DailyRewardUpdateMessage? _state;
 
     public DailyRewardWindow()
@@ -59,10 +67,13 @@ public sealed class DailyRewardWindow : DefaultWindow
         _resourceCache = IoCManager.Resolve<IResourceCache>();
         _clockTexture = _resourceCache.GetTexture(ClockIconPath);
         _coinTexture = _resourceCache.GetTexture(CoinIconPath);
+        _antagCoinTexture = _resourceCache.TryGetResource<TextureResource>(new ResPath(AntagCoinIconPath), out var antagRes)
+            ? antagRes.Texture
+            : _resourceCache.GetTexture(CoinIconPath);
 
         Title = Loc.GetString("daily-reward-window-title");
-        MinSize = new Vector2(900, 600);
-        SetSize = new Vector2(900, 600);
+        MinSize = new Vector2(900, 720);
+        SetSize = new Vector2(900, 720);
 
         var root = new BoxContainer
         {
@@ -79,6 +90,18 @@ public sealed class DailyRewardWindow : DefaultWindow
         backdrop.AddChild(root);
 
         root.AddChild(BuildHeroSection(out _streakValueLabel, out _activeProgressLabel, out _cooldownLabel, out _expiryLabel, out _activeProgressBar, out _claimButton));
+
+        root.AddChild(new Label
+        {
+            Text = Loc.GetString("daily-reward-online-title"),
+            StyleClasses = { "LabelHeading" },
+            Margin = new Thickness(4, 0, 0, 0)
+        });
+
+        root.AddChild(BuildOnlineTimeRewardsPanel(
+            out _onlineSegmentBars,
+            out _onlineBarTimeLabels,
+            out _onlineRewardLabels));
 
         root.AddChild(new Label
         {
@@ -144,6 +167,11 @@ public sealed class DailyRewardWindow : DefaultWindow
             currentActiveTime = Min(currentActiveTime + step, _state.RequiredActiveTime);
 
         var canClaim = currentActiveTime >= _state.RequiredActiveTime && timeUntilNextClaim == TimeSpan.Zero;
+        var onlineElapsed = _state.OnlineElapsed + step;
+        var grantedCopy = _state.OnlineGrantedThresholds != null
+            ? new List<TimeSpan>(_state.OnlineGrantedThresholds)
+            : new List<TimeSpan>();
+
         _state = new DailyRewardUpdateMessage(
             _state.CurrentStreak,
             _state.NextRewardDay,
@@ -154,7 +182,9 @@ public sealed class DailyRewardWindow : DefaultWindow
             timeUntilNextClaim,
             currentActiveTime,
             _state.RequiredActiveTime,
-            _state.Rewards);
+            _state.Rewards,
+            onlineElapsed,
+            grantedCopy);
 
         RefreshState();
     }
@@ -193,6 +223,8 @@ public sealed class DailyRewardWindow : DefaultWindow
         _claimButton.Text = Loc.GetString(state.CanClaim
             ? "daily-reward-window-claim-ready"
             : "daily-reward-window-claim-locked");
+
+        RefreshOnlineTimeSection();
 
         _rewardTrack.RemoveAllChildren();
         for (var i = 0; i < state.Rewards.Count; i++)
@@ -266,6 +298,199 @@ public sealed class DailyRewardWindow : DefaultWindow
         }
 
         return column;
+    }
+
+    private Control BuildOnlineTimeRewardsPanel(
+        out ProgressBar[] bars,
+        out Label[] barTimeLabels,
+        out Label[] rewardLabels)
+    {
+        var milestones = AntagTokenCatalog.OnlineRewardMilestones;
+        var n = milestones.Length;
+        bars = new ProgressBar[n];
+        barTimeLabels = new Label[n];
+        rewardLabels = new Label[n];
+
+        var panel = new PanelContainer
+        {
+            HorizontalExpand = true,
+            PanelOverride = new StyleBoxFlat
+            {
+                BackgroundColor = HeroPanelColor,
+                BorderColor = AccentColor,
+                BorderThickness = new Thickness(2),
+                ContentMarginLeftOverride = 12,
+                ContentMarginTopOverride = 10,
+                ContentMarginRightOverride = 12,
+                ContentMarginBottomOverride = 10
+            }
+        };
+
+        var row = new BoxContainer
+        {
+            Orientation = LayoutOrientation.Horizontal,
+            SeparationOverride = 8
+        };
+        panel.AddChild(row);
+
+        for (var i = 0; i < n; i++)
+        {
+            var col = new BoxContainer
+            {
+                Orientation = LayoutOrientation.Vertical,
+                SeparationOverride = 6,
+                HorizontalExpand = true
+            };
+            row.AddChild(col);
+
+            var threshold = milestones[i].Threshold;
+            var hours = (int)threshold.TotalHours;
+            col.AddChild(new Label
+            {
+                Text = Loc.GetString("daily-reward-online-hour-stage", ("hours", hours)),
+                StyleClasses = { "LabelHeading" },
+                Modulate = Color.White,
+                HorizontalAlignment = HAlignment.Center
+            });
+
+            var barWrap = new LayoutContainer
+            {
+                HorizontalExpand = true,
+                MinSize = new Vector2(0, 22)
+            };
+
+            bars[i] = new ProgressBar
+            {
+                MinSize = new Vector2(0, 22),
+                BackgroundStyleBoxOverride = new StyleBoxFlat { BackgroundColor = Color.FromHex("#0c1220") },
+                ForegroundStyleBoxOverride = new StyleBoxFlat { BackgroundColor = ClaimReadyColor },
+                MinValue = 0,
+                MaxValue = 100,
+                MouseFilter = MouseFilterMode.Pass
+            };
+            SetAnchorPreset(bars[i], LayoutPreset.Wide);
+            barWrap.AddChild(bars[i]);
+
+            barTimeLabels[i] = new Label
+            {
+                Align = Label.AlignMode.Center,
+                HorizontalAlignment = HAlignment.Center,
+                VerticalAlignment = VAlignment.Center,
+                MouseFilter = MouseFilterMode.Ignore,
+                Modulate = Color.FromHex("#e8eef8")
+            };
+            SetAnchorPreset(barTimeLabels[i], LayoutPreset.Wide);
+            barWrap.AddChild(barTimeLabels[i]);
+
+            col.AddChild(barWrap);
+
+            var coinRow = new BoxContainer
+            {
+                Orientation = LayoutOrientation.Horizontal,
+                SeparationOverride = 4,
+                HorizontalAlignment = HAlignment.Center
+            };
+            rewardLabels[i] = new Label
+            {
+                Modulate = AccentColor,
+                HorizontalAlignment = HAlignment.Center,
+                VerticalAlignment = VAlignment.Center
+            };
+            coinRow.AddChild(rewardLabels[i]);
+            coinRow.AddChild(new TextureRect
+            {
+                Texture = _antagCoinTexture,
+                MinSize = new Vector2(22, 22),
+                TextureScale = new Vector2(0.4f, 0.4f),
+                Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                VerticalAlignment = VAlignment.Center
+            });
+            col.AddChild(coinRow);
+        }
+
+        return panel;
+    }
+
+    private void RefreshOnlineTimeSection()
+    {
+        if (_state == null)
+            return;
+
+        var milestones = AntagTokenCatalog.OnlineRewardMilestones;
+        var prev = TimeSpan.Zero;
+        var granted = _state.OnlineGrantedThresholds ?? new List<TimeSpan>();
+        var elapsed = _state.OnlineElapsed;
+
+        for (var i = 0; i < milestones.Length; i++)
+        {
+            var (threshold, amount) = milestones[i];
+            ComputeOnlineSegment(elapsed, granted, threshold, prev, out var fill, out var remaining, out var claimed);
+
+            _onlineSegmentBars[i].Value = fill * 100f;
+
+            _onlineBarTimeLabels[i].Text = claimed
+                ? Loc.GetString("daily-reward-online-claimed")
+                : FormatHms(remaining);
+
+            _onlineBarTimeLabels[i].Modulate = claimed ? ClaimReadyColor : Color.FromHex("#e8eef8");
+
+            _onlineRewardLabels[i].Text = Loc.GetString("daily-reward-online-reward", ("amount", amount));
+
+            prev = threshold;
+        }
+    }
+
+    private static void ComputeOnlineSegment(
+        TimeSpan elapsed,
+        IReadOnlyList<TimeSpan> granted,
+        TimeSpan threshold,
+        TimeSpan prevThreshold,
+        out float fill,
+        out TimeSpan remaining,
+        out bool claimed)
+    {
+        claimed = false;
+        for (var g = 0; g < granted.Count; g++)
+        {
+            if (granted[g] == threshold)
+            {
+                claimed = true;
+                break;
+            }
+        }
+
+        var segmentDuration = threshold - prevThreshold;
+        if (claimed)
+        {
+            fill = 1f;
+            remaining = TimeSpan.Zero;
+            return;
+        }
+
+        if (elapsed >= threshold)
+        {
+            fill = 1f;
+            remaining = TimeSpan.Zero;
+            return;
+        }
+
+        if (segmentDuration <= TimeSpan.Zero)
+        {
+            fill = 0f;
+            remaining = MaxZero(threshold - elapsed);
+            return;
+        }
+
+        if (elapsed <= prevThreshold)
+        {
+            fill = 0f;
+            remaining = MaxZero(threshold - elapsed);
+            return;
+        }
+
+        var inSeg = elapsed - prevThreshold;
+        fill = (float)Math.Clamp(inSeg.TotalSeconds / segmentDuration.TotalSeconds, 0d, 1d);
+        remaining = MaxZero(threshold - elapsed);
     }
 
     private Control BuildHeroSection(
@@ -623,6 +848,14 @@ public sealed class DailyRewardWindow : DefaultWindow
             return "00:00";
         var totalHours = (int)span.TotalHours;
         return $"{totalHours:00}:{span.Minutes:00}";
+    }
+
+    private static string FormatHms(TimeSpan span)
+    {
+        if (span <= TimeSpan.Zero)
+            return "00:00:00";
+        var h = (int)span.TotalHours;
+        return $"{h:00}:{span.Minutes:00}:{span.Seconds:00}";
     }
 
     private static string GetAvailabilityText(DailyRewardUpdateMessage state)
