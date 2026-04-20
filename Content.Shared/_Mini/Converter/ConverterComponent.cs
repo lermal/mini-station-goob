@@ -7,7 +7,7 @@ public sealed partial class ConverterComponent : Component
     /// Progress required to mint one telecrystal.
     /// </summary>
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public int PointsPerTelecrystal = 5000;
+    public int PointsPerTelecrystal = 3000;
 
     /// <summary>
     /// Value of a regular technology disk.
