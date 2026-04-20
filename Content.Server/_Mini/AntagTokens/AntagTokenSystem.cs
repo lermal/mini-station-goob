@@ -32,7 +32,9 @@ using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
+using Robust.Server.GameObjects;
 using Robust.Shared.Asynchronous;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Log;
 using Robust.Shared.Prototypes;
 
@@ -54,6 +56,7 @@ public sealed class AntagTokenSystem : EntitySystem
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
     [Dependency] private readonly ITaskManager _taskManager = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
+    [Dependency] private readonly TransformSystem _transform = default!;
 
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
