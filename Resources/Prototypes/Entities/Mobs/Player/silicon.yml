@@ -195,7 +195,8 @@
   - type: RadarConsole
     followEntity: false
   - type: CommunicationsConsole
-    canShuttle: false
+    canCallShuttle: false
+    canRecallShuttle: false
     title: comms-console-announcement-title-station-ai
     color: "#5ed7aa"
     sound: /Audio/_CorvaxGoob/Announcements/aiannounce.ogg # CorvaxGoob-Announcements
