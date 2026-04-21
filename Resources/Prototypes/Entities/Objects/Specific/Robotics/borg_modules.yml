@@ -1166,7 +1166,6 @@
   - type: Sprite
     layers:
     - state: generic
-    - state: icon-syndicate
   - type: ItemBorgModule
     moduleId: Security
     items:
@@ -1181,7 +1180,7 @@
         tags:
         - Handcuffs
   - type: BorgModuleIcon
-    icon: { sprite: Interface/Actions/actions_borg.rsi, state: syndicate-weapon-module }
+    icon: { sprite: Interface/Actions/actions_borg.rsi, state: no-action }
 
 - type: entity
   id: BorgModuleSecurityAdvanced
@@ -1192,13 +1191,12 @@
   - type: Sprite
     layers:
     - state: generic
-    - state: icon-syndicate
   - type: ItemBorgModule
     moduleId: SecurityAdvanced
     items:
     - WeaponPistolMk58Borg
   - type: BorgModuleIcon
-    icon: { sprite: Interface/Actions/actions_borg.rsi, state: syndicate-weapon-module }
+    icon: { sprite: Interface/Actions/actions_borg.rsi, state: no-action }
 
 #syndicate modules
 - type: entity

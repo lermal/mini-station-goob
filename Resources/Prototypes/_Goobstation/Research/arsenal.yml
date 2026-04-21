@@ -69,6 +69,20 @@
   technologyPrerequisites:
   - SalvageWeapons
 
+- type: technology
+  id: SecurityBorgModules
+  name: research-technology-security-borg-module-t1
+  icon:
+    entity: BorgModuleSecurityStandard
+  discipline: Arsenal
+  tier: 1
+  cost: 7000
+  recipeUnlocks:
+  - BorgModuleSecurityStandard
+  position: 2,1
+  technologyPrerequisites:
+  - AdvancedRiotControl
+
 # Tier 2
 - type: technology
   id: WeaponLaserCellSMGTech
@@ -86,6 +100,20 @@
   position: 5,-1
   technologyPrerequisites:
   - WeaponizedLaserManipulation
+
+- type: technology
+  id: SecurityBorgModulesAdvanced
+  name: research-technology-security-borg-module-t2
+  icon:
+    entity: BorgModuleSecurityAdvanced
+  discipline: Arsenal
+  tier: 2
+  cost: 14000
+  recipeUnlocks:
+  - BorgModuleSecurityAdvanced
+  position: 3,1
+  technologyPrerequisites:
+  - SecurityBorgModules
 
 - type: technology
   id: Gygax
