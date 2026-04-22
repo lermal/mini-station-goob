@@ -8562,13 +8562,6 @@ entities:
     - type: Transform
       pos: 31.768242,41.57351
       parent: 2
-- proto: RussiaHandyFlag
-  entities:
-  - uid: 1278
-    components:
-    - type: Transform
-      pos: 18.068703,57.41552
-      parent: 2
 - proto: SeedExtractor
   entities:
   - uid: 1279
