@@ -386,6 +386,8 @@
       max: 10 # Goobstation / еЏ¤еёѓз©єй—ґз«™ - жІЎжњ‰й™ђе€¶зљ„ж ёз‰№е·Ґ
       playerRatio: 16 # Goobstation
       startingGear: SyndicateOperativeGearFullHonkops
+      skills: # CorvaxGoob-Skills
+      - All
       roleLoadout:
       - RoleSurvivalNukieHonkops
       components:

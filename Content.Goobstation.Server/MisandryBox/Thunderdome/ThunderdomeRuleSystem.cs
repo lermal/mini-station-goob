@@ -64,6 +64,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
     [Dependency] private readonly ILocalizationManager _loc = default!;
     [Dependency] private readonly GunSystem _gun = default!;
 
+    [Dependency] private readonly SkillsSystem _skills = default!;
+
     private const string RulePrototype = "ThunderdomeRule";
     private EntityUid? _ruleEntity;
     private bool _refillOnKill;
@@ -294,6 +296,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             return;
 
         rule.Players.Add(GetNetEntity(mob));
+
+        _skills.GrantAllSkills(mob); // CorvaxGoob-Skills
 
         _activeEuis.Remove(session);
 
