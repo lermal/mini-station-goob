@@ -169,10 +169,6 @@
     - Typan
 
 # Midpop 25–55
-- type: additionalMap
-  id: CorvaxAwesome
-  maps:
-    - Typan
 
 - type: additionalMap
   id: CorvaxBagel
