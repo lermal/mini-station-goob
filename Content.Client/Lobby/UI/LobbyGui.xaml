@@ -40,7 +40,7 @@
                             <TextureRect TextureScale="0.2 0.2" Stretch="KeepCentered" TexturePath="/Textures/Interface/main_logo.png" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <controls:VSpacer Spacing="25"/>
                             <!-- <Button Name="DailyRewardsButton" Access="Public" Text="Награды" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/> -->
-                            <Button Name="Boosty" Access="Public" Text="Бусти" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <Button Name="Site" Access="Public" Text="Сайт" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <Button Name="Discord" Text="Дискорд" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <Button Name="Telegram" Text="Телеграм" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <Button Name="AHelpButton" Access="Public" Text="{Loc 'ui-lobby-ahelp-button'}" MinSize="125 10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>

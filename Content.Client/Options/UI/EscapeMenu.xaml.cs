@@ -61,7 +61,7 @@ namespace Content.Client.Options.UI
                 _uriOpener.OpenUri(new Uri(requestUrl));
             };
 
-            Boosty.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://boosty.to/mini-station"));
+            Site.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://ministation.ru"));
             Discord.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://discord.gg/mini-station"));
             Telegram.OnPressed += _ => _uriOpener.OpenUri(new Uri("https://t.me/mini_station"));
             DailyRewardsButton.OnPressed += _ => OpenDailyRewards();
