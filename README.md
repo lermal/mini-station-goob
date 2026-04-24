@@ -4,7 +4,7 @@
 
 ## Ссылки
 
-[Наш Discord](https://discord.gg/mini-station) | [Наша Вики](https://mini-station-14.ru/) | [Steam](https://store.steampowered.com/app/1255460/Space_Station_14/) | [Клиент без Steam](https://spacestation14.io/about/nightlies/) | [Основной репозиторий](https://github.com/space-wizards/space-station-14) | [Основной репозиторий Goob Station](https://github.com/Goob-Station/Goob-Station)
+[Наш Discord](https://discord.gg/mini-station) | [Наша Вики](https://wiki.ministation.ru/) | [Steam](https://store.steampowered.com/app/1255460/Space_Station_14/) | [Клиент без Steam](https://spacestation14.io/about/nightlies/) | [Основной репозиторий](https://github.com/space-wizards/space-station-14) | [Основной репозиторий Goob Station](https://github.com/Goob-Station/Goob-Station)
 
 ## Документация
 
