@@ -134,7 +134,7 @@ public sealed class JukeboxSystem : SharedJukeboxSystem
 
     private void Stop(Entity<JukeboxComponent> entity)
     {
-        Audio.SetState(entity.Comp.AudioStream, AudioState.Stopped);
+        entity.Comp.AudioStream = Audio.Stop(entity.Comp.AudioStream);
         Dirty(entity);
     }
 

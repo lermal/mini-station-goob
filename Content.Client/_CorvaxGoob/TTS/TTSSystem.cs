@@ -11,7 +11,9 @@ using Robust.Shared.Utility;
 using Content.Shared._CorvaxGoob;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Audio.Components;
+using Robust.Shared.Player;
 using Robust.Shared.Spawners;
+using Robust.Shared.Timing;
 
 namespace Content.Client._CorvaxGoob.TTS;
 
@@ -43,6 +45,10 @@ public sealed partial class TTSSystem : EntitySystem
     /// The volume at which the TTS sound will not be heard.
     /// </summary>
     private const float MinimalVolume = -5f;
+    private static readonly SoundPathSpecifier RadioStaticSound = new("/Audio/_Mini/TTS/radio.ogg");
+    private const float RadioStaticFade = 7f;
+    private const float RadioTtsFade = 2f;
+    private const int RadioLeadInMs = 160;
 
     private float _volume = 0.0f;
     private int _fileIdx = 0;
@@ -83,6 +89,18 @@ public sealed partial class TTSSystem : EntitySystem
     {
         _sawmill.Verbose($"Play TTS audio {ev.Data.Length} bytes from {ev.SourceUid} entity");
 
+        if (ev.IsRadio)
+        {
+            PlayRadioStatic();
+            Timer.Spawn(TimeSpan.FromMilliseconds(RadioLeadInMs), () => PlayTtsAudio(ev));
+            return;
+        }
+
+        PlayTtsAudio(ev);
+    }
+
+    private void PlayTtsAudio(PlayTTSEvent ev)
+    {
         var filePath = new ResPath($"{_fileIdx++}.ogg");
         _contentRoot.AddOrUpdateFile(filePath, ev.Data);
 
@@ -90,7 +108,7 @@ public sealed partial class TTSSystem : EntitySystem
         audioResource.Load(IoCManager.Instance!, Prefix / filePath);
 
         var audioParams = AudioParams.Default
-            .WithVolume(AdjustVolume(ev.IsWhisper))
+            .WithVolume(AdjustVolume(ev.IsWhisper, ev.IsRadio))
             .WithMaxDistance(AdjustDistance(ev.IsWhisper));
 
         if (ev.Pitch.HasValue)
@@ -130,13 +148,25 @@ public sealed partial class TTSSystem : EntitySystem
         _contentRoot.RemoveFile(filePath);
     }
 
-    private float AdjustVolume(bool isWhisper)
+    private void PlayRadioStatic()
+    {
+        var staticVolume = AdjustVolume(true) - SharedAudioSystem.GainToVolume(RadioStaticFade);
+        var noiseParams = AudioParams.Default.WithVolume(staticVolume);
+        _audio.PlayGlobal(RadioStaticSound, Filter.Local(), false, noiseParams);
+    }
+
+    private float AdjustVolume(bool isWhisper, bool isRadio = false)
     {
         var volume = MinimalVolume + SharedAudioSystem.GainToVolume(_volume);
 
         if (isWhisper)
         {
             volume -= SharedAudioSystem.GainToVolume(WhisperFade);
+        }
+
+        if (isRadio)
+        {
+            volume -= SharedAudioSystem.GainToVolume(RadioTtsFade);
         }
 
         return volume;
