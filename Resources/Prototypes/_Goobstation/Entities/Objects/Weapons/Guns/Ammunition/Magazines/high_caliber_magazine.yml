@@ -90,7 +90,7 @@
       tags:
       - CartridgeAntiMateriel
     proto: CartridgeAntiMateriel
-    capacity: 5
+    capacity: 6
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container

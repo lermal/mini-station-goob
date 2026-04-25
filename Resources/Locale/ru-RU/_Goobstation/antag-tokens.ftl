@@ -93,10 +93,18 @@ antag-store-role-shadowling-description = Очередь на шедоулинг
 
 antag-store-role-xenomorph-name = Ксеноморф
 antag-store-role-xenomorph-description = Очередь на раундстартовое заражение ксеноморфами. Только выживание.
+
 antag-store-role-bingle-name = Бингл
 antag-store-role-bingle-description = Гост-роль бингла. Только выживание.
+
 antag-store-role-clone-name = Парадоксальный клон
 antag-store-role-clone-description = Гост роль парадоксального клона.
+
+antag-store-role-rat-king-name = Крысиный король
+antag-store-role-rat-king-description = Гост роль крысинного короля. Выдаётся мнгновенно после покупки.
+
+antag-store-role-wraith-name = Привидение
+antag-store-role-wraith-description = Гост роль привидения.
 
 # Server (AntagTokenSystem)
 antag-tokens-online-reward = Вы получили {$amount} билет(ов) за {$hours} ч. на сервере!

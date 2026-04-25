@@ -98,7 +98,7 @@
             SalvageSpecialist: [3, 3]
             CargoTechnician: [5, 5]
             #civilian
-            Passenger: [1, 1]
+            Passenger: [3, 3]
             Clown: [2, 2]
             Mime: [2, 2]
             Musician: [3, 3]

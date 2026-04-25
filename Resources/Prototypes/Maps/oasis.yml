@@ -153,7 +153,7 @@
             SalvageSpecialist: [3, 3]
             CargoTechnician: [4, 4]
             #civilian
-            Passenger: [1, 1]
+            Passenger: [3, 3]
             Clown: [1, 1]
             Mime: [1, 1]
             Musician: [1, 1]

@@ -33,7 +33,7 @@
           mapNameTemplate: "Empty"
         - type: StationJobs
           availableJobs:
-            Passenger: [ 1, 1 ]
+            Passenger: [ 3, 3 ]
 
 - type: gameMap
   id: Dev

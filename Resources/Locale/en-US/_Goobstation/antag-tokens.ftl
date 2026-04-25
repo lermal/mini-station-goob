@@ -100,6 +100,12 @@ antag-store-role-bingle-description = Ghost role for a Bingle. Survival only.
 antag-store-role-clone-name = Paradox clone
 antag-store-role-clone-description = Ghost role for a Paradox clone.
 
+antag-store-role-rat-king-name = Rat king
+antag-store-role-rat-king-description = A Rat King ghost role. Granted instantly upon purchase.
+
+antag-store-role-wraith-name = Wraith
+antag-store-role-wraith-description = A Wraith ghost role.
+
 # Server (AntagTokenSystem)
 antag-tokens-online-reward = You received {$amount} ticket(s) for {$hours} hours on the server!
 antag-tokens-sponsor-bonus-popup = Sponsor bonus: +{$amount} tickets (tier {$tier})!
