@@ -44,7 +44,9 @@ public sealed partial class TTSSystem
         if (!TryGetRadioVoice(args.MessageSource, out var speaker, out var pitch))
             return;
 
-        var radioText = GetRadioTtsText(args.OriginalChatMsg.Message);
+        var canUnderstand = _lang.CanUnderstand(uid, args.Language);
+        var message = canUnderstand ? args.OriginalChatMsg.Message : args.LanguageObfuscatedChatMsg.Message;
+        var radioText = GetRadioTtsText(message);
         if (string.IsNullOrWhiteSpace(radioText) || radioText.Length > MaxMessageChars)
             return;
 
@@ -72,7 +74,7 @@ public sealed partial class TTSSystem
         if (soundData is null)
             return;
 
-        RaiseNetworkEvent(new PlayTTSEvent(soundData, pitch: pitch), actor.PlayerSession);
+        RaiseNetworkEvent(new PlayTTSEvent(soundData, isWhisper: true, isRadio: true, pitch: pitch), actor.PlayerSession);
     }
 
     private bool TryGetRadioVoice(EntityUid source, out string speaker, out float? pitch)

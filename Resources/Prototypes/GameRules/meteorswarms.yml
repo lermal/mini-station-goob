@@ -173,12 +173,6 @@
       path: /Audio/Announcements/meteors_end.ogg
     startAnnouncement: station-event-meteor-swarm-start-announcement
     endAnnouncement: station-event-meteor-swarm-end-announcement
-    announcersStartAudio:
-      Intern:
-        collection: InternEventMeteor
-    announcersEndAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/meteorcleared.ogg
     # CorvaxGoob-CustomAnnouncers-End
     reoccurrenceDelay: 1
     earliestStart: 12
@@ -197,12 +191,6 @@
       path: /Audio/Announcements/attention.ogg
     startAnnouncement: station-event-space-dust-start-announcement
     endAnnouncement: station-event-space-dust-end-announcement
-    announcersStartAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/dust.ogg
-    announcersEndAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/dust_passed.ogg
     # CorvaxGoob-CustomAnnouncers-End
     minimumPlayers: 0
     chaos: # Goobstation
@@ -232,12 +220,6 @@
     # CorvaxGoob-CustomAnnouncers-Start
     startAnnouncement: station-event-space-dust-start-announcement
     endAnnouncement: station-event-space-dust-end-announcement
-    announcersStartAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/dust.ogg
-    announcersEndAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/dust_passed.ogg
     # CorvaxGoob-CustomAnnouncers-End
     chaos: # Goobstation
       Power: 25
@@ -327,12 +309,6 @@
     # CorvaxGoob-CustomAnnouncers-Start
     startAudio:
       path: /Audio/Announcements/attention.ogg
-    announcersStartAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/intercept.ogg
-    announcersEndAudio:
-      Intern:
-        path: /Audio/_CorvaxGoob/Announcements/Announcers/Intern/irod.ogg
     # CorvaxGoob-CustomAnnouncers-End
     weight: 3.5
     reoccurrenceDelay: 1

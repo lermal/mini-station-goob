@@ -1,15 +1,3 @@
-- type: announcer
-  id: Intern
-  minDaysInMonth: 5
-  shuttleRecallSound:
-    collection: InternShuttleRecall
-  shuttleCallSound:
-    collection: InternShuttleCall
-  shuttleDockedSound:
-    collection: InternCommandReport
-  centcomAnnouncementSound:
-    collection: InternCommandReport
-
 - type: soundCollection
   id: InternCommandReport
   files:

@@ -127,12 +127,14 @@ public sealed class AntagTokenSystem : EntitySystem
             if (!_onlineRewards.TryGetValue(session.UserId, out var rewardState))
                 continue;
 
+            rewardState.EnsureCurrentCycle(now);
+
             foreach (var (threshold, rewardAmount) in AntagTokenCatalog.OnlineRewardMilestones)
             {
                 if (rewardState.GrantedThresholds.Contains(threshold))
                     continue;
 
-                if (now - rewardState.ConnectedAtUtc < threshold)
+                if (rewardState.GetElapsed(now) < threshold)
                     continue;
 
                 rewardState.GrantedThresholds.Add(threshold);
@@ -537,8 +539,8 @@ public sealed class AntagTokenSystem : EntitySystem
         if (!_onlineRewards.TryGetValue(userId, out var rewardState))
             return false;
 
-        var raw = nowUtc - rewardState.ConnectedAtUtc;
-        elapsed = raw < TimeSpan.Zero ? TimeSpan.Zero : raw;
+        rewardState.EnsureCurrentCycle(nowUtc);
+        elapsed = rewardState.GetElapsed(nowUtc);
         foreach (var t in rewardState.GrantedThresholds)
             grantedThresholds.Add(t);
         return true;
@@ -555,7 +557,9 @@ public sealed class AntagTokenSystem : EntitySystem
         var prevMonthlyMonth = state.MonthlyMonth;
         NormalizeMonthlyState(state, DateTime.UtcNow, player.UserId);
         _states[player.UserId] = state;
-        _onlineRewards[player.UserId] = new OnlineRewardState(DateTime.UtcNow);
+        var now = DateTime.UtcNow;
+        _onlineRewards.TryAdd(player.UserId, new OnlineRewardState());
+        _onlineRewards[player.UserId].Resume(now);
         if (prevMonthlyYear != state.MonthlyYear || prevMonthlyMonth != state.MonthlyMonth)
             PersistState(player.UserId, state);
     }
@@ -777,8 +781,10 @@ public sealed class AntagTokenSystem : EntitySystem
              await PersistStateAsync(player.UserId, state);
         }
 
+        if (_onlineRewards.TryGetValue(player.UserId, out var rewardState))
+            rewardState.Pause(DateTime.UtcNow);
+
         _states.Remove(player.UserId);
-        _onlineRewards.Remove(player.UserId);
     }
     private void PersistState(NetUserId userId, PlayerTokenState state)
     {
@@ -790,7 +796,9 @@ public sealed class AntagTokenSystem : EntitySystem
 }
     private void OnJoinedLobby(PlayerJoinedLobbyEvent ev)
     {
-        _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState(DateTime.UtcNow));
+        var now = DateTime.UtcNow;
+        _onlineRewards.TryAdd(ev.PlayerSession.UserId, new OnlineRewardState());
+        _onlineRewards[ev.PlayerSession.UserId].Resume(now);
     }
 
     private void OnPlayerDatabaseLoadFinished(ICommonSession session)
@@ -1588,7 +1596,9 @@ private async Task PersistStateAsync(NetUserId userId, PlayerTokenState state)
         state = new PlayerTokenState();
         NormalizeMonthlyState(state, DateTime.UtcNow, userId);
         _states[userId] = state;
-        _onlineRewards.TryAdd(userId, new OnlineRewardState(DateTime.UtcNow));
+        var now = DateTime.UtcNow;
+        _onlineRewards.TryAdd(userId, new OnlineRewardState());
+        _onlineRewards[userId].Resume(now);
         return state;
     }
 
@@ -1696,10 +1706,66 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
             _popup.PopupEntity(message, uid, uid);
     }
 
-    private sealed class OnlineRewardState(DateTime connectedAtUtc)
+    private sealed class OnlineRewardState
     {
-        public DateTime ConnectedAtUtc { get; } = connectedAtUtc;
+        private static readonly TimeSpan RewardCycleLength = TimeSpan.FromHours(24);
         public HashSet<TimeSpan> GrantedThresholds { get; } = new();
+        private TimeSpan _accumulatedOnline = TimeSpan.Zero;
+        private DateTime? _onlineSinceUtc;
+        private DateTime _cycleStartUtc = DateTime.MinValue;
+
+        public void EnsureCurrentCycle(DateTime nowUtc)
+        {
+            if (_cycleStartUtc == DateTime.MinValue)
+            {
+                _cycleStartUtc = nowUtc;
+                return;
+            }
+
+            if (nowUtc - _cycleStartUtc < RewardCycleLength)
+                return;
+
+            _accumulatedOnline = TimeSpan.Zero;
+            GrantedThresholds.Clear();
+            _cycleStartUtc = nowUtc;
+
+            if (_onlineSinceUtc != null)
+                _onlineSinceUtc = nowUtc;
+        }
+
+        public void Resume(DateTime nowUtc)
+        {
+            EnsureCurrentCycle(nowUtc);
+            if (_onlineSinceUtc != null)
+                return;
+
+            _onlineSinceUtc = nowUtc;
+        }
+
+        public void Pause(DateTime nowUtc)
+        {
+            EnsureCurrentCycle(nowUtc);
+            if (_onlineSinceUtc == null)
+                return;
+
+            var delta = nowUtc - _onlineSinceUtc.Value;
+            if (delta > TimeSpan.Zero)
+                _accumulatedOnline += delta;
+
+            _onlineSinceUtc = null;
+        }
+
+        public TimeSpan GetElapsed(DateTime nowUtc)
+        {
+            if (_onlineSinceUtc == null)
+                return _accumulatedOnline;
+
+            var delta = nowUtc - _onlineSinceUtc.Value;
+            if (delta <= TimeSpan.Zero)
+                return _accumulatedOnline;
+
+            return _accumulatedOnline + delta;
+        }
     }
 
     public sealed class PlayerTokenState
