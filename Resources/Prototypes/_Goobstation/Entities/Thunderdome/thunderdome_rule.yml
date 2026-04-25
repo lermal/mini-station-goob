@@ -34,8 +34,13 @@
         - gear: ThunderdomeEstoc
           name: thunderdome-loadout-estoc
           description: thunderdome-desc-estoc
-          category: thunderdome-category-rifles
+          category: thunderdome-category-snipers
           sprite: WeaponRifleEstoc
+        - gear: ThunderdomeHristov
+          name: thunderdome-loadout-hristov
+          description: thunderdome-desc-hristov
+          category: thunderdome-category-snipers
+          sprite: WeaponSniperHristov
         - gear: ThunderdomeWt550
           name: thunderdome-loadout-wt550
           description: thunderdome-desc-wt550
