@@ -72,7 +72,7 @@
             Musician: [ 1, 1 ]
             ServiceWorker: [ 2, 2 ]
             RadioHost: [ 1, 1 ]
-            Passenger: [ 1, 1 ]
+            Passenger: [ 3, 3 ]
             # silicon
             Borg: [ 1, 1 ]
             StationAi: [ 1, 1 ]
