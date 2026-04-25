@@ -33,6 +33,7 @@ using Content.Shared.Throwing;
 using Content.Shared.Atmos.Components;
 using Content.Server.Nutrition.EntitySystems;
 using Content.Shared.Nutrition.Components;
+using Content.Goobstation.Shared.Xenomorph;
 
 
 namespace Content.Server._White.Xenomorphs.FaceHugger;
@@ -218,6 +219,8 @@ public sealed class FaceHuggerSystem : EntitySystem
     public bool TryEquipFaceHugger(EntityUid uid, EntityUid target, FaceHuggerComponent component)
     {
         if (!component.Active || _mobState.IsDead(uid) || _entityWhitelist.IsBlacklistPass(component.Blacklist, target))
+            return false;
+        if (HasComp<FacehuggerImmuneComponent>(target))
             return false;
 
         // Check for any blocking masks or equipment

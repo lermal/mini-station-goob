@@ -83,8 +83,10 @@
 using Content.Client.Interactable.Components;
 using Content.Shared.Stealth;
 using Content.Shared.Stealth.Components;
+using Content.Goobstation.Shared.Slasher.Components;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
+using Robust.Client.Player;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.Stealth;
@@ -94,6 +96,7 @@ public sealed class StealthSystem : SharedStealthSystem
     private static readonly ProtoId<ShaderPrototype> Shader = "Stealth";
 
     [Dependency] private readonly IPrototypeManager _protoMan = default!;
+    [Dependency] private readonly IPlayerManager _player = default!;
     [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
 
@@ -169,6 +172,13 @@ public sealed class StealthSystem : SharedStealthSystem
         var reference = args.Viewport.WorldToLocal(_transformSystem.GetWorldPosition(parentXform));
         reference.X = -reference.X;
         var visibility = GetVisibility(uid, component);
+        if (_player.LocalEntity == uid &&
+            TryComp<SlasherIncorporealComponent>(uid, out var slasher) &&
+            slasher.IsIncorporeal)
+        {
+            // Keep slasher readable for its own player only.
+            visibility = MathF.Max(visibility, 0.35f);
+        }
 
         // Goobstation - Proper invisibility: changes -1 to -1.5
         // actual visual visibility effect is limited to -1.5 to 1.

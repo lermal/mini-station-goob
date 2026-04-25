@@ -34,8 +34,9 @@ using Content.Shared.Standing;
 using Content.Goobstation.Shared.Supermatter.Components;
 using Content.Shared.Body.Part;
 using Content.Shared.Pointing;
+using Content.Goobstation.Shared.Xenomorph;
 using Robust.Shared.Timing;
-using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics.Systems;
 
 namespace Content.Goobstation.Shared.Slasher.Systems;
 
@@ -52,6 +53,7 @@ public sealed class SlasherIncorporealSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
+    [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private const string FootstepSoundTag = "FootstepSound";
@@ -275,6 +277,7 @@ public sealed class SlasherIncorporealSystem : EntitySystem
 
         // Supermatter immunity
         _ = EnsureComp<SupermatterImmuneComponent>(uid);
+        _ = EnsureComp<FacehuggerImmuneComponent>(uid);
 
         // Raise event for server systems to handle additional logic (like disabling lights)
         var enteredEv = new SlasherIncorporealEnteredEvent();
@@ -318,6 +321,7 @@ public sealed class SlasherIncorporealSystem : EntitySystem
 
         // Remove supermatter immunity
         _ = RemComp<SupermatterImmuneComponent>(uid);
+        _ = RemComp<FacehuggerImmuneComponent>(uid);
     }
 
     // Goida as shit.. I couldn't find a better way stop cooldowns
@@ -509,43 +513,6 @@ public sealed class SlasherIncorporealSystem : EntitySystem
 
     private bool IsInsideSolidObject(EntityUid uid)
     {
-        var entities = _lookup.GetEntitiesInRange(uid, 1f, LookupFlags.Static | LookupFlags.Sundries);
-
-        foreach (var entity in entities)
-        {
-            if (entity == uid)
-                continue;
-
-            // Check if the entity is solid and impassable
-            if (!TryComp<PhysicsComponent>(entity, out var physics))
-                continue;
-
-            if (!physics.CanCollide || !physics.Hard)
-                continue;
-
-            // Check for Impassable collision layer (walls, grilles, etc)
-            if ((physics.CollisionLayer & (int) CollisionGroup.Impassable) != 0)
-                return true;
-
-            // Check for MachineLayer (vending machines, computers, etc)
-            if ((physics.CollisionLayer & (int) CollisionGroup.MidImpassable) != 0 &&
-                (physics.CollisionLayer & (int) CollisionGroup.LowImpassable) != 0)
-                return true;
-
-            // Check for TableLayer (tables)
-            if ((physics.CollisionLayer & (int) CollisionGroup.MidImpassable) != 0 &&
-                (physics.CollisionLayer & (int) CollisionGroup.TableLayer) != 0)
-                return true;
-
-            // Check for TabletopMachineLayer (small machines on tables)
-            if ((physics.CollisionLayer & (int) CollisionGroup.TabletopMachineLayer) != 0)
-                return true;
-
-            // Check for HighImpassable (tall objects)
-            if ((physics.CollisionLayer & (int) CollisionGroup.HighImpassable) != 0)
-                return true;
-        }
-
-        return false;
+        return _physics.GetEntitiesIntersectingBody(uid, (int) CollisionGroup.Impassable).Count > 0;
     }
 }
