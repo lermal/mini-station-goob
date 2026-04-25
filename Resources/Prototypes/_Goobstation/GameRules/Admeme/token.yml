@@ -258,7 +258,7 @@
     - type: AntagSelection
       agentName: lesser-slaughter-round-end-agent-name
       definitions:
-        - spawnerPrototype: SpawnPointSlaughterDemonToken
+        - spawnerPrototype: SpawnPointGhostSlaughterDemon
           min: 1
           max: 1
           pickPlayer: false
@@ -267,6 +267,7 @@
           briefing:
             text: slaughter-role-greeting
             color: Red
+            sound: /Audio/Misc/narsie_rises.ogg
           components:
             - type: RandomMetadata
               nameSegments:
