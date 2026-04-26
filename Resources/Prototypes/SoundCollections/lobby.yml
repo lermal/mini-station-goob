@@ -146,15 +146,15 @@
 #    - /Audio/Lobby/marhaba.ogg
 #    - /Audio/Lobby/the_future_soon.ogg
 #    - /Audio/Lobby/horn.ogg
-    # Nuclear - Custom lobby music
-    - /Audio/_Nuclear/Lobby/aurora_caelus.ogg
-    - /Audio/_Nuclear/Lobby/cascade.ogg
-    - /Audio/_Nuclear/Lobby/insomnia.ogg
-    - /Audio/_Nuclear/Lobby/lightness.ogg
-    - /Audio/_Nuclear/Lobby/midnight.ogg
-    - /Audio/_Nuclear/Lobby/neutral03.ogg
-    - /Audio/_Nuclear/Lobby/shitsuboo-shita.ogg
-    - /Audio/_Nuclear/Lobby/stellar.ogg
-    - /Audio/_Nuclear/Lobby/vibe_ace.ogg
+    # Mini - Custom lobby music
     - /Audio/_Mini/Lobby/komarovo.ogg
-    - /Audio/_Nuclear/Lobby/we-are-finally-landing.ogg
+    - /Audio/_Mini/Lobby/tom_tom.ogg
+    - /Audio/_Mini/Lobby/xed_eyes.ogg
+    - /Audio/_Mini/Lobby/komarovo.ogg
+    - /Audio/_Mini/Lobby/tancy.ogg
+    - /Audio/_Mini/Lobby/metamorphosis.ogg
+    - /Audio/_Mini/Lobby/batarei.ogg
+    - /Audio/_Mini/Lobby/dispozal_unit.ogg
+    - /Audio/_Mini/Lobby/dead_blonde.ogg
+
+
