@@ -1,5 +1,5 @@
 - type: body
-  id: XenomorphMaid
+  id: XenomorphMaidPet
   name: xenomorph maid
   root: chest
   slots:
@@ -19,7 +19,7 @@
       - groin
       - head
       organs:
-        plasma_vessel: OrganXenomorphPlasmaVessel
+        plasma_vessel: OrganXenomorphPlasmaVesselMaid
     groin:
       part: GroinXenomorph
       connections:
