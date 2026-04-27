@@ -308,7 +308,8 @@ public abstract class SharedEnsnareableSystem : EntitySystem
         if (numEnsnares >= component.MaxEnsnares)
             return false;
 
-        Container.Insert(ensnare, ensnareable.Container);
+        if (!Container.Insert(ensnare, ensnareable.Container))
+            return false;
 
         // Apply stamina damage to target
         if (TryComp<StaminaComponent>(target, out var stamina))

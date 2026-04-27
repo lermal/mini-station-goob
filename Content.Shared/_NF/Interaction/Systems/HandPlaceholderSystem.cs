@@ -110,6 +110,12 @@ public sealed partial class HandPlaceholderSystem : EntitySystem
 
     private void OnEntityRemovedFromContainer(Entity<HandPlaceholderRemoveableComponent> ent, ref EntGotRemovedFromContainerMessage args)
     {
+        if (!TryComp<HandsComponent>(args.Container.Owner, out var hands))
+            return;
+
+        if (!_hands.TryGetHand((args.Container.Owner, hands), args.Container.ID, out _))
+            return;
+
         SwapPlaceholder(ent, args.Container);
     }
 
