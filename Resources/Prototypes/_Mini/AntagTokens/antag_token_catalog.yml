@@ -49,9 +49,9 @@
       ghostRulesLocKey: ghost-role-information-freeagent-rules
       gameRuleId: SoloVoxRaidersMidround
       tagLocKey: antag-token-window-tag-ghost
-      #minimumPlayers: 15
+      minimumPlayers: 15
       requiresInRound: true
-      #minimumTimeFromRoundStart: 1200
+      minimumTimeFromRoundStart: 1200
 
     - id: abductor
       nameLocKey: antag-store-role-abductor-name
@@ -168,7 +168,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 2700
 
     - id: cosmic_cult
       nameLocKey: antag-store-role-cosmic-cult-name
@@ -194,7 +194,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 2700
 
     - id: hastur
       nameLocKey: antag-store-role-hastur-name
@@ -272,7 +272,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 4200
+      minimumTimeFromRoundStart: 3600
 
     - id: changeling
       nameLocKey: antag-store-role-changeling-name
@@ -312,7 +312,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 30
       requiresInRound: true
-      minimumTimeFromRoundStart: 5400
+      minimumTimeFromRoundStart: 4200
 
     - id: wizard
       nameLocKey: antag-store-role-wizard-name
@@ -325,4 +325,4 @@
       gameRuleId: TokenWizard
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumTimeFromRoundStart: 5400
+      minimumTimeFromRoundStart: 4200
