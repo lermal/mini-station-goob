@@ -41,6 +41,10 @@ public static class AntagTokenCatalog
     public const string ParadoxCloneRole = "paradox_clone";
     public const string RatKingRole = "rat_king";
     public const string WraithRole = "wraith";
+    public const string HasturRole = "hastur";
+    public const string VoxRole = "vox";
+
+
 
 
     public static readonly (TimeSpan Threshold, int RewardAmount)[] OnlineRewardMilestones =

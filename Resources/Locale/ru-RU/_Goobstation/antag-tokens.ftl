@@ -106,6 +106,12 @@ antag-store-role-rat-king-description = Гост роль крысинного �
 antag-store-role-wraith-name = Привидение
 antag-store-role-wraith-description = Гост роль привидения.
 
+antag-store-role-hastur-name = Король в жёлтом
+antag-store-role-hastur-description = Гост роль короля в жёлтом.
+
+antag-store-role-vox-name = Вокс рейдер
+antag-store-role-vox-description = Гост роль вокса рейдера.
+
 # Server (AntagTokenSystem)
 antag-tokens-online-reward = Вы получили {$amount} билет(ов) за {$hours} ч. на сервере!
 antag-tokens-sponsor-bonus-popup = Донатерский бонус: +{$amount} билет(ов) (уровень {$tier})!

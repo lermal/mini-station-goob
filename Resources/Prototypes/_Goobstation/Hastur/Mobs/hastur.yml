@@ -35,6 +35,7 @@
       - ActionOmnipresence
       - ActionHasturLash
       - ActionHasturClone
+      - ActionMassWhisper
     - type: HTN
       rootTask:
         task: SimpleHostileCompound
