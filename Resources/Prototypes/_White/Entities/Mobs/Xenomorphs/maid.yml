@@ -3,6 +3,7 @@
   - BaseSimpleMob
   - MobCombat
   - MobFlammable
+  - StripableInventoryBase
   id: MobXenomorphMaid
   name: xenomorph maid
   description: I mean, I guess it is kinda cute?
@@ -30,6 +31,8 @@
   - type: ComplexInteraction
   - type: Body
     prototype: XenomorphMaidPet
+  - type: Inventory
+    templateId: xenomorphMaid
   - type: SurgeryTarget
     canOperate: false
   - type: MobThresholds
