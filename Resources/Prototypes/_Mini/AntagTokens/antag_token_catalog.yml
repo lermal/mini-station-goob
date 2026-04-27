@@ -39,19 +39,19 @@
       tagLocKey: antag-token-window-tag-queue
       requiresPreRoundLobby: true
 
-    - id: rat_king
-      nameLocKey: antag-store-role-rat-king-name
-      descriptionLocKey: antag-store-role-rat-king-description
+    - id: vox
+      nameLocKey: antag-store-role-vox-name
+      descriptionLocKey: antag-store-role-vox-description
       cost: 3
-      iconPath: /Textures/_Mini/Interface/Antags/rat_king.png
+      iconPath: /Textures/_Mini/Interface/Antags/vox.png
       mode: GhostRule
-      ghostAutoJoinEntityProto: SpawnPointGhostRatKing
+      ghostAutoJoinEntityProto: SpawnPointGhostVoxRaider
       ghostRulesLocKey: ghost-role-information-freeagent-rules
-      gameRuleId: RatKingSpawn
+      gameRuleId: SoloVoxRaidersMidround
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 20
+      minimumPlayers: 15
       requiresInRound: true
-      minimumTimeFromRoundStart: 1800
+      minimumTimeFromRoundStart: 1200
 
     - id: abductor
       nameLocKey: antag-store-role-abductor-name
@@ -91,15 +91,29 @@
       requiresInRound: true
       minimumTimeFromRoundStart: 1200
 
+    - id: rat_king
+      nameLocKey: antag-store-role-rat-king-name
+      descriptionLocKey: antag-store-role-rat-king-description
+      cost: 4
+      iconPath: /Textures/_Mini/Interface/Antags/rat_king.png
+      mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostRatKing
+      ghostRulesLocKey: ghost-role-information-freeagent-rules
+      gameRuleId: KingRatSpawn
+      tagLocKey: antag-token-window-tag-ghost
+      minimumPlayers: 20
+      requiresInRound: true
+      minimumTimeFromRoundStart: 1800
+
     - id: bingle
       nameLocKey: antag-store-role-bingle-name
       descriptionLocKey: antag-store-role-bingle-description
       cost: 5
       iconPath: /Textures/_Mini/Interface/Antags/bingle.png
       mode: GhostRule
-      ghostAutoJoinEntityProto: SpawnPointGhostBinglePrimeToken
+      ghostAutoJoinEntityProto: SpawnPointGhostBinglePrime
       ghostRulesLocKey: ghost-role-information-freeagent-rules
-      gameRuleId: TokenBingleSpawn
+      gameRuleId: BingleSpawnInstant
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
@@ -154,7 +168,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 2700
 
     - id: cosmic_cult
       nameLocKey: antag-store-role-cosmic-cult-name
@@ -179,6 +193,20 @@
       gameRuleId: TokenSlasherSpawn
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
+      requiresInRound: true
+      minimumTimeFromRoundStart: 2700
+
+    - id: hastur
+      nameLocKey: antag-store-role-hastur-name
+      descriptionLocKey: antag-store-role-hastur-description
+      cost: 7
+      iconPath: /Textures/_Mini/Interface/Antags/hastur.png
+      mode: GhostRule
+      ghostAutoJoinEntityProto: SpawnPointGhostHastur
+      ghostRulesLocKey: ghost-role-information-antagonist-rules
+      gameRuleId: HasturMidround
+      tagLocKey: antag-token-window-tag-ghost
+      minimumPlayers: 25
       requiresInRound: true
       minimumTimeFromRoundStart: 3600
 
@@ -244,7 +272,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 4200
+      minimumTimeFromRoundStart: 3600
 
     - id: changeling
       nameLocKey: antag-store-role-changeling-name
@@ -266,7 +294,7 @@
       mode: GhostRule
       ghostAutoJoinEntityProto: SpawnPointGhostWraith
       ghostRulesLocKey: ghost-role-information-freeagent-rules
-      gameRuleId: WraithSpawn
+      gameRuleId: WraithMidround
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 30
       requiresInRound: true
@@ -284,7 +312,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 30
       requiresInRound: true
-      minimumTimeFromRoundStart: 5400
+      minimumTimeFromRoundStart: 4200
 
     - id: wizard
       nameLocKey: antag-store-role-wizard-name
@@ -297,4 +325,4 @@
       gameRuleId: TokenWizard
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumTimeFromRoundStart: 5400
+      minimumTimeFromRoundStart: 4200

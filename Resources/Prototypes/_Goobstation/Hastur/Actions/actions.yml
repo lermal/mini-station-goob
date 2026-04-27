@@ -4,7 +4,7 @@
   description: Поглощает человека целиком...
   components:
   - type: Action
-    useDelay: 150
+    useDelay: 75
     itemIconStyle: BigAction
     icon:
       sprite: _Goobstation/Hastur/actions.rsi
