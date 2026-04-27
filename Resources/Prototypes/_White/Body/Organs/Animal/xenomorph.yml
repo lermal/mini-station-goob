@@ -263,3 +263,17 @@
   - type: OrganActions # Goobstation - larba cant spread weeds, only transfer
     actions:
     - ActionTransferPlasma
+
+- type: entity
+  parent: BaseXenomorphOrgan
+  id: OrganXenomorphPlasmaVesselMaid
+  name: plasma vessel
+  description: A reservoir containing concentrated and highly active plasma - the main source of energy and raw material for the xenomorph's biological weapons.
+  components:
+  - type: Sprite
+    state: plasma_vessel
+  - type: Organ
+    slotId: plasma_vessel
+    onAdd:
+    - type: PlasmaVessel
+  - type: PlasmaVessel

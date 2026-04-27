@@ -1,5 +1,9 @@
 - type: entity
-  parent: BaseMobXenomorphAdult
+  parent:
+  - BaseSimpleMob
+  - MobCombat
+  - MobFlammable
+  - StripableInventoryBase
   id: MobXenomorphMaid
   name: xenomorph maid
   description: I mean, I guess it is kinda cute?
@@ -16,13 +20,21 @@
       sprite: _White/Objects/Misc/handcuffs.rsi
       state: body-overlay-xenomorph
       visible: false
-  - type: Xenomorph
-    caste: Maid
   #- type: ActionGrant # Goobstation - moved to organ
   #  actions:
   #  - ActionTransferPlasma
   #  - ActionSpawnResinWeedNode
   - type: Cuffable
+  - type: Hands
+  - type: Puller
+    needsHands: false
+  - type: ComplexInteraction
+  - type: Body
+    prototype: XenomorphMaidPet
+  - type: Inventory
+    templateId: xenomorphMaid
+  - type: SurgeryTarget
+    canOperate: false
   - type: MobThresholds
     thresholds:
       0: Alive
