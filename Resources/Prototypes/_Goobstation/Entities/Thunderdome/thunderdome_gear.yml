@@ -8,6 +8,9 @@
     gloves: ClothingHandsGlovesCombat
     pocket1: WeaponPistolMk58
     pocket2: MagazinePistol
+  storage:
+    back:
+      - Flash
 
 - type: startingGear
   id: ThunderdomeShotgun
@@ -15,6 +18,7 @@
     suitstorage: WeaponShotgunKammerer
   storage:
     back:
+      - Flash
       - BoxLethalshot
       - BoxShotgunSlug
 
@@ -34,6 +38,7 @@
     suitstorage: WeaponShotgunDoubleBarreled
   storage:
     back:
+      - Flash
       - BoxLethalshot
       - BoxLethalshot
 
@@ -43,6 +48,7 @@
     suitstorage: WeaponSubMachineGunDrozd
   storage:
     back:
+      - Flash
       - MagazinePistolSubMachineGun
       - MagazinePistolSubMachineGun
 
@@ -52,6 +58,7 @@
     suitstorage: WeaponSubMachineGunWt550
   storage:
     back:
+      - Flash
       - MagazinePistolSubMachineGunTopMounted
       - MagazinePistolSubMachineGunTopMounted
 
@@ -61,6 +68,7 @@
     suitstorage: WeaponRifleLecter
   storage:
     back:
+      - Flash
       - MagazineRifle
       - MagazineRifle
       - MagazineRifleIncendiary
@@ -71,6 +79,7 @@
     suitstorage: WeaponRifleAk
   storage:
     back:
+      - Flash
       - MagazineLightRifle
       - MagazineLightRifle
 
@@ -80,6 +89,7 @@
     suitstorage: WeaponRevolverPythonAP
   storage:
     back:
+      - Flash
       - SpeedLoaderMagnumAP
 
 - type: startingGear
@@ -88,6 +98,7 @@
     suitstorage: WeaponRevolverInspector
   storage:
     back:
+      - Flash
       - SpeedLoaderMagnum
       - SpeedLoaderMagnum
 
@@ -97,6 +108,7 @@
     suitstorage: EnergySword
   storage:
     back:
+      - Flash
       - Stimpack
       - Stimpack
 
@@ -106,6 +118,7 @@
     suitstorage: CapoeiraManual
   storage:
     back:
+    - Flash
     - BruteAutoInjector
     - BurnAutoInjector
 
@@ -115,6 +128,7 @@
     suitstorage: WeaponSubMachineGunC20r
   storage:
     back:
+      - Flash
       - MagazinePistolSubMachineGun
       - MagazinePistolSubMachineGun
 
@@ -124,6 +138,7 @@
     suitstorage: WeaponRifleWSPR
   storage:
     back:
+      - Flash
       - MagazineCaselessRifle
       - MagazineCaselessRifle
 
@@ -133,6 +148,7 @@
     suitstorage: WeaponRifleEstoc
   storage:
     back:
+      - Flash
       - MagazineLightRifle
       - MagazineLightRifle
 
@@ -140,16 +156,28 @@
   id: ThunderdomeAdvancedLaser
   equipment:
     suitstorage: WeaponAdvancedLaser
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
 
 - type: startingGear
   id: ThunderdomeLaserRifle
   equipment:
     suitstorage: WeaponLaserCarbineAutoRecharge
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
 
 - type: startingGear
   id: ThunderdomeLaserSniper
   equipment:
     suitstorage: WeaponSniperLaser
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
 
 # Grenades
 - type: startingGear
@@ -179,25 +207,29 @@
   id: ThunderdomeMedicalDefault
   storage:
     back:
-      - MedkitFilled
+      - OmnimedToolSyndie
+      - PillCanisterTricordrazine
+      - RegenerativeMesh
+      - MedicatedSuture
 
 - type: startingGear
   id: ThunderdomeMedicalEphedrine
   storage:
     back:
-      - SyringeEphedrine
-      - SyringeEphedrine
+      - Brutepack
+      - Ointment
+      - Gauze
+      - EphedrineAutoInjectorThunderdome
 
 - type: startingGear
   id: ThunderdomeMedicalBicaridine
   storage:
     back:
-      - SyringeBicaridine
-      - SyringeBicaridine
-      - SyringeBicaridine
-      - SyringeDermaline
-      - SyringeDermaline
-      - SyringeDermaline
+      - Brutepack
+      - Ointment
+      - Gauze
+      - DermalineAutoInjectorThunderdome
+      - BicaridineAutoInjectorThunderdome
 
 # Cosmetic options - Head
 - type: startingGear
