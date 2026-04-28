@@ -90,6 +90,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
 
     private readonly Dictionary<ICommonSession, ThunderdomeLoadoutEui> _activeEuis = new();
     private readonly Dictionary<NetUserId, GlobalThunderdomeStats> _globalStats = new();
+    private TimeSpan _nextGlobalStatsCleanup = TimeSpan.Zero;
+    private int _retentionDays = 30;
 
     private HashSet<string> _allowedSpecies = new();
 
@@ -99,6 +101,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         public int Kills;
         public int Deaths;
         public int BestStreak;
+        public int LongestKillstreak;
+        public DateTime LastActivity = DateTime.UtcNow;
         public int LastWeaponSelection = -1;
         public int LastGrenadeSelection = 0;
         public int LastMedicalSelection = 0;
@@ -118,6 +122,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         // CorvaxGoob-Thunderdome-end
 
         Subs.CVar(_cfg, ThunderdomeCVars.ThunderdomeRefill, value => _refillOnKill = value, true);
+
+        Subs.CVar(_cfg, ThunderdomeCVars.GlobalStatsRetentionDays, value => _retentionDays = value, true);
 
         Subs.CVar(_cfg, ThunderdomeCVars.AllowedSpecies, value =>
         {
@@ -155,6 +161,14 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             (_cfg.GetCVar(ThunderdomeCVars.ActivationDelay) > (int) duration.TotalMinutes))
             return;
         // CorvaxGoob-Thunderdome-end
+
+        // Periodic global stats cleanup
+        var curTime = _timing.CurTime;
+        if (curTime >= _nextGlobalStatsCleanup)
+        {
+            CleanupOldGlobalStats();
+            _nextGlobalStatsCleanup = curTime + TimeSpan.FromHours(1);
+        }
 
         if (_ruleEntity != null && TryComp<ThunderdomeRuleComponent>(_ruleEntity.Value, out var rule) && rule.Active)
         {
@@ -204,6 +218,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             rule.Deaths.Clear();
             rule.BestStreaks.Clear();
             rule.CharacterNames.Clear();
+            rule.CachedLeaderboards.Clear();
             rule.Active = false;
             BroadcastPlayerCount(rule);
         }
@@ -493,6 +508,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             }
             victimGlobalStats.Deaths++;
             victimGlobalStats.LastCharacterName = victim.Comp.CharacterName;
+            victimGlobalStats.LastActivity = DateTime.UtcNow;
         }
 
         killer ??= victim.Comp.LastAttacker;
@@ -548,7 +564,10 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             killerGlobalStats.Kills++;
             if (killerComp.CurrentStreak > killerGlobalStats.BestStreak)
                 killerGlobalStats.BestStreak = killerComp.CurrentStreak;
+            if (killerComp.CurrentStreak > killerGlobalStats.LongestKillstreak)
+                killerGlobalStats.LongestKillstreak = killerComp.CurrentStreak;
             killerGlobalStats.LastCharacterName = killerComp.CharacterName;
+            killerGlobalStats.LastActivity = DateTime.UtcNow;
 
             BroadcastKillMessage((killer.Value, killerComp), (victim, victim.Comp), rule);
             CheckKillStreak((killer.Value, killerComp), rule);
@@ -1314,16 +1333,13 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
 
     private void UpdateLeaderboard(ThunderdomeRuleComponent rule)
     {
-        if (rule.ArenaMap == null)
+        if (rule.CachedLeaderboards.Count == 0)
             return;
-
-        var leaderboards = new HashSet<Entity<ThunderdomeLeaderboardComponent>>();
-        _lookup.GetEntitiesOnMap(rule.ArenaMap.Value, leaderboards);
 
         var roundEntries = GenerateRoundLeaderboardEntries(rule);
         var globalEntries = GenerateGlobalLeaderboardEntries();
 
-        foreach (var (lbUid, lbComp) in leaderboards)
+        foreach (var (lbUid, lbComp) in rule.CachedLeaderboards)
         {
             var entries = lbComp.IsGlobal ? globalEntries : roundEntries;
             lbComp.Entries = entries;
@@ -1428,9 +1444,31 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         var leaderboards = new HashSet<Entity<ThunderdomeLeaderboardComponent>>();
         _lookup.GetEntitiesOnMap(ent.Comp.ArenaMap.Value, leaderboards);
 
+        ent.Comp.CachedLeaderboards = leaderboards.ToList();
+
         foreach (var (lbUid, leaderboard) in leaderboards)
         {
             leaderboard.RuleEntity = ent;
+        }
+    }
+
+    private void CleanupOldGlobalStats()
+    {
+        var cutoff = DateTime.UtcNow - TimeSpan.FromDays(_retentionDays);
+        var beforeCount = _globalStats.Count;
+
+        var toRemove = _globalStats
+            .Where(kvp => kvp.Value.LastActivity < cutoff)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        foreach (var userId in toRemove)
+            _globalStats.Remove(userId);
+
+        if (toRemove.Count > 0)
+        {
+            Log.Info($"Thunderdome: Cleaned up {toRemove.Count} inactive stats " +
+                     $"({beforeCount} → {_globalStats.Count} total, retention: {_retentionDays} days)");
         }
     }
 
