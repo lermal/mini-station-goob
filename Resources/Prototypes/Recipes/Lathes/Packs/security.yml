@@ -58,9 +58,12 @@
   - MagazineRifleRubber
   - MagazineBoxRifleRubber
   - MagazinePistolRubber
+  - MagazinePistolSubMachineGunRubber
   - MagazineBoxPistolRubber
   - MagazineBoxMagnumRubber
   - SpeedLoaderMagnumRubber
+  - MagazineShotgunBeanbag
+  - BoxBeanbag
   # CorvaxGoob-RubberAmmo-End
 
   - MagazinePistol
@@ -122,7 +125,7 @@
 - type: latheRecipePack
   id: SecurityAmmo
   recipes:
-  - BoxBeanbag
+  # - BoxBeanbag # Commented by CorvaxGoob-RubberAmmo
   - BoxShotgunIncendiary
   - BoxShotgunUranium
   - BoxShellTranquilizer
@@ -142,7 +145,7 @@
   - MagazinePistolSubMachineGunUranium
   - MagazineRifleIncendiary
   - MagazineRifleUranium
-  - MagazineShotgunBeanbag
+  # - MagazineShotgunBeanbag # Commented by CorvaxGoob-RubberAmmo
   - MagazineShotgunIncendiary
   - SpeedLoaderMagnumIncendiary
   - SpeedLoaderMagnumUranium
