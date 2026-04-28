@@ -7,6 +7,17 @@ thunderdome-loadout-title = Снаряжение Грозовой Арены
 thunderdome-loadout-players = игроков на арене: {$count}
 thunderdome-loadout-subtitle = Выбери свой комплект оружия
 thunderdome-loadout-confirm = Зайти на арену
+
+# Tab titles
+thunderdome-tab-weapons = Оружие
+thunderdome-tab-grenades = Гранаты
+thunderdome-tab-medical = Медицина
+thunderdome-tab-head = Голова
+thunderdome-tab-neck = Шея
+thunderdome-tab-glasses = Очки
+thunderdome-tab-backpack = Рюкзак
+
+thunderdome-loadout-base-gear = Базовое снаряжение: пистолет Mk58 + магазин, вспышка в РПС, сам РПС
 # Weapon categories
 thunderdome-category-shotguns = Дробовики
 thunderdome-category-smgs = Пистолеты-пулемёты
@@ -15,6 +26,12 @@ thunderdome-category-revolvers = Револьверы
 thunderdome-category-snipers = Снайперские винтовки
 thunderdome-category-melee = Рукопашное
 thunderdome-category-lasers = Лазеры
+thunderdome-category-grenades = Гранаты
+thunderdome-category-medical = Медицина
+thunderdome-category-head = Голова
+thunderdome-category-neck = Шея
+thunderdome-category-glasses = Очки
+thunderdome-category-backpack = Рюкзаки
 # Weapon names
 thunderdome-loadout-shotgun = Каммерер
 thunderdome-loadout-doublebarreled = Двустволка
@@ -65,13 +82,13 @@ thunderdome-desc-grenade-flash = Оглушает и ослепляет враг
 thunderdome-desc-grenade-smoke = Создаёт дымовую завесу
 
 # Medical loadouts
-thunderdome-loadout-medical-default = Базовая медицина
-thunderdome-loadout-medical-ephedrine = Боевой стимулятор (эфедрин)
-thunderdome-loadout-medical-bicaridine = Боевая медицина (бикаридин + дермалин)
+thunderdome-loadout-medical-default = Базовая медицина + Хирургический набор
+thunderdome-loadout-medical-ephedrine = Боевой стимулятор
+thunderdome-loadout-medical-bicaridine = Быстрое лечение
 
-thunderdome-desc-medical-default = Медленное, но эффективное лечение: хирургические инструменты и таблетки трикордразина
-thunderdome-desc-medical-ephedrine = Быстрые автоинъекторы эфедрина для мгновенного буста скорости и базовые расходники
-thunderdome-desc-medical-bicaridine = Автоинъекторы бикаридина и дермалина для быстрого лечения ран и ожогов в бою
+thunderdome-desc-medical-default = Продвинутый хирургический инструмент, регенеративная сетка, медицинская нить и таблетки трикордразина
+thunderdome-desc-medical-ephedrine = Автоинъектор эфедрина для буста скорости, плюс бинты, мазь и марля
+thunderdome-desc-medical-bicaridine = Автоинъекторы бикаридина и дермалина для быстрого лечения, плюс бинты, мазь и марля
 
 # Head loadouts
 thunderdome-loadout-head-default = Базовый шлем
