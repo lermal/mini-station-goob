@@ -91,11 +91,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
     private readonly Dictionary<ICommonSession, ThunderdomeLoadoutEui> _activeEuis = new();
     private readonly Dictionary<NetUserId, GlobalThunderdomeStats> _globalStats = new();
 
-    private static readonly HashSet<string> AllowedSpecies = new()
-    {
-        "Human", "Reptilian", "Dwarf", "Moth", "Diona", "Arachnid", "Slime",
-        "Felinid", "Oni", "Harpy", "Vulpkanin", "Tajaran"
-    };
+    private HashSet<string> _allowedSpecies = new();
 
     private sealed class GlobalThunderdomeStats
     {
@@ -122,6 +118,13 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         // CorvaxGoob-Thunderdome-end
 
         Subs.CVar(_cfg, ThunderdomeCVars.ThunderdomeRefill, value => _refillOnKill = value, true);
+
+        Subs.CVar(_cfg, ThunderdomeCVars.AllowedSpecies, value =>
+        {
+            _allowedSpecies = value.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .ToHashSet();
+        }, true);
 
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundEnding);
         SubscribeLocalEvent<ThunderdomeRuleComponent, RuleLoadedGridsEvent>(OnGridsLoaded);
@@ -323,7 +326,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             var selectedProfile = prefs.SelectedCharacter as HumanoidCharacterProfile;
             if (selectedProfile != null)
             {
-                var species = AllowedSpecies.Contains(selectedProfile.Species)
+                var species = _allowedSpecies.Contains(selectedProfile.Species)
                     ? selectedProfile.Species
                     : SharedHumanoidAppearanceSystem.DefaultSpecies;
                 profile = selectedProfile.WithSpecies(species);
