@@ -83,7 +83,6 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly SharedStorageSystem _storage = default!;
     [Dependency] private readonly PvsOverrideSystem _pvsOverride = default!;
-
     [Dependency] private readonly SkillsSystem _skills = default!;
 
     private const string RulePrototype = "ThunderdomeRule";

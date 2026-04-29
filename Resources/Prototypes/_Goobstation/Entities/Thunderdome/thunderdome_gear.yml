@@ -357,6 +357,11 @@
   equipment:
     eyes: ClothingEyesNightVisionGoggles
 
+- type: startingGear
+  id: ThunderdomeGlasses5
+  equipment:
+    eyes: ClothingEyesNightVisionGoggles
+
 # Backpack
 - type: startingGear
   id: ThunderdomeBackpack1
