@@ -166,9 +166,9 @@
       ghostRulesLocKey: ghost-role-information-slaughter-demon-rules
       gameRuleId: SlaughterDemonMidround
       tagLocKey: antag-token-window-tag-ghost
-      # minimumPlayers: 20
+      minimumPlayers: 20
       requiresInRound: true
-      # minimumTimeFromRoundStart: 2700
+      minimumTimeFromRoundStart: 2700
 
     - id: cosmic_cult
       nameLocKey: antag-store-role-cosmic-cult-name
