@@ -592,8 +592,7 @@ public sealed class DailyRewardSystem : EntitySystem
         var milestones = new[]
         {
             (TimeSpan.FromMinutes(30), 1),
-            (TimeSpan.FromHours(2), 2),
-            (TimeSpan.FromHours(4), 3),
+            (TimeSpan.FromHours(3), 1),
         };
 
         foreach (var (threshold, amount) in milestones)
@@ -604,7 +603,7 @@ public sealed class DailyRewardSystem : EntitySystem
                 tickets.Tickets += amount;
                 Dirty(uid, tickets);
 
-                _popup.PopupEntity($"Получено билетов: {amount}", uid, uid);
+                // _popup.PopupEntity($"Получено билетов: {amount}", uid, uid);
                 RaiseNetworkEvent(new GhostRoleTicketUpdateEvent(tickets.Tickets), session);
             }
         }
