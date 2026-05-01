@@ -1728,7 +1728,7 @@
   icon: { sprite: _Goobstation/Objects/Misc/syndiecubes.rsi, state: box }
   productEntity: SlimeCubeBoxSyndie
   cost:
-    Telecrystal: 250
+    Telecrystal: 20
   categories:
     - UplinkDisruption
   conditions:
