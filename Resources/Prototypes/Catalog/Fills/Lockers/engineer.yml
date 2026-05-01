@@ -158,7 +158,7 @@
       - id: ClothingMaskGasAtmos
       - id: ClothingOuterSuitAtmosFire
       - id: ClothingHeadHelmetAtmosFire
-      - id: GasAnalyzer
+    # - id: GasAnalyzer #Corvax-Goob-atmos-magboots
       - id: MedkitOxygenFilled
       - id: HolofanProjector
       - id: RPD #funkystation
@@ -169,6 +169,7 @@
       - id: ClothingOuterHardsuitAtmos # Ministation - atmos hardsuit
       - id: ClothingHandsGlovesAtmosInsulated # Goobstation - insulated atmos gloves
       - id: ClothingBackpackFirefighterTank # Assmos - Firefighter nozzle
+      - id: ClothingShoesBootsMagAtmos #Corvax-Goob-atmos-magboots
 
 - type: entity
   id: LockerAtmosphericsFilled
@@ -180,7 +181,7 @@
       - id: ClothingMaskGasAtmos
       - id: ClothingOuterSuitAtmosFire
       - id: ClothingHeadHelmetAtmosFire
-      - id: GasAnalyzer
+    # - id: GasAnalyzer #Corvax-Goob-atmos-magboots
       - id: MedkitOxygenFilled
       - id: HolofanProjector
       - id: RPD #funkystation

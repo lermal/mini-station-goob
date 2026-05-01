@@ -38,6 +38,7 @@ using Content.Shared.Stacks;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
 using Robust.Server.Audio;
+using Robust.Server.GameStates;
 using Robust.Server.Player;
 using Robust.Shared.Audio;
 using Robust.Shared.Configuration;
@@ -81,7 +82,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
     [Dependency] private readonly SharedStackSystem _stack = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly SharedStorageSystem _storage = default!;
-
+    [Dependency] private readonly PvsOverrideSystem _pvsOverride = default!;
     [Dependency] private readonly SkillsSystem _skills = default!;
 
     private const string RulePrototype = "ThunderdomeRule";
@@ -90,12 +91,11 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
 
     private readonly Dictionary<ICommonSession, ThunderdomeLoadoutEui> _activeEuis = new();
     private readonly Dictionary<NetUserId, GlobalThunderdomeStats> _globalStats = new();
+    private TimeSpan _nextGlobalStatsCleanup = TimeSpan.Zero;
+    private int _retentionDays = 30;
+    private float _suicidePenaltyWindow = 10f;
 
-    private static readonly HashSet<string> AllowedSpecies = new()
-    {
-        "Human", "Reptilian", "Dwarf", "Moth", "Diona", "Arachnid", "Slime",
-        "Felinid", "Oni", "Harpy", "Vulpkanin", "Tajaran"
-    };
+    private HashSet<string> _allowedSpecies = new();
 
     private sealed class GlobalThunderdomeStats
     {
@@ -103,6 +103,8 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         public int Kills;
         public int Deaths;
         public int BestStreak;
+        public int LongestKillstreak;
+        public DateTime LastActivity = DateTime.UtcNow;
         public int LastWeaponSelection = -1;
         public int LastGrenadeSelection = 0;
         public int LastMedicalSelection = 0;
@@ -110,6 +112,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         public int LastNeckSelection = 0;
         public int LastGlassesSelection = 0;
         public int LastBackpackSelection = 0;
+        public int LastUtilitySelection = 0;
     }
 
     public override void Initialize()
@@ -122,6 +125,17 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         // CorvaxGoob-Thunderdome-end
 
         Subs.CVar(_cfg, ThunderdomeCVars.ThunderdomeRefill, value => _refillOnKill = value, true);
+
+        Subs.CVar(_cfg, ThunderdomeCVars.GlobalStatsRetentionDays, value => _retentionDays = value, true);
+
+        Subs.CVar(_cfg, ThunderdomeCVars.SuicidePenaltyWindow, value => _suicidePenaltyWindow = value, true);
+
+        Subs.CVar(_cfg, ThunderdomeCVars.AllowedSpecies, value =>
+        {
+            _allowedSpecies = value.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .ToHashSet();
+        }, true);
 
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundEnding);
         SubscribeLocalEvent<ThunderdomeRuleComponent, RuleLoadedGridsEvent>(OnGridsLoaded);
@@ -138,6 +152,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         SubscribeLocalEvent<ThunderdomePlayerComponent, GetAntagSelectionBlockerEvent>(OnAntagSelectionBlocker);
         SubscribeLocalEvent<ThunderdomeOriginalBodyComponent, ExaminedEvent>(OnOriginalBodyExamined);
         SubscribeLocalEvent<ThunderdomePlayerComponent, PlayerDetachedEvent>(OnPlayerDetached);
+        SubscribeLocalEvent<ThunderdomePlayerComponent, DamageChangedEvent>(OnThunderdomePlayerDamaged);
 
         _playerManager.PlayerStatusChanged += OnPlayerStatusChanged;
     }
@@ -152,6 +167,14 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             (_cfg.GetCVar(ThunderdomeCVars.ActivationDelay) > (int) duration.TotalMinutes))
             return;
         // CorvaxGoob-Thunderdome-end
+
+        // Periodic global stats cleanup
+        var curTime = _timing.CurTime;
+        if (curTime >= _nextGlobalStatsCleanup)
+        {
+            CleanupOldGlobalStats();
+            _nextGlobalStatsCleanup = curTime + TimeSpan.FromHours(1);
+        }
 
         if (_ruleEntity != null && TryComp<ThunderdomeRuleComponent>(_ruleEntity.Value, out var rule) && rule.Active)
         {
@@ -201,6 +224,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             rule.Deaths.Clear();
             rule.BestStreaks.Clear();
             rule.CharacterNames.Clear();
+            rule.CachedLeaderboards.Clear();
             rule.Active = false;
             BroadcastPlayerCount(rule);
         }
@@ -306,7 +330,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         GhostDomePlayer(ent, rule, playSound: false);
     }
 
-    public void SpawnPlayer(ICommonSession session, EntityUid ruleEntity, int weaponIdx, int grenadeIdx, int medicalIdx, int headIdx, int neckIdx, int glassesIdx, int backpackIdx)
+    public void SpawnPlayer(ICommonSession session, EntityUid ruleEntity, int weaponIdx, int grenadeIdx, int medicalIdx, int headIdx, int neckIdx, int glassesIdx, int backpackIdx, int utilityIdx)
     {
         if (!TryComp<ThunderdomeRuleComponent>(ruleEntity, out var rule)
             || !rule.Active
@@ -323,7 +347,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             var selectedProfile = prefs.SelectedCharacter as HumanoidCharacterProfile;
             if (selectedProfile != null)
             {
-                var species = AllowedSpecies.Contains(selectedProfile.Species)
+                var species = _allowedSpecies.Contains(selectedProfile.Species)
                     ? selectedProfile.Species
                     : SharedHumanoidAppearanceSystem.DefaultSpecies;
                 profile = selectedProfile.WithSpecies(species);
@@ -342,9 +366,14 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         SpawnBackpackLoadout(mob, backpackIdx, rule);
 
         // Then spawn items that go into storage (after backpack is equipped)
-        SpawnLoadoutItems(mob, weaponIdx, rule);
+        // Grenade first (goes to belt, doesn't affect backpack order)
         SpawnGrenadeLoadout(mob, grenadeIdx, rule);
+        // Utility second (goes to backpack)
+        SpawnUtilityLoadout(mob, utilityIdx, rule);
+        // Medical third (goes to backpack)
         SpawnMedicalLoadout(mob, medicalIdx, rule);
+        // Weapon last (ammo goes to backpack, appears in Q/A)
+        SpawnLoadoutItems(mob, weaponIdx, rule);
 
         EnsureComp<IgnoreSkillsComponent>(mob);
 
@@ -357,6 +386,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         tdPlayer.NeckSelection = neckIdx;
         tdPlayer.GlassesSelection = glassesIdx;
         tdPlayer.BackpackSelection = backpackIdx;
+        tdPlayer.UtilitySelection = utilityIdx;
         tdPlayer.CharacterName = profile?.Name ?? "Unknown";
 
         // Восстанавливаем статистику из rule по UserId
@@ -394,6 +424,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             globalStats.LastNeckSelection = neckIdx;
             globalStats.LastGlassesSelection = glassesIdx;
             globalStats.LastBackpackSelection = backpackIdx;
+            globalStats.LastUtilitySelection = utilityIdx;
             globalStats.LastCharacterName = profile?.Name ?? "Unknown";
 
             // Update leaderboard immediately to show new player
@@ -470,6 +501,37 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
 
     private void CreditKill(Entity<ThunderdomePlayerComponent> victim, ThunderdomeRuleComponent rule, EntityUid? killer = null)
     {
+        // Самоубийство или отсутствие киллера
+        if (killer == null || killer == victim.Owner || !TryComp<ThunderdomePlayerComponent>(killer.Value, out var killerComp))
+        {
+            // Check if player is in critical state or recently damaged by another player
+            var isCritical = TryComp<MobStateComponent>(victim.Owner, out var mobState) &&
+                             mobState.CurrentState == MobState.Critical;
+            var timeSinceLastDamage = _timing.CurTime - victim.Comp.LastDamagedByPlayer;
+            var recentlyDamaged = timeSinceLastDamage.TotalSeconds < _suicidePenaltyWindow;
+
+            // If in crit OR recently damaged, and attacker exists, credit them with kill
+            if ((isCritical || recentlyDamaged) &&
+                victim.Comp.LastAttacker != null &&
+                TryComp<ThunderdomePlayerComponent>(victim.Comp.LastAttacker.Value, out var attackerComp))
+            {
+                // Combat death - credit attacker, clear LastAttacker, recurse
+                var lastAttacker = victim.Comp.LastAttacker.Value;
+                victim.Comp.LastAttacker = null;
+                CreditKill(victim, rule, lastAttacker);
+                return;
+            }
+
+            // Not in combat - peaceful exit, NO death counted
+            victim.Comp.LastAttacker = null;
+            UpdateLeaderboard(rule);
+            return;
+        }
+
+        // Has killer - this is a combat death
+        victim.Comp.LastAttacker = null;
+
+        // Increment deaths ONLY for combat deaths
         victim.Comp.Deaths++;
         victim.Comp.CurrentStreak = 0;
 
@@ -487,36 +549,10 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             }
             victimGlobalStats.Deaths++;
             victimGlobalStats.LastCharacterName = victim.Comp.CharacterName;
+            victimGlobalStats.LastActivity = DateTime.UtcNow;
         }
 
-        killer ??= victim.Comp.LastAttacker;
-        victim.Comp.LastAttacker = null;
-
-        // Самоубийство или отсутствие киллера - штраф
-        if (killer == null || killer == victim.Owner || !TryComp<ThunderdomePlayerComponent>(killer.Value, out var killerComp))
-        {
-            // Штраф за самоубийство
-            if (victim.Comp.Kills > 0)
-            {
-                victim.Comp.Kills--;
-
-                // Update rule dictionary
-                if (_mind.TryGetMind(victim, out _, out var victimMind) && victimMind.UserId is { } victimUserId)
-                {
-                    rule.Kills.TryGetValue(victimUserId, out var existingKills);
-                    if (existingKills > 0)
-                        rule.Kills[victimUserId] = existingKills - 1;
-
-                    // Update global stats - apply suicide penalty
-                    if (_globalStats.TryGetValue(victimUserId, out var victimGlobalStats) && victimGlobalStats.Kills > 0)
-                        victimGlobalStats.Kills--;
-                }
-            }
-
-            UpdateLeaderboard(rule);
-            return;
-        }
-
+        // Credit killer
         killerComp.Kills++;
         killerComp.CurrentStreak++;
 
@@ -542,7 +578,10 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             killerGlobalStats.Kills++;
             if (killerComp.CurrentStreak > killerGlobalStats.BestStreak)
                 killerGlobalStats.BestStreak = killerComp.CurrentStreak;
+            if (killerComp.CurrentStreak > killerGlobalStats.LongestKillstreak)
+                killerGlobalStats.LongestKillstreak = killerComp.CurrentStreak;
             killerGlobalStats.LastCharacterName = killerComp.CharacterName;
+            killerGlobalStats.LastActivity = DateTime.UtcNow;
 
             BroadcastKillMessage((killer.Value, killerComp), (victim, victim.Comp), rule);
             CheckKillStreak((killer.Value, killerComp), rule);
@@ -843,6 +882,20 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         _stationSpawning.EquipStartingGear(mob, rule.BackpackLoadouts[backpackIdx].Gear);
     }
 
+    private void SpawnUtilityLoadout(EntityUid mob, int utilityIdx, ThunderdomeRuleComponent rule)
+    {
+        if (rule.UtilityLoadouts.Count == 0)
+            return;
+
+        if (utilityIdx < 0 || utilityIdx >= rule.UtilityLoadouts.Count)
+        {
+            Log.Warning($"ThunderDome: Invalid utilityIdx {utilityIdx} received, clamping to valid range [0, {rule.UtilityLoadouts.Count - 1}]");
+            utilityIdx = Math.Clamp(utilityIdx, 0, rule.UtilityLoadouts.Count - 1);
+        }
+
+        _stationSpawning.EquipStartingGear(mob, rule.UtilityLoadouts[utilityIdx].Gear);
+    }
+
     private EntityCoordinates? GetRandomSpawnPoint(ThunderdomeRuleComponent rule)
     {
         if (rule.ArenaMap == null)
@@ -1010,6 +1063,20 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             });
         }
 
+        var utilities = new List<ThunderdomeLoadoutOption>();
+        for (var i = 0; i < rule.UtilityLoadouts.Count; i++)
+        {
+            var loadout = rule.UtilityLoadouts[i];
+            utilities.Add(new ThunderdomeLoadoutOption
+            {
+                Index = i,
+                Name = Loc.GetString(loadout.Name),
+                Description = string.IsNullOrEmpty(loadout.Description) ? string.Empty : Loc.GetString(loadout.Description),
+                Category = string.Empty,
+                SpritePrototype = loadout.Sprite,
+            });
+        }
+
         // Получаем сохраненный выбор
         var lastWeapon = -1;
         var lastGrenade = 0;
@@ -1018,6 +1085,7 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         var lastNeck = 0;
         var lastGlasses = 0;
         var lastBackpack = 0;
+        var lastUtility = 0;
         if (userId.HasValue && _globalStats.TryGetValue(userId.Value, out var stats))
         {
             lastWeapon = stats.LastWeaponSelection;
@@ -1027,9 +1095,10 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
             lastNeck = stats.LastNeckSelection;
             lastGlasses = stats.LastGlassesSelection;
             lastBackpack = stats.LastBackpackSelection;
+            lastUtility = stats.LastUtilitySelection;
         }
 
-        return new ThunderdomeLoadoutEuiState(weapons, grenades, medicals, heads, necks, glasses, backpacks, rule.Players.Count, lastWeapon, lastGrenade, lastMedical, lastHead, lastNeck, lastGlasses, lastBackpack);
+        return new ThunderdomeLoadoutEuiState(weapons, grenades, medicals, heads, necks, glasses, backpacks, utilities, rule.Players.Count, lastWeapon, lastGrenade, lastMedical, lastHead, lastNeck, lastGlasses, lastBackpack, lastUtility);
     }
 
     private void RefillAmmo(EntityUid killer)
@@ -1308,16 +1377,32 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
 
     private void UpdateLeaderboard(ThunderdomeRuleComponent rule)
     {
-        if (rule.ArenaMap == null)
-            return;
+        // Fallback: if cache is empty, try to populate it
+        if (rule.CachedLeaderboards.Count == 0 && rule.ArenaMap != null)
+        {
+            var leaderboards = new HashSet<Entity<ThunderdomeLeaderboardComponent>>();
+            _lookup.GetEntitiesOnMap(rule.ArenaMap.Value, leaderboards);
 
-        var leaderboards = new HashSet<Entity<ThunderdomeLeaderboardComponent>>();
-        _lookup.GetEntitiesOnMap(rule.ArenaMap.Value, leaderboards);
+            // Double-check to prevent race condition
+            if (leaderboards.Count > 0 && rule.CachedLeaderboards.Count == 0)
+            {
+                rule.CachedLeaderboards = leaderboards.ToList();
+
+                // Make leaderboards visible to all clients (including ghosts far away)
+                foreach (var (lbUid, _) in leaderboards)
+                {
+                    _pvsOverride.AddGlobalOverride(lbUid);
+                }
+            }
+        }
+
+        if (rule.CachedLeaderboards.Count == 0)
+            return;
 
         var roundEntries = GenerateRoundLeaderboardEntries(rule);
         var globalEntries = GenerateGlobalLeaderboardEntries();
 
-        foreach (var (lbUid, lbComp) in leaderboards)
+        foreach (var (lbUid, lbComp) in rule.CachedLeaderboards)
         {
             var entries = lbComp.IsGlobal ? globalEntries : roundEntries;
             lbComp.Entries = entries;
@@ -1422,9 +1507,50 @@ public sealed class ThunderdomeRuleSystem : EntitySystem
         var leaderboards = new HashSet<Entity<ThunderdomeLeaderboardComponent>>();
         _lookup.GetEntitiesOnMap(ent.Comp.ArenaMap.Value, leaderboards);
 
+        ent.Comp.CachedLeaderboards = leaderboards.ToList();
+
         foreach (var (lbUid, leaderboard) in leaderboards)
         {
             leaderboard.RuleEntity = ent;
+            // Make leaderboards visible to all clients (including ghosts far away)
+            _pvsOverride.AddGlobalOverride(lbUid);
+        }
+    }
+
+    private void OnThunderdomePlayerDamaged(Entity<ThunderdomePlayerComponent> ent, ref DamageChangedEvent args)
+    {
+        // Only track damage from other Thunderdome players
+        if (args.Origin == null ||
+            args.Origin == ent.Owner ||
+            !Exists(args.Origin.Value) ||
+            !HasComp<ThunderdomePlayerComponent>(args.Origin.Value))
+            return;
+
+        // Only track if damage increased (not healing)
+        if (!args.DamageIncreased)
+            return;
+
+        ent.Comp.LastAttacker = args.Origin.Value;
+        ent.Comp.LastDamagedByPlayer = _timing.CurTime;
+    }
+
+    private void CleanupOldGlobalStats()
+    {
+        var cutoff = DateTime.UtcNow - TimeSpan.FromDays(_retentionDays);
+        var beforeCount = _globalStats.Count;
+
+        var toRemove = _globalStats
+            .Where(kvp => kvp.Value.LastActivity < cutoff)
+            .Select(kvp => kvp.Key)
+            .ToList();
+
+        foreach (var userId in toRemove)
+            _globalStats.Remove(userId);
+
+        if (toRemove.Count > 0)
+        {
+            Log.Info($"Thunderdome: Cleaned up {toRemove.Count} inactive stats " +
+                     $"({beforeCount} → {_globalStats.Count} total, retention: {_retentionDays} days)");
         }
     }
 
