@@ -824,12 +824,22 @@ public sealed class AntagTokenSystem : EntitySystem
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
+        var grantedGhost = new HashSet<NetUserId>(_roundGrantedGhostRule);
         _roundGrantedLobbyAntag.Clear();
         _roundGrantedGhostRule.Clear();
+
         foreach (var (userId, state) in _states)
         {
             if (state.PendingGhostAutoRoleId == null)
                 continue;
+
+            if (grantedGhost.Contains(userId))
+            {
+                ClearPendingGhostAuto(state);
+                PersistState(userId, state);
+                SendState(userId);
+                continue;
+            }
 
             RefundPendingGhostAuto(userId, state);
             PersistState(userId, state);
@@ -1521,6 +1531,12 @@ public sealed class AntagTokenSystem : EntitySystem
         // If the round has ended (or server restarted into lobby), stale pending must be refunded.
         if (_gameTicker.RunLevel != GameRunLevel.InRound)
         {
+            if (_roundGrantedGhostRule.Contains(userId))
+            {
+                ClearPendingGhostAuto(state);
+                return true;
+            }
+
             RefundPendingGhostAuto(userId, state);
             return true;
         }
