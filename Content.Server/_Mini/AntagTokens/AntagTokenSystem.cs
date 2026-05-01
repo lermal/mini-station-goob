@@ -673,6 +673,18 @@ public sealed class AntagTokenSystem : EntitySystem
         var newState = BuildPlayerTokenStateFromRows(tokenEntries, selection);
         var prevMonthlyYear = newState.MonthlyYear;
         var prevMonthlyMonth = newState.MonthlyMonth;
+
+        // Prevent DB sync from restoring a pending token that was already consumed this round
+        if (_roundGrantedGhostRule.Contains(userId))
+            ClearPendingGhostAuto(newState);
+
+        if (_roundGrantedLobbyAntag.Contains(userId))
+        {
+            newState.PendingDepositRoleId = null;
+            newState.PendingDepositQueuedAtUtc = null;
+            newState.PendingDepositUsedRoleCredit = false;
+        }
+
         NormalizeMonthlyState(newState, DateTime.UtcNow, userId);
 
         if (_states.TryGetValue(userId, out var oldState) && TokenStatesEqual(oldState, newState))
@@ -1529,15 +1541,12 @@ public sealed class AntagTokenSystem : EntitySystem
 
         // Ghost token queue is only valid during an active round.
         // If the round has ended (or server restarted into lobby), stale pending must be refunded.
+        // Ghost token queue is only valid during an active round.
+        // If the round has ended (or server restarted into lobby), just clean up the pending state
+        // without refunding. Refunds for truly unused tokens are handled in OnRoundRestartCleanup.
         if (_gameTicker.RunLevel != GameRunLevel.InRound)
         {
-            if (_roundGrantedGhostRule.Contains(userId))
-            {
-                ClearPendingGhostAuto(state);
-                return true;
-            }
-
-            RefundPendingGhostAuto(userId, state);
+            ClearPendingGhostAuto(state);
             return true;
         }
 
@@ -1904,6 +1913,8 @@ private void NormalizeMonthlyState(PlayerTokenState state, DateTime nowUtc, NetU
 
         if (_ghostRoles.Takeover(session, ghostRole.Identifier))
         {
+            ClearPendingGhostAuto(state);
+            MarkGhostRuleTokenGranted(session.UserId);
             PersistState(session.UserId, state);
             SendState(session.UserId);
             Logger.InfoS("AntagTokens", $"Ghost auto-join instant takeover ok: user={session.Name}");
