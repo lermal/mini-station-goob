@@ -263,7 +263,7 @@
     sprite: Objects/Weapons/Guns/Snipers/heavy_sniper.rsi
   - type: GunRequiresWield
   - type: Gun
-    # fireRate: 0.4 # Goobstation
+    fireRate: 0.6 # Goobstation
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
