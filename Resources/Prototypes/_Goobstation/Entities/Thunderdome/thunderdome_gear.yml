@@ -355,10 +355,10 @@
 - type: startingGear
   id: ThunderdomeGlasses5
   equipment:
-    eyes: ClothingEyesNightVisionGoggles
+    eyes: ClothingEyesThermalVisionGoggles
 
 - type: startingGear
-  id: ThunderdomeGlasses5
+  id: ThunderdomeGlasses6
   equipment:
     eyes: ClothingEyesNightVisionGoggles
 

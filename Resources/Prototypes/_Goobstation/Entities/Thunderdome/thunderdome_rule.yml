@@ -251,12 +251,12 @@
           description: thunderdome-desc-glasses-diagnostic
           category: thunderdome-category-glasses
           sprite: ClothingEyesHudMedical
-        - gear: ThunderdomeGlasses4
+        - gear: ThunderdomeGlasses5
           name: thunderdome-loadout-glasses-thermal
           description: thunderdome-desc-glasses-thermal
           category: thunderdome-category-glasses
           sprite: ClothingEyesThermalVisionGoggles
-        - gear: ThunderdomeGlasses5
+        - gear: ThunderdomeGlasses6
           name: thunderdome-loadout-glasses-nightvision
           description: thunderdome-desc-glasses-nightvision
           category: thunderdome-category-glasses
