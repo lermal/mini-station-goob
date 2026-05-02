@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2026 Lermal
 # Мини-станция/Freaky-station, Licensed under custom terms with restrictions on public hosting and commercial use, full text: https://raw.githubusercontent.com/ministation/mini-station-goob/master/LICENSE.TXT
+#
+# freeMinimumSponsorLevel (optional): omit — только за токены. 0 — бесплатно любому игроку (один раз за раунд).
+# 1–5 — бесплатно при уровне спонсора >= значения, не чаще 1 раза в сутки (UTC) на аккаунт.
 
 - type: antagTokenCatalog
   id: Default
@@ -14,6 +17,7 @@
       gameRuleId: OopsAllThieves
       tagLocKey: antag-token-window-tag-queue
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 1
 
     - id: revenant
       nameLocKey: antag-store-role-revenant-name
@@ -27,6 +31,7 @@
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
+      freeMinimumSponsorLevel: 2
 
     - id: agent
       nameLocKey: antag-store-role-agent-name
@@ -38,6 +43,7 @@
       gameRuleId: Traitor
       tagLocKey: antag-token-window-tag-queue
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 1
 
     - id: abductor
       nameLocKey: antag-store-role-abductor-name
@@ -51,6 +57,7 @@
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
       minimumTimeFromRoundStart: 600
+      freeMinimumSponsorLevel: 2
 
     - id: paradox_clone
       nameLocKey: antag-store-role-clone-name
@@ -65,6 +72,7 @@
       minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 1200
+      freeMinimumSponsorLevel: 2
 
     - id: vox
       nameLocKey: antag-store-role-vox-name
@@ -79,6 +87,7 @@
       minimumPlayers: 15
       requiresInRound: true
       minimumTimeFromRoundStart: 1200
+      freeMinimumSponsorLevel: 3
 
     - id: devil
       nameLocKey: antag-store-role-devil-name
@@ -90,6 +99,7 @@
       gameRuleId: Devil
       tagLocKey: antag-token-window-tag-queue
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 3
 
     - id: rat_king
       nameLocKey: antag-store-role-rat-king-name
@@ -104,6 +114,7 @@
       minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
+      freeMinimumSponsorLevel: 1
 
     - id: bingle
       nameLocKey: antag-store-role-bingle-name
@@ -118,6 +129,7 @@
       minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 2400
+      freeMinimumSponsorLevel: 4
 
     - id: ninja
       nameLocKey: antag-store-role-ninja-name
@@ -131,6 +143,7 @@
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
       minimumTimeFromRoundStart: 2400
+      freeMinimumSponsorLevel: 2
 
     - id: headrev
       nameLocKey: antag-store-role-headrev-name
@@ -143,6 +156,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 25
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 4
 
     - id: initial_infected
       nameLocKey: antag-store-role-initial-infected-name
@@ -155,6 +169,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 30
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 2
 
     - id: slaughter_demon
       nameLocKey: antag-store-role-slaughter-demon-name
@@ -169,6 +184,7 @@
       minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 2700
+      freeMinimumSponsorLevel: 3
 
     - id: cosmic_cult
       nameLocKey: antag-store-role-cosmic-cult-name
@@ -181,6 +197,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 20
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 4
 
     - id: slasher
       nameLocKey: antag-store-role-slasher-name
@@ -195,6 +212,7 @@
       minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 2700
+      freeMinimumSponsorLevel: 4
 
     - id: hastur
       nameLocKey: antag-store-role-hastur-name
@@ -209,6 +227,7 @@
       minimumPlayers: 25
       requiresInRound: true
       minimumTimeFromRoundStart: 3600
+      freeMinimumSponsorLevel: 3
 
     - id: dragon
       nameLocKey: antag-store-role-dragon-name
@@ -223,6 +242,7 @@
       minimumPlayers: 25
       requiresInRound: true
       minimumTimeFromRoundStart: 3600
+      freeMinimumSponsorLevel: 4
 
     - id: heretic
       nameLocKey: antag-store-role-heretic-name
@@ -235,6 +255,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 20
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 4
 
     - id: shadowling
       nameLocKey: antag-store-role-shadowling-name
@@ -247,6 +268,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 30
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 4
 
     - id: xenomorph
       nameLocKey: antag-store-role-xenomorph-name
@@ -259,6 +281,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 30
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 5
 
     - id: yao
       nameLocKey: antag-store-role-yao-name
@@ -272,7 +295,8 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 20
       requiresInRound: true
-      minimumTimeFromRoundStart: 3600
+      minimumTimeFromRoundStart: 3600\
+      freeMinimumSponsorLevel: 4
 
     - id: changeling
       nameLocKey: antag-store-role-changeling-name
@@ -285,6 +309,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 25
       requiresPreRoundLobby: true
+      freeMinimumSponsorLevel: 5
 
     - id: wraith
       nameLocKey: antag-store-role-wraith-name
@@ -299,6 +324,7 @@
       minimumPlayers: 30
       requiresInRound: true
       minimumTimeFromRoundStart: 3600
+      freeMinimumSponsorLevel: 5
 
     - id: blob
       nameLocKey: antag-store-role-blob-name
@@ -313,6 +339,7 @@
       minimumPlayers: 30
       requiresInRound: true
       minimumTimeFromRoundStart: 4200
+      freeMinimumSponsorLevel: 5
 
     - id: wizard
       nameLocKey: antag-store-role-wizard-name
@@ -326,3 +353,4 @@
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
       minimumTimeFromRoundStart: 4200
+      freeMinimumSponsorLevel: 5

@@ -52,8 +52,7 @@ public sealed class SlasherRegenerateSystem : EntitySystem
         if (args.Handled)
             return;
 
-        // Check if a soul is available to use
-        if (!comp.HasSoulAvailable)
+        if (comp.SoulCharges <= 0)
         {
             _popup.PopupPredicted(Loc.GetString("slasher-regenerate-no-soul"), uid, uid);
             return;
@@ -78,8 +77,7 @@ public sealed class SlasherRegenerateSystem : EntitySystem
         // Play sound effect
         _audio.PlayPredicted(comp.RegenerateSound, uid, uid);
 
-        // Consume the soul
-        comp.HasSoulAvailable = false;
+        comp.SoulCharges--;
         Dirty(uid, comp);
 
         args.Handled = true;
@@ -101,15 +99,12 @@ public sealed class SlasherRegenerateSystem : EntitySystem
         _solutions.TryAddReagent(bloodstream.ChemicalSolution.Value, new ReagentId(comp.Reagent, null), FixedPoint2.New(comp.ReagentAmount), out _);
     }
 
-    /// <summary>
-    /// Grants a soul to use for regenerate. Called when the slasher successfully steals a soul in soulsteal.
-    /// </summary>
     public void GrantSoul(EntityUid uid, SlasherRegenerateComponent? comp = null)
     {
         if (!Resolve(uid, ref comp))
             return;
 
-        comp.HasSoulAvailable = true;
+        comp.SoulCharges++;
         Dirty(uid, comp);
     }
 }

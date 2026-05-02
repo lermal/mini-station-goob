@@ -57,6 +57,9 @@ public sealed partial class AntagTokenListingEntry
     [DataField]
     public string? GhostAutoJoinEntityProto;
 
+    [DataField]
+    public int? FreeMinimumSponsorLevel;
+
     public AntagRoleDefinition ToDefinition()
     {
         return new AntagRoleDefinition(
@@ -75,7 +78,8 @@ public sealed partial class AntagTokenListingEntry
             MinimumTimeFromRoundStart,
             UnavailableReasonLocKey,
             GhostRulesLocKey,
-            GhostAutoJoinEntityProto);
+            GhostAutoJoinEntityProto,
+            FreeMinimumSponsorLevel ?? -1);
     }
 }
 

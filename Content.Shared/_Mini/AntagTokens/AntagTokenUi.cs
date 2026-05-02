@@ -56,7 +56,8 @@ public sealed class AntagTokenRoleEntry(
     bool available,
     string? tagLocKey,
     string? statusLocKey,
-    int purchaseCooldownSecondsRemaining = 0)
+    int purchaseCooldownSecondsRemaining = 0,
+    bool freePurchaseAvailable = false)
 {
     public string RoleId { get; } = roleId;
     public int Cost { get; } = cost;
@@ -69,4 +70,5 @@ public sealed class AntagTokenRoleEntry(
     public string? TagLocKey { get; } = tagLocKey;
     public string? StatusLocKey { get; } = statusLocKey;
     public int PurchaseCooldownSecondsRemaining { get; } = purchaseCooldownSecondsRemaining;
+    public bool FreePurchaseAvailable { get; } = freePurchaseAvailable;
 }

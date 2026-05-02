@@ -7,6 +7,7 @@ using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Interaction.Events;
 using Content.Shared.Popups;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Audio.Systems;
@@ -35,6 +36,18 @@ public sealed class SlasherMassacreSystem : EntitySystem
         SubscribeLocalEvent<SlasherMassacreMacheteComponent, GetItemActionsEvent>(OnGetItemActions);
         SubscribeLocalEvent<SlasherMassacreUserComponent, SlasherMassacreEvent>(OnMassacreAction);
         SubscribeLocalEvent<SlasherMassacreMacheteComponent, MeleeHitEvent>(OnMeleeHitWeapon);
+        SubscribeLocalEvent<SlasherComponent, GettingAttackedAttemptEvent>(OnSlasherGettingAttacked);
+    }
+
+    private void OnSlasherGettingAttacked(EntityUid uid, SlasherComponent _, ref GettingAttackedAttemptEvent args)
+    {
+        if (args.Attacker != uid || args.Disarm)
+            return;
+
+        if (!args.Weapon.HasValue || !HasComp<SlasherMassacreMacheteComponent>(args.Weapon.Value))
+            return;
+
+        args.Cancelled = true;
     }
 
     private void OnGetItemActions(EntityUid uid, SlasherMassacreMacheteComponent comp, GetItemActionsEvent args)
@@ -60,6 +73,7 @@ public sealed class SlasherMassacreSystem : EntitySystem
             ent.Comp.Active = true;
             ent.Comp.HitCount = 0;
             ent.Comp.CurrentVictim = null;
+            ent.Comp.MassacreMissForgivenessRemaining = 1;
 
             _popup.PopupEntity(Loc.GetString("slasher-massacre-start"), ent.Owner, ent.Owner, PopupType.MediumCaution);
             _audio.PlayPvs(ent.Comp.MassacreIntro, ent.Owner);
@@ -80,6 +94,7 @@ public sealed class SlasherMassacreSystem : EntitySystem
         comp.Active = false;
         comp.HitCount = 0;
         comp.CurrentVictim = null;
+        comp.MassacreMissForgivenessRemaining = 0;
         Dirty(uid, comp);
     }
 
@@ -89,14 +104,22 @@ public sealed class SlasherMassacreSystem : EntitySystem
             || !userComp.Active) // don't activate when comp isn't active.
             return;
 
-        // End the chain when you miss.
         if (args.HitEntities.Count == 0)
         {
+            if (userComp.MassacreMissForgivenessRemaining > 0)
+            {
+                userComp.MassacreMissForgivenessRemaining--;
+                userComp.HitCount /= 2;
+                Dirty(args.User, userComp);
+                if (_net.IsServer)
+                    _popup.PopupEntity(Loc.GetString("slasher-massacre-last-chance"), args.User, args.User, PopupType.LargeCaution);
+                return;
+            }
+
             EndChain(args.User, userComp, true);
             return;
         }
 
-        // Only consider humanoid's as targets.
         EntityUid? victim = null;
         foreach (var hit in args.HitEntities)
         {
@@ -107,9 +130,18 @@ public sealed class SlasherMassacreSystem : EntitySystem
             break;
         }
 
-        // If no valid humanoid was hit, treat like a miss and end the chain.
         if (victim == null)
         {
+            if (userComp.MassacreMissForgivenessRemaining > 0)
+            {
+                userComp.MassacreMissForgivenessRemaining--;
+                userComp.HitCount /= 2;
+                Dirty(args.User, userComp);
+                if (_net.IsServer)
+                    _popup.PopupEntity(Loc.GetString("slasher-massacre-last-chance"), args.User, args.User, PopupType.LargeCaution);
+                return;
+            }
+
             EndChain(args.User, userComp, true);
             return;
         }

@@ -34,16 +34,14 @@ public sealed class SponsorSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<RoundEndMessageEvent>(OnRoundEnd);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
 
-        // Первичная загрузка при старте
         TryScheduleLoad("первичной загрузки", logSuccess: false);
     }
 
-    private void OnRoundEnd(RoundEndMessageEvent ev)
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
-        // Внеочередное обновление после раунда
-        TryScheduleLoad("обновления после раунда", logSuccess: true);
+        TryScheduleLoad("перезагрузки списка после раунда", logSuccess: true);
     }
 
     public override void Update(float frameTime)
@@ -125,6 +123,10 @@ public sealed class SponsorSystem : EntitySystem
             }
 
             Sponsors = tempList.ToImmutableList();
+            var legacy = new List<SponsorInfoComponent.SponsorInfo>(tempList.Count);
+            foreach (var s in tempList)
+                legacy.Add(new SponsorInfoComponent.SponsorInfo(s.Uid, s.Level));
+            SponsorInfoComponent.listOfSponsors = legacy;
             if (_dbUnavailable)
                 Log.Info("[Sponsors] Подключение к БД восстановлено.");
 

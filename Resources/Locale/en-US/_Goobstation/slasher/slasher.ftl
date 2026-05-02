@@ -23,6 +23,7 @@ slasher-soulsteal-fail-not-valid = This is not a valid target!
 slasher-soulsteal-ascendance = CRITICAL ALERT: Massive psychic disturbance detected. An entity of unprecedented malevolent power has achieved critical mass. All personnel are advised to arm themselves and travel in groups.
 
 slasher-massacre-start = A surge of energy fills the air!
+slasher-massacre-last-chance = LAST CHANCE...
 slasher-massacre-end = The atmosphere returns to normal.
 slasher-massacre-target-change = The focus shifts to a new target.
 slasher-massacre-decap = A decisive blow is struck!

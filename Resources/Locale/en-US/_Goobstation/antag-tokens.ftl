@@ -31,6 +31,7 @@ antag-store-status-deposited = This role is already deposited and waiting for a 
 antag-store-status-not-enough = You do not have enough tickets.
 antag-store-status-saturated = Queue cap
 antag-store-status-has-other-deposit = You already have another active deposit.
+antag-store-status-ghost-taken-by-other = Purchased by another player
 antag-store-status-unavailable = This role is temporarily unavailable.
 antag-store-status-min-players = There are not enough players online for this role.
 antag-store-status-round-only = This role can only be purchased while a round is in progress.
