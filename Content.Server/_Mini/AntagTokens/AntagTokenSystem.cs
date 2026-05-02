@@ -13,6 +13,7 @@ using Content.Server.Antag;
 using Content.Server.Antag.Components;
 using Content.Server.Database;
 using Content.Server.GameTicking;
+using Content.Server.GameTicking.Events;
 using Content.Server.Mind;
 using Content.Server.Popups;
 using Content.Server.Roles;
@@ -38,6 +39,7 @@ using Robust.Shared.Asynchronous;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Log;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 namespace Content.Server._Mini.AntagTokens;
 
@@ -58,6 +60,7 @@ public sealed class AntagTokenSystem : EntitySystem
     [Dependency] private readonly ITaskManager _taskManager = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
 
     private readonly Dictionary<NetUserId, PlayerTokenState> _states = new();
     private readonly Dictionary<NetUserId, int?> _sponsorLevelOverrides = new();
@@ -72,6 +75,7 @@ public sealed class AntagTokenSystem : EntitySystem
     private const float DatabaseSyncInterval = 15f;
     private const int SharedTokenSlotsPlayersPerSlot = 10;
     private bool _enforcingSharedTokenSlotCapacity;
+    private int _ghostMinimumTimeBonusSeconds;
     private static readonly HashSet<string> BlockedRoundstartRolePresets = new(StringComparer.OrdinalIgnoreCase)
     {
         "Extended",
@@ -141,6 +145,7 @@ public sealed class AntagTokenSystem : EntitySystem
         SubscribeLocalEvent<PlayerJoinedLobbyEvent>(OnJoinedLobby);
         SubscribeLocalEvent<RulePlayerJobsAssignedEvent>(OnRoundstartJobsAssigned, after: new[] { typeof(AntagSelectionSystem) });
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
+        SubscribeLocalEvent<RoundStartingEvent>(OnRoundStarting);
         SubscribeLocalEvent<GhostRoleComponent, GhostRoleRegisteredEvent>(OnGhostRoleRegistered);
         SubscribeLocalEvent<GhostRoleComponent, TakeGhostRoleEvent>(OnGhostRoleTakenForToken, after: new[] { typeof(GhostRoleSystem) });
 
@@ -934,6 +939,11 @@ public sealed class AntagTokenSystem : EntitySystem
         state.LastDonorBonusClaimUtc = utc;
     }
 
+    private void OnRoundStarting(RoundStartingEvent _)
+    {
+        _ghostMinimumTimeBonusSeconds = _random.Next(0, 4) * 300;
+    }
+
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
         _globallyClaimedGhostRoles.Clear();
@@ -1561,12 +1571,16 @@ public sealed class AntagTokenSystem : EntitySystem
         }
     }
 
-    private static int GetCooldownRemaining(AntagRoleDefinition role, in AntagSendStateCache cache)
+    private int GetCooldownRemaining(AntagRoleDefinition role, in AntagSendStateCache cache)
     {
         if (role.MinimumTimeFromRoundStart <= 0 || !cache.InRound)
             return 0;
 
-        return Math.Max(0, role.MinimumTimeFromRoundStart - cache.RoundElapsedSeconds);
+        var minimum = role.MinimumTimeFromRoundStart;
+        if (role.Mode == AntagPurchaseMode.GhostRule)
+            minimum += _ghostMinimumTimeBonusSeconds;
+
+        return Math.Max(0, minimum - cache.RoundElapsedSeconds);
     }
 
     private static bool IsAntagTrackGloballySaturated(in AntagSendStateCache cache)

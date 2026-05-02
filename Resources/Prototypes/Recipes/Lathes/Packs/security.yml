@@ -126,7 +126,7 @@
 - type: latheRecipePack
   id: SecurityAmmo
   recipes:
-  # - BoxBeanbag # Commented by CorvaxGoob-RubberAmmo
+  - BoxBeanbag
   - BoxShotgunIncendiary
   - BoxShotgunUranium
   - BoxShellTranquilizer
@@ -146,7 +146,7 @@
   - MagazinePistolSubMachineGunUranium
   - MagazineRifleIncendiary
   - MagazineRifleUranium
-  # - MagazineShotgunBeanbag # Commented by CorvaxGoob-RubberAmmo
+  - MagazineShotgunBeanbag
   - MagazineShotgunIncendiary
   - SpeedLoaderMagnumIncendiary
   - SpeedLoaderMagnumUranium

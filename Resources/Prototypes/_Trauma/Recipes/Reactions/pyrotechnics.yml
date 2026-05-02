@@ -22,6 +22,7 @@
 
 - type: reaction
   id: Cyclonite
+  priority: -10
   reactants:
     Hexamine:
       amount: 1
@@ -42,7 +43,7 @@
 
 - type: reaction
   id: Octogen
-  priority: 5 # god please let this react BEFORE cyclonite
+  priority: 50
   reactants:
     NitricAcid:
       amount: 1
