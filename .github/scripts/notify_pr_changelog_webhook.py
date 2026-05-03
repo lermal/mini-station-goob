@@ -93,7 +93,7 @@ def main():
     body = os.environ.get("PR_BODY", "")
     pr_author = os.environ.get("PR_AUTHOR", "unknown")
     pr_url = os.environ.get("PR_HTML_URL", "")
-    webhook = os.environ.get("CHANNEL_WEBHOOK_URL", "")
+    webhook = (os.environ.get("CHANNEL_WEBHOOK_URL") or "").strip()
 
     author, entries = parse_body(body)
     if author is None or not entries:
@@ -110,10 +110,12 @@ def main():
     payload_obj = build_payload(date_str, pr_url, display_author, entries)
 
     payload = json.dumps(payload_obj).encode("utf-8")
+    repo = os.environ.get("GITHUB_REPOSITORY", "github.com")
+    ua = f"MiniStation-ChangelogNotify/1.0 (+https://github.com/{repo})"
     req = urllib.request.Request(
         webhook,
         data=payload,
-        headers={"Content-Type": "application/json"},
+        headers={"Content-Type": "application/json", "User-Agent": ua},
         method="POST",
     )
     try:
