@@ -75,17 +75,17 @@ def parse_body(body: str):
     return author, entries
 
 
-def build_embed_description(author: str, entries: list) -> str:
+def build_embed_description(entries: list) -> str:
     lines = []
     for typ, text in entries:
         icon = entry_icon(typ)
-        lines.append(f"{icon} {text} (by {author})")
+        lines.append(f"{icon} {text}")
     return "\n".join(lines)
 
 
 def build_payload(date_str: str, pr_url: str, author: str, entries: list, role_id: str) -> dict:
-    title = f"— {date_str} {monetks_emoji()} MiniStation"
-    desc = build_embed_description(author, entries)
+    title = f"— {date_str} {monetks_emoji()} MiniStation (by {author})"
+    desc = build_embed_description(entries)
     return {
         "content": f"<@&{role_id}>",
         "allowed_mentions": {"roles": [role_id]},
