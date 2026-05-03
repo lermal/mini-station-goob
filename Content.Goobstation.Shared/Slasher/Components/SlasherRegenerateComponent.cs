@@ -30,12 +30,10 @@ public sealed partial class SlasherRegenerateComponent : Component
     public float ReagentAmount = 10f;
 
     /// <summary>
-    /// Whether the slasher has a stolen soul available to use for regenerate.
-    /// Acts as ammo for the regenerate ability.
-    /// Max of one soul at a time to prevent stacking.
+    /// Stolen souls banked for regenerate (one steal adds one charge; one regenerate spends one).
     /// </summary>
     [DataField, AutoNetworkedField]
-    public bool HasSoulAvailable = true; // Start with one soul available
+    public int SoulCharges = 1;
 
     /// <summary>
     /// The sound that plays when regenerating

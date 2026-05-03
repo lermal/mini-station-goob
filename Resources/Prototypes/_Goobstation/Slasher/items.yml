@@ -10,7 +10,8 @@
   - type: Sprite
     sprite: _Goobstation/Objects/Specific/Slasher/machete.rsi
   - type: MeleeWeapon
-    canWideSwing: false # Wideswing causes issues with massacre.
+    canWideSwing: true
+    angle: 38
     damage:
       types:
         Slash: 15

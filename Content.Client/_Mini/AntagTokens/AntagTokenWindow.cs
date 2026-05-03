@@ -76,6 +76,7 @@ public sealed class AntagTokenWindow : DefaultWindow
 
         Title = Loc.GetString("antag-token-window-title");
         MinSize = new Vector2(1000, 650);
+        MaxSize = new Vector2(1000, float.PositiveInfinity);
         SetSize = new Vector2(1000, 650);
 
         var root = new BoxContainer
@@ -136,6 +137,15 @@ public sealed class AntagTokenWindow : DefaultWindow
         _roleScroll.AddChild(_roleGrid);
 
         _clearButton.OnPressed += _ => OnClearPressed?.Invoke();
+    }
+
+    protected override DragMode GetDragModeFor(Vector2 relativeMousePos)
+    {
+        var mode = base.GetDragModeFor(relativeMousePos);
+        if (mode == DragMode.Move)
+            return DragMode.Move;
+
+        return mode & ~(DragMode.Left | DragMode.Right);
     }
 
     public void SetLoading(bool loading)
@@ -535,7 +545,7 @@ public sealed class AntagTokenWindow : DefaultWindow
                 VerticalAlignment = VAlignment.Center
             });
         }
-        else if (entry.FreeUnlocks > 0)
+        else if (entry.FreeUnlocks > 0 || entry.FreePurchaseAvailable)
         {
             buttonContent.AddChild(new Label
             {
@@ -610,7 +620,7 @@ public sealed class AntagTokenWindow : DefaultWindow
         if (entry.StatusLocKey != null)
             return Loc.GetString(entry.StatusLocKey);
 
-        if (entry.FreeUnlocks > 0)
+        if (entry.FreeUnlocks > 0 || entry.FreePurchaseAvailable)
             return Loc.GetString("antag-token-window-tooltip-free");
 
         return entry.Mode switch

@@ -73,6 +73,17 @@ public static class AntagTokenCatalog
 
     public const string GhostAutoPendingUsedRoleCreditEntryId = "ghost-auto-pending-used-role-credit";
 
+    public const string LastDonorDailyFreeAntagDayEntryId = "last-donor-daily-free-antag-day";
+
+    public const string DepositUsedDonorDailyFreeEntryId = "deposit-used-donor-daily-free";
+
+    public const string GhostAutoPendingUsedDonorDailyFreeEntryId = "ghost-auto-pending-used-donor-daily-free";
+
+    /// <summary>
+    /// Persisted while the player has successfully taken a ghost-rule token role this station round (survives disconnect / crash before pending rows are cleared).
+    /// </summary>
+    public const string GhostAntagConsumedMarkEntryId = "ghost-antag-consumed-mark";
+
     public static string GetGhostAutoPendingEntryId(string roleId)
     {
         return $"ghost-auto-pending:{roleId}";
@@ -102,4 +113,5 @@ public sealed record AntagRoleDefinition(
     int MinimumTimeFromRoundStart = 0,
     string? UnavailableReasonLocKey = null,
     string? GhostRulesLocKey = null,
-    string? GhostAutoJoinEntityProto = null);
+    string? GhostAutoJoinEntityProto = null,
+    int FreeMinimumSponsorLevel = -1);

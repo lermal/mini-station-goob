@@ -8,7 +8,7 @@ namespace Content.Goobstation.Shared.Slasher.Components;
 /// <summary>
 /// Added to the Slasher user to track status.
 /// </summary>
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class SlasherMassacreUserComponent : Component
 {
     /// <summary>
@@ -25,6 +25,9 @@ public sealed partial class SlasherMassacreUserComponent : Component
     /// Whether massacre mode is active.
     /// </summary>
     [ViewVariables] public bool Active;
+
+    [DataField, AutoNetworkedField]
+    public int MassacreMissForgivenessRemaining;
 
     [DataField]
     public SoundSpecifier MassacreIntro =
