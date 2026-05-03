@@ -51,9 +51,9 @@
       amount: 1
     AceticAnhydride:
       amount: 1
-    Hexamine:
-      amount: 1
     Vestine:
       amount: 1 # CorvaxGoob edit
+    Hexamine:
+      amount: 1
   products:
     Octogen: 4

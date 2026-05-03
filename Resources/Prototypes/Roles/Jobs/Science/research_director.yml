@@ -159,6 +159,7 @@
   #goobcoins: 40 #Goob content Corvax-Goob-coins
   skills: # CorvaxGoob-Skills
   - AdvancedBuilding
+  - MedicalEquipment
   #canBeAntag: false
   antagAdvantage: 75 # Goobstation
   guides: # goobstation
