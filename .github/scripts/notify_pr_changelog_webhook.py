@@ -10,7 +10,8 @@ from datetime import datetime, timezone
 COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 HEADER_LINE_RE = re.compile(r"^\s*(?::cl:|🆑)\s*(.*)$", re.I)
 ENTRY_RE = re.compile(
-    r"^\s*[*-]?\s*(add|remove|tweak|fix)\s*:\s*(.+)$", re.I
+    r"^\s*[*-]?\s*(add|remove|tweak|fix|upstream|sponsor)\s*:\s*(.+)$",
+    re.I,
 )
 
 EMOJI = {
@@ -18,7 +19,12 @@ EMOJI = {
     "remove": ":no_entry_sign:",
     "tweak": ":hammer_pick:",
     "fix": ":bug:",
+    "upstream": "⚡",
+    "sponsor": ":monetks:",
 }
+
+ROLE_PING = "1500334396283162684"
+EMBED_COLOR = 0xFFF183
 
 
 def parse_body(body: str):
@@ -58,16 +64,29 @@ def parse_body(body: str):
     return author, entries
 
 
-def build_message(date_str: str, pr_url: str, author: str, entries: list) -> str:
-    lines = [
-        f"— {date_str} :monetks: MiniStation",
-        pr_url,
-        "",
-    ]
+def build_embed_description(pr_url: str, author: str, entries: list) -> str:
+    lines = [pr_url, ""]
     for typ, text in entries:
         icon = EMOJI.get(typ, ":white_check_mark:")
         lines.append(f"{icon} {text} (by {author})")
     return "\n".join(lines)
+
+
+def build_payload(date_str: str, pr_url: str, author: str, entries: list) -> dict:
+    title = f"— {date_str} :monetks: MiniStation"
+    desc = build_embed_description(pr_url, author, entries)
+    return {
+        "content": f"<@&{ROLE_PING}>",
+        "allowed_mentions": {"parse": [], "roles": [ROLE_PING]},
+        "embeds": [
+            {
+                "title": title[:256],
+                "url": pr_url,
+                "description": desc[:4096],
+                "color": EMBED_COLOR,
+            }
+        ],
+    }
 
 
 def main():
@@ -88,9 +107,9 @@ def main():
     display_author = author.strip() if author.strip() else pr_author
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%d/%m/%y")
-    message = build_message(date_str, pr_url, display_author, entries)
+    payload_obj = build_payload(date_str, pr_url, display_author, entries)
 
-    payload = json.dumps({"content": message}).encode("utf-8")
+    payload = json.dumps(payload_obj).encode("utf-8")
     req = urllib.request.Request(
         webhook,
         data=payload,
