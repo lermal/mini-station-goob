@@ -36,4 +36,6 @@ jobs:
           PR_AUTHOR: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_author || github.event.pull_request.user.login }}
           PR_HTML_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_url || github.event.pull_request.html_url }}
           CHANNEL_WEBHOOK_URL: ${{ secrets.CHANNEL_WEBHOOK_URL }}
+          NOTIFY_ROLE_ID: ${{ secrets.NOTIFY_ROLE_ID }}
+          DISCORD_MONETKS_EMOJI_ID: ${{ secrets.DISCORD_MONETKS_EMOJI_ID }}
         run: python3 .github/scripts/notify_pr_changelog_webhook.py

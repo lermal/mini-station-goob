@@ -20,11 +20,22 @@ EMOJI = {
     "tweak": ":hammer_pick:",
     "fix": ":bug:",
     "upstream": "⚡",
-    "sponsor": ":monetks:",
 }
 
-ROLE_PING = "1500334396283162684"
+ROLE_PING_DEFAULT = "1500334396283162684"
+MONETKS_EMOJI_ID_DEFAULT = "1492181985420902610"
 EMBED_COLOR = 0xFFF183
+
+
+def monetks_emoji() -> str:
+    eid = (os.environ.get("DISCORD_MONETKS_EMOJI_ID") or MONETKS_EMOJI_ID_DEFAULT).strip()
+    return f"<:monetks:{eid}>"
+
+
+def entry_icon(typ: str) -> str:
+    if typ == "sponsor":
+        return monetks_emoji()
+    return EMOJI.get(typ, ":white_check_mark:")
 
 
 def parse_body(body: str):
@@ -64,20 +75,20 @@ def parse_body(body: str):
     return author, entries
 
 
-def build_embed_description(pr_url: str, author: str, entries: list) -> str:
-    lines = [pr_url, ""]
+def build_embed_description(author: str, entries: list) -> str:
+    lines = []
     for typ, text in entries:
-        icon = EMOJI.get(typ, ":white_check_mark:")
+        icon = entry_icon(typ)
         lines.append(f"{icon} {text} (by {author})")
     return "\n".join(lines)
 
 
-def build_payload(date_str: str, pr_url: str, author: str, entries: list) -> dict:
-    title = f"— {date_str} :monetks: MiniStation"
-    desc = build_embed_description(pr_url, author, entries)
+def build_payload(date_str: str, pr_url: str, author: str, entries: list, role_id: str) -> dict:
+    title = f"— {date_str} {monetks_emoji()} MiniStation"
+    desc = build_embed_description(author, entries)
     return {
-        "content": f"<@&{ROLE_PING}>",
-        "allowed_mentions": {"parse": [], "roles": [ROLE_PING]},
+        "content": f"<@&{role_id}>",
+        "allowed_mentions": {"roles": [role_id]},
         "embeds": [
             {
                 "title": title[:256],
@@ -105,9 +116,10 @@ def main():
         sys.exit(1)
 
     display_author = author.strip() if author.strip() else pr_author
+    role_id = (os.environ.get("NOTIFY_ROLE_ID") or "").strip() or ROLE_PING_DEFAULT
     now = datetime.now(timezone.utc)
     date_str = now.strftime("%d/%m/%y")
-    payload_obj = build_payload(date_str, pr_url, display_author, entries)
+    payload_obj = build_payload(date_str, pr_url, display_author, entries, role_id)
 
     payload = json.dumps(payload_obj).encode("utf-8")
     repo = os.environ.get("GITHUB_REPOSITORY", "github.com")
