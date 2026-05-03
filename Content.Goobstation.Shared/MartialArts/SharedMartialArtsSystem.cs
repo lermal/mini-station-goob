@@ -586,6 +586,18 @@ public abstract partial class SharedMartialArtsSystem : EntitySystem
         }
     }
 
+    protected void ReloadMartialArtCombosFromKnowledge(EntityUid user)
+    {
+        if (!_netManager.IsServer
+            || !TryComp<MartialArtsKnowledgeComponent>(user, out var mak)
+            || !TryComp<CanPerformComboComponent>(user, out var cpc)
+            || !_proto.TryIndex<MartialArtPrototype>(mak.MartialArtsForm.ToString(), out var martialArtsPrototype))
+            return;
+
+        LoadCombos(martialArtsPrototype.RoundstartCombos, cpc);
+        Dirty(user, cpc);
+    }
+
     private bool TryUseMartialArt(Entity<CanPerformComboComponent> ent,
         ComboPrototype proto,
         out EntityUid target,

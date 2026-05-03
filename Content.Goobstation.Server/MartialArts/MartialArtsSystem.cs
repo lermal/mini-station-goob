@@ -36,7 +36,11 @@ public sealed class MartialArtsSystem : SharedMartialArtsSystem
     }
 
     private void OnPolymorphedCPC(Entity<CanPerformComboComponent> ent, ref PolymorphedEvent args)
-        => _polymorph.CopyPolymorphComponent<CanPerformComboComponent>(ent, args.NewEntity);
+    {
+        _polymorph.CopyPolymorphComponent<CanPerformComboComponent>(ent, args.NewEntity);
+        if (args.IsRevert)
+            ReloadMartialArtCombosFromKnowledge(args.NewEntity);
+    }
 
     private void OnPolymorphedMAK(Entity<MartialArtsKnowledgeComponent> ent, ref PolymorphedEvent args)
         => _polymorph.CopyPolymorphComponent<MartialArtsKnowledgeComponent>(ent, args.NewEntity);
