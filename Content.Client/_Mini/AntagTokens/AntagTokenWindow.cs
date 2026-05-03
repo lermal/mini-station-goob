@@ -550,6 +550,7 @@ public sealed class AntagTokenWindow : DefaultWindow
             buttonContent.AddChild(new Label
             {
                 Text = Loc.GetString("antag-token-window-button-free"),
+                StyleClasses = { "LabelHeading" },
                 Modulate = Color.White,
                 VerticalAlignment = VAlignment.Center
             });

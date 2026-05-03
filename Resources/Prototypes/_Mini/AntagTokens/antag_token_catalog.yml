@@ -30,7 +30,7 @@
       gameRuleId: TokenRevenantSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumPlayers: 20
+      minimumPlayers: 10
       minimumTimeFromRoundStart: 1800
       freeMinimumSponsorLevel: 2
 
@@ -57,7 +57,7 @@
       gameRuleId: TokenLoneAbductorSpawn
       tagLocKey: antag-token-window-tag-ghost
       requiresInRound: true
-      minimumPlayers: 25
+      minimumPlayers: 10
       minimumTimeFromRoundStart: 900
       freeMinimumSponsorLevel: 2
 
@@ -86,7 +86,7 @@
       ghostRulesLocKey: ghost-role-information-freeagent-rules
       gameRuleId: SoloVoxRaidersMidround
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 50
+      minimumPlayers: 15
       requiresInRound: true
       minimumTimeFromRoundStart: 2100
       freeMinimumSponsorLevel: 3
@@ -113,7 +113,7 @@
       ghostRulesLocKey: ghost-role-information-freeagent-rules
       gameRuleId: KingRatSpawn
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 30
+      minimumPlayers: 15
       requiresInRound: true
       minimumTimeFromRoundStart: 900
       freeMinimumSponsorLevel: 1
@@ -128,7 +128,7 @@
       ghostRulesLocKey: ghost-role-information-freeagent-rules
       gameRuleId: BingleSpawnInstant
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 50
+      minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 3000
       freeMinimumSponsorLevel: 4
@@ -143,7 +143,7 @@
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenNinjaSpawn
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 30
+      minimumPlayers: 20
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
       freeMinimumSponsorLevel: 2
@@ -184,7 +184,7 @@
       ghostRulesLocKey: ghost-role-information-slaughter-demon-rules
       gameRuleId: SlaughterDemonMidround
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 50
+      minimumPlayers: 25
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
       freeMinimumSponsorLevel: 3
@@ -244,7 +244,7 @@
       tagLocKey: antag-token-window-tag-ghost
       minimumPlayers: 50
       requiresInRound: true
-      minimumTimeFromRoundStart: 1800
+      minimumTimeFromRoundStart: 2100
       freeMinimumSponsorLevel: 4
 
     - id: heretic
@@ -296,9 +296,9 @@
       ghostRulesLocKey: ghost-role-information-loneop-rules
       gameRuleId: TokenLoneOpsSpawn
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 50
+      minimumPlayers: 25
       requiresInRound: true
-      minimumTimeFromRoundStart: 2100
+      minimumTimeFromRoundStart: 2700
       freeMinimumSponsorLevel: 4
 
     - id: changeling
@@ -339,7 +339,7 @@
       ghostRulesLocKey: blob-carrier-role-rules
       gameRuleId: TokenBlobMidround
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 50
+      minimumPlayers: 30
       requiresInRound: true
       minimumTimeFromRoundStart: 2700
       freeMinimumSponsorLevel: 5
@@ -354,7 +354,7 @@
       ghostRulesLocKey: ghost-role-information-antagonist-rules
       gameRuleId: TokenWizard
       tagLocKey: antag-token-window-tag-ghost
-      minimumPlayers: 20
+      minimumPlayers: 30
       requiresInRound: true
       minimumTimeFromRoundStart: 2100
       freeMinimumSponsorLevel: 5
