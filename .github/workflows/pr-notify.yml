@@ -3,18 +3,37 @@ name: Notify channel (PR changelog)
 on:
   pull_request_target:
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr_body:
+        description: "Текст с :cl:"
+        required: true
+        type: string
+        default: |
+          :cl: TestCkey
+          - add: Тест уведомления
+      pr_author:
+        description: "GitHub login, если в :cl: нет автора в строке"
+        required: false
+        type: string
+        default: "github-actions"
+      pr_url:
+        description: "URL для ссылки в embed"
+        required: false
+        type: string
+        default: "https://github.com/owner/repo/pull/0"
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true)
     steps:
       - uses: actions/checkout@v4
 
       - name: Post changelog to webhook
         env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-          PR_HTML_URL: ${{ github.event.pull_request.html_url }}
+          PR_BODY: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_body || github.event.pull_request.body }}
+          PR_AUTHOR: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_author || github.event.pull_request.user.login }}
+          PR_HTML_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_url || github.event.pull_request.html_url }}
           CHANNEL_WEBHOOK_URL: ${{ secrets.CHANNEL_WEBHOOK_URL }}
         run: python3 .github/scripts/notify_pr_changelog_webhook.py
