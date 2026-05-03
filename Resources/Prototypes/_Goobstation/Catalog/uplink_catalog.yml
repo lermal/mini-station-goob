@@ -83,8 +83,8 @@
 
 - type: listing
   id: UplinkBoxReagentGrenades
-  name: Коробка скользких гранат
-  description: Содержит 2 гранаты со смазкой и 2 гранаты с клеем
+  name: uplink-box-reagent-grenades-name
+  description: uplink-box-reagent-grenades-desc
   productEntity: BoxReagentGrenades
   cost:
     Telecrystal: 6
