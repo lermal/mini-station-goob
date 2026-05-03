@@ -75,7 +75,7 @@ public sealed class AntagTokenSystem : EntitySystem
     private const float DatabaseSyncInterval = 15f;
     private const int SharedTokenSlotsPlayersPerSlot = 10;
     private bool _enforcingSharedTokenSlotCapacity;
-    private int _ghostMinimumTimeBonusSeconds;
+    private readonly Dictionary<string, int> _ghostMinimumTimeRandomBonusByRole = new();
     private static readonly HashSet<string> BlockedRoundstartRolePresets = new(StringComparer.OrdinalIgnoreCase)
     {
         "Extended",
@@ -941,11 +941,19 @@ public sealed class AntagTokenSystem : EntitySystem
 
     private void OnRoundStarting(RoundStartingEvent _)
     {
-        _ghostMinimumTimeBonusSeconds = _random.Next(0, 4) * 300;
+        _ghostMinimumTimeRandomBonusByRole.Clear();
+        foreach (var role in _listings.ListingsOrdered)
+        {
+            if (role.Mode != AntagPurchaseMode.GhostRule || role.MinimumTimeFromRoundStart <= 0)
+                continue;
+
+            _ghostMinimumTimeRandomBonusByRole[role.Id] = _random.Next(-300, 901);
+        }
     }
 
     private void OnRoundRestartCleanup(RoundRestartCleanupEvent _)
     {
+        _ghostMinimumTimeRandomBonusByRole.Clear();
         _globallyClaimedGhostRoles.Clear();
 
         var grantedGhost = new HashSet<NetUserId>(_roundGrantedGhostRule);
@@ -1577,8 +1585,9 @@ public sealed class AntagTokenSystem : EntitySystem
             return 0;
 
         var minimum = role.MinimumTimeFromRoundStart;
-        if (role.Mode == AntagPurchaseMode.GhostRule)
-            minimum += _ghostMinimumTimeBonusSeconds;
+        if (role.Mode == AntagPurchaseMode.GhostRule &&
+            _ghostMinimumTimeRandomBonusByRole.TryGetValue(role.Id, out var bonus))
+            minimum += bonus;
 
         return Math.Max(0, minimum - cache.RoundElapsedSeconds);
     }

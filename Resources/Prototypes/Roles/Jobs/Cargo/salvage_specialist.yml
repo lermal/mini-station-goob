@@ -88,6 +88,7 @@
   - ShuttleControl
   - Shooting
   - Butchering
+  - MedicalEquipment
   access:
   - Cargo
   - Salvage
