@@ -295,8 +295,7 @@ public sealed class DailyRewardSystem : EntitySystem
             return;
         }
 
-        if (state.Progress.LastClaimTime != null &&
-            now - state.Progress.LastClaimTime.Value > component.ExpirationWindow)
+        if (IsStreakExpired(state.Progress.LastClaimTime, component, now))
         {
             state.Progress.CurrentStreak = 0;
         }
@@ -356,7 +355,7 @@ public sealed class DailyRewardSystem : EntitySystem
         EnsureCurrentDay(progress, now);
 
         var currentStreak = progress.CurrentStreak;
-        if (progress.LastClaimTime != null && now - progress.LastClaimTime.Value > component.ExpirationWindow)
+        if (IsStreakExpired(progress.LastClaimTime, component, now))
             currentStreak = 0;
 
         nextDay = Math.Clamp(currentStreak + 1, 1, component.MaxStreak);
@@ -382,7 +381,7 @@ public sealed class DailyRewardSystem : EntitySystem
 
         var lastClaim = state.Progress.LastClaimTime;
         var visibleStreak = state.Progress.CurrentStreak;
-        if (lastClaim != null && now - lastClaim.Value > component.ExpirationWindow)
+        if (IsStreakExpired(lastClaim, component, now))
             visibleStreak = 0;
 
         var nextDay = Math.Clamp(visibleStreak + 1, 1, component.MaxStreak);
@@ -464,6 +463,18 @@ public sealed class DailyRewardSystem : EntitySystem
     private static TimeSpan MaxZero(TimeSpan span)
     {
         return span < TimeSpan.Zero ? TimeSpan.Zero : span;
+    }
+
+    private static bool IsStreakExpired(DateTime? lastClaimTime, DailyRewardComponent component, DateTime nowUtc)
+    {
+        if (lastClaimTime == null)
+            return false;
+
+        var lastClaim = lastClaimTime.Value;
+        if (nowUtc - lastClaim <= component.ExpirationWindow)
+            return false;
+
+        return nowUtc.Date > lastClaim.Date.AddDays(1);
     }
 
     private DailyRewardComponent? TryGetComponentFor(NetUserId userId)
