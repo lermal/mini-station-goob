@@ -59,7 +59,7 @@
       requiresInRound: true
       minimumPlayers: 25
       minimumTimeFromRoundStart: 900
-      freeMinimumSponsorLevel: 2
+      freeMinimumSponsorLevel: 3
 
     - id: paradox_clone
       nameLocKey: antag-store-role-clone-name
@@ -159,7 +159,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 25
       requiresPreRoundLobby: true
-      freeMinimumSponsorLevel: 4
+      freeMinimumSponsorLevel: 3
 
     - id: initial_infected
       nameLocKey: antag-store-role-initial-infected-name
@@ -187,7 +187,7 @@
       minimumPlayers: 50
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
-      freeMinimumSponsorLevel: 3
+      freeMinimumSponsorLevel: 4
 
     - id: cosmic_cult
       nameLocKey: antag-store-role-cosmic-cult-name
@@ -200,7 +200,7 @@
       tagLocKey: antag-token-window-tag-queue
       minimumPlayers: 20
       requiresPreRoundLobby: true
-      freeMinimumSponsorLevel: 4
+      freeMinimumSponsorLevel: 3
 
     - id: slasher
       nameLocKey: antag-store-role-slasher-name
@@ -245,7 +245,7 @@
       minimumPlayers: 50
       requiresInRound: true
       minimumTimeFromRoundStart: 1800
-      freeMinimumSponsorLevel: 4
+      freeMinimumSponsorLevel: 2
 
     - id: heretic
       nameLocKey: antag-store-role-heretic-name
