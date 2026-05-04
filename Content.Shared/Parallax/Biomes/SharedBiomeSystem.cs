@@ -31,6 +31,17 @@ public abstract class SharedBiomeSystem : EntitySystem
     [Dependency] private readonly SharedMapSystem _map = default!;
 
     public const byte ChunkSize = 8; // Lavaland change - make it public
+    private readonly object _noiseCacheLock = new();
+    // Goob - Cache Noise
+    private readonly Dictionary<(FastNoiseLite, int), FastNoiseLite> _noiseCache = new();
+
+    protected void ClearNoiseCache()
+    {
+        lock (_noiseCacheLock)
+        {
+            _noiseCache.Clear();
+        }
+    }
 
     private T Pick<T>(List<T> collection, float value)
     {
@@ -387,11 +398,17 @@ public abstract class SharedBiomeSystem : EntitySystem
 
     private FastNoiseLite GetNoise(FastNoiseLite seedNoise, int seed)
     {
-        var noiseCopy = new FastNoiseLite();
-        _serManager.CopyTo(seedNoise, ref noiseCopy, notNullableOverride: true);
-        noiseCopy.SetSeed(noiseCopy.GetSeed() + seed);
-        // Ensure re-calculate is run.
-        noiseCopy.SetFractalOctaves(noiseCopy.GetFractalOctaves());
-        return noiseCopy;
+        lock (_noiseCacheLock)
+        {
+            if (_noiseCache.TryGetValue((seedNoise, seed), out var cached))
+                return cached;
+
+            var noiseCopy = new FastNoiseLite();
+            _serManager.CopyTo(seedNoise, ref noiseCopy, notNullableOverride: true);
+            noiseCopy.SetSeed(noiseCopy.GetSeed() + seed);
+            noiseCopy.SetFractalOctaves(noiseCopy.GetFractalOctaves());
+            _noiseCache[(seedNoise, seed)] = noiseCopy;
+            return noiseCopy;
+        }
     }
 }

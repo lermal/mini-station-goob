@@ -84,7 +84,7 @@ def build_embed_description(entries: list) -> str:
 
 
 def build_payload(date_str: str, pr_url: str, author: str, entries: list, role_id: str) -> dict:
-    title = f"— {date_str} {monetks_emoji()} MiniStation (by {author})"
+    title = f"— {date_str} {monetks_emoji()} Мини-станция (by {author})"
     desc = build_embed_description(entries)
     return {
         "content": f"<@&{role_id}>",
